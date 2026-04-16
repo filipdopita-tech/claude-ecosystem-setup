@@ -1,0 +1,227 @@
+domain: code-patterns
+last_updated: 2026-04-09
+description: Code style, testing, security, architecture patterns for Filip's projects
+
+# =========================
+# CODE STYLE
+# =========================
+style:
+  immutability: MANDATORY
+  file_size:
+    typical_lines: 200-400
+    max_lines: 800
+  function_size:
+    max_lines: 50
+    max_nesting_levels: 4
+  error_handling: explicit_at_every_level
+  input_validation: at_system_boundaries
+  no_hardcoded_secrets: MANDATORY
+
+naming:
+  private_vars: "_prefix"
+  constants: UPPER_SNAKE_CASE
+  classes: PascalCase
+  functions: snake_case_python_camelCase_js
+
+# =========================
+# CODE COMPACTION (z PULSE protokolu)
+# =========================
+compaction:
+  comments: "Delete WHAT comments, keep only WHY comments"
+  variables: "Inline single-use variables"
+  conditionals: "Optional chaining (?.), nullish coalescing (??), ternaries"
+  functions: "Arrow for simple transforms, no braces for single expressions"
+  loops: "map/filter/reduce over manual loops when cleaner"
+  objects: "Shorthand, spread, destructuring"
+  imports: "Destructure only what you use, no wildcards unless 5+"
+  duplication: "3+ repeated lines = extract to function"
+  dead_code: "Delete it, git has history. Never comment-out."
+  quality_gate: "Compaction MUST NOT reduce output quality. Same behavior, fewer tokens."
+
+# =========================
+# TESTING
+# =========================
+testing:
+  coverage_minimum: 80
+  types_required: [unit, integration, e2e]
+  workflow: TDD_RED_GREEN_REFACTOR
+  mocking:
+    rule: "Never mock what you can use for real"
+    source: Jaymin_West_video_06
+  test_before_implementation: true
+
+# =========================
+# SECURITY
+# =========================
+security_checklist:
+  before_commit:
+    - No hardcoded secrets
+    - Input validation
+    - Parameterized queries (no string concat SQL)
+    - Output sanitization (HTML escape)
+    - CSRF tokens on mutations
+    - Rate limiting on endpoints
+    - Error messages dont leak info
+    - No debug statements in prod
+
+secrets:
+  storage: env_files_or_secret_manager
+  never_in: git, config_in_repo, hardcoded
+  validation: check_at_startup_fail_fast
+
+# =========================
+# PATTERNS
+# =========================
+patterns:
+  repository_pattern:
+    when: data_access_layer
+    why: decouple_storage_from_business_logic
+
+  api_response_envelope:
+    structure:
+      success: bool
+      data: any
+      error: string_or_null
+      metadata: pagination_meta
+
+  error_response:
+    structure:
+      isError: true
+      isRetryable: bool
+      errorCategory: enum
+      message: user_friendly_string
+
+  circuit_breaker:
+    states: [CLOSED, OPEN, HALF_OPEN]
+    when: external_api_calls
+    thresholds:
+      failure_rate: 50%
+      slow_call_duration: 5s
+      minimum_throughput: 10
+
+# =========================
+# PYTHON SPECIFIC
+# =========================
+python:
+  async: "I/O bound only"
+  dataclasses: "frozen=True"
+  type_hints: MANDATORY
+  duck_typing: "via Protocol"
+  formatter: black
+  linter: ruff
+  test_framework: pytest
+
+# =========================
+# TYPESCRIPT SPECIFIC
+# =========================
+typescript:
+  strict_mode: MANDATORY
+  discriminated_unions: prefer_over_enums
+  runtime_validation: zod
+  branded_types: for_primitive_ID_types
+  no_any: use_unknown
+  test_framework: vitest_or_jest
+
+# =========================
+# DATABASES
+# =========================
+postgresql:
+  indexes:
+    default: B_Tree
+    jsonb: GIN
+    timestamps: BRIN
+  pagination: cursor_not_offset
+  connection_pool: PgBouncer_for_high_load
+
+redis:
+  patterns:
+    objects: HSET
+    sessions: "SET + EXPIRE"
+    rate_limit: INCR
+    leaderboard: ZADD
+  always_ttl: true
+
+# =========================
+# API DESIGN
+# =========================
+rest_api:
+  post_response: "201 + Location header"
+  pagination: cursor
+  auth: Bearer_JWT_or_API_key
+  versioning: URL_path_v1_v2
+  rate_limit_headers: "X-RateLimit-*"
+
+# =========================
+# GIT WORKFLOW
+# =========================
+git:
+  commit_format: "<type>: <description>"
+  commit_types: [feat, fix, refactor, docs, test, chore, perf, ci]
+  branches:
+    main: protected
+    feature: "feat/description"
+    fix: "fix/description"
+
+# =========================
+# AGENT PATTERNS (Claude Code specific)
+# =========================
+agent_patterns:
+  model_routing:
+    sub_agents_simple: haiku
+    sub_agents_research: sonnet
+    main_development: sonnet
+    architecture_security: opus
+
+  context_management:
+    max_utilization: 50%
+    delegate_reads_to_sub_agents: true
+    never_fix_bad_output: "diagnose -> reset -> rerun"
+
+  one_agent_one_task:
+    rule: "Focused agent = correct agent"
+    source: Jaymin_West_video_06
+
+  forced_delegation:
+    how: "Tool restriction in agent frontmatter"
+    who_gets_restricted: top_level_orchestrators
+    source: Jaymin_West_video_17
+
+  spec_driven:
+    rule: "Use /feature -> spec -> /implement pipeline"
+    source: Jaymin_West_video_19
+
+# =========================
+# FACTS
+# =========================
+facts:
+  - date: 2026-04-09
+    fact: Jaymin West 5 komponent agenta = model, prompt, context, tools, harness
+    source: "/mac/Documents/OneFlow-Vault/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md"
+
+  - date: 2026-04-09
+    fact: Forced delegation pro orchestratory implementovano v ~/.claude/agents/orchestrator.md
+    source: This implementation rollout
+
+  - date: 2026-04-09
+    fact: Pit of Success pattern (spec-driven) implementovano jako /feature + /implement
+    source: ~/.claude/commands/feature.md, implement.md
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_rules:
+  - ~/.claude/rules/expertise-programming.md
+  - ~/.claude/rules/ecc/coding-style.md
+  - ~/.claude/rules/ecc/testing.md
+  - ~/.claude/rules/ecc/security.md
+  - ~/.claude/rules/ecc/development-workflow.md
+
+related_commands:
+  - /feature
+  - /implement
+
+related_agents:
+  - orchestrator
+  - architect
+  - security-reviewer
+  - performance-optimizer

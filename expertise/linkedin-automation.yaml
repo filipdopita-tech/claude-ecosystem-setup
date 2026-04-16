@@ -1,0 +1,278 @@
+domain: linkedin-automation
+last_updated: 2026-04-13
+description: LinkedIn Voyager API, Playwright automation, Dubai pipeline, A/B testing, throttle logic, safety limits
+
+# =========================
+# CURRENT STATUS
+# =========================
+current_status:
+  bridge_status: DOWN  # Alfa VPS unreachable od 2026-04-12
+  bridge_location: "Alfa VPS /root/linkedin-bridge/ — DEAD"
+  data_status: "110+ leadů v GHL = PLATNÁ DATA"
+  migration_options:
+    A: "Flash migration — přesunout linkedin-bridge z Alfa na Flash"
+    B: "Archive — exportovat GHL leady do cold email pipeline"
+    C: "Alfa restart — obnovit Wedos (čeká na zrušení)"
+  recommendation: "Option A nebo B — Alfa se ruší"
+
+# =========================
+# ARCHITEKTURA SYSTÉMU
+# =========================
+architecture:
+  flash_vps:
+    role: "Lead Discovery + GHL sync"
+    scripts:
+      - "/root/cold_email/ghl_sync.py"
+      - "dubai_scraper (neděle 4:00)"
+    cron: "/etc/cron.d/linkedin-health-check (*/15 min)"
+
+  alfa_vps:  # DEAD
+    role: "LinkedIn Bridge — outreach, messaging, reply detection"
+    api_port: 8200
+    db: "/root/linkedin-bridge/bridge.db"
+    scripts:
+      - "api_v2.py — FastAPI :8200"
+      - "li_connect.py — Playwright automation"
+      - "dubai_outreach.py v2.1 — outreach pipeline"
+      - "dubai_mass_search.py v2.0 — 90 search queries"
+      - "dubai_followup.py v1.0 — auto follow-up DMs"
+      - "dubai_monitor.py v1.0 — acceptance rate tracking"
+      - "sync.py + reply_detector.py"
+      - "session_keeper.py — keepalive */6h"
+      - "li_voyager.py — Voyager API"
+
+# =========================
+# VOYAGER API (UNOFFICIAL)
+# =========================
+voyager_api:
+  description: "LinkedIn internal API — neoficiální, ale funkční"
+  base: "https://www.linkedin.com/voyager/api"
+  auth: "LinkedIn session cookies (li_at, JSESSIONID)"
+
+  endpoints:
+    messaging:
+      send: "POST /messaging/conversations/{conversationId}/events"
+      list: "GET /messaging/conversations"
+      mark_read: "POST /messaging/conversations/{id}/events/0"
+
+    connections:
+      pending: "GET /relationships/pendingInvitations"
+      send_connect: "POST /relationships/invitations"
+
+    search:
+      people: "GET /search/blended?keywords={q}&origin=SWITCH_SEARCH_VERTICAL"
+      params: [start, count_max_49, filters]
+
+  stability_notes:
+    - "Session vyprší každých ~24h — session_keeper.py obnovuje"
+    - "JSESSIONID se rotuje — potřeba pravidelný refresh"
+    - "Rate limiting: LinkedIn detekuje burst — max 50 connects/den"
+    - "Headers musí obsahovat csrf-token z cookies"
+
+# =========================
+# PLAYWRIGHT AUTOMATION
+# =========================
+playwright:
+  stability_flags:
+    - "--disable-gpu"
+    - "--single-process"
+    - "--no-zygote"
+    - "--no-sandbox"  # na VPS bez Xorg
+
+  global_context_pool:
+    variables: ["_browser_p", "_browser_ctx"]
+    max_uses_before_recycle: 30  # prevence memory leaks
+    share_across_requests: true
+    backup_file: "li_connect.py.bak.chromium_fix"
+
+  session_management:
+    keepalive_interval: "*/6h (cron)"
+    session_file: "session cookies JSON"
+    detection_avoidance:
+      - "Headless mode"
+      - "Random delays between actions (1-3s)"
+      - "Human-like scroll patterns"
+      - "Max 50 actions/session"
+
+# =========================
+# DUBAI PIPELINE
+# =========================
+dubai_pipeline:
+  search:
+    script: "dubai_mass_search.py v2.0"
+    queries: 90  # GCC + MENA region
+    count_per_query: 49  # LinkedIn max per request
+    schedule: "Neděle 06:00 UTC"
+    table: "dubai_prospects"
+
+  prospect_states:
+    flow: "new → queued → sent → connected → replied → failed"
+
+  outreach:
+    script: "dubai_outreach.py v2.1"
+    schedule: "Po-Pá 10:00 + 15:00 UTC"
+    per_run: 50  # connects
+    categories: [fund, RE, HNWI, generic]
+
+  followup_dm:
+    script: "dubai_followup.py v1.0"
+    trigger: "2-3 dny po přijetí connection"
+    templates: 4
+    max_per_day: 10
+    schedule: "Po-Pá 12:00 UTC"
+
+  ghl_integration:
+    leads_imported: 110  # + ke 2026-04-13
+    tags_applied: ["dubai", "tier-a-hot", "developer", "fund"]
+    reply_detection: "reply_detector.py → tag linkedin-odepsal → pipeline stage posun"
+    webhook: "POST /webhook/ghl pro GHL Workflow triggers"
+
+# =========================
+# A/B TESTING FRAMEWORK
+# =========================
+ab_testing:
+  connect_variants:
+    distribution: {A: 40, B: 20, C: 20, D: 20}  # procenta
+    A: "original (control) — storytelling/value prop"
+    B: "krátký/direktní — 1-2 věty max"
+    C: "otázka-hook — začíná otázkou na jejich business"
+    D: "social proof — zmínka konkrétního výsledku"
+
+  per_category_templates:
+    categories: [fund, RE, HNWI, generic]
+    total_variants: 16  # 4 categories × 4 variants
+
+  tracking:
+    db_table: "outreach_sent"
+    column: "ab_variant"
+    analysis: "GROUP BY ab_variant, category → acceptance rate"
+
+  metrics_to_watch:
+    primary: "acceptance rate (connects accepted / sent)"
+    secondary: "reply rate to follow-up DM"
+    target_acceptance: "> 20%"
+    target_reply: "> 5%"
+
+# =========================
+# THROTTLE & SAFETY LIMITS
+# =========================
+throttle_logic:
+  auto_throttle:
+    trigger_condition: "acceptance rate < 15%"
+    mechanism: ".throttle flag file v /root/linkedin-bridge/"
+    effect: "MAX_PER_DAY = 20 (místo 50)"
+    reset_condition: "acceptance rate >= 20%"
+    check_time: "08:00 UTC denně (dubai_monitor.py)"
+
+  daily_limits:
+    connects: 50  # max LinkedIn safe limit
+    messages: 10  # follow-up DMs
+    profile_views: 100  # organic max
+    search_queries: 90  # mass search, jen weekly
+
+  safety_margins:
+    note: "LinkedIn detekuje accounts s >100 connects/den — perma-ban risk"
+    recommendation: "50/den = safe zone pro scrapers bez Sales Navigator"
+    with_sales_navigator: "150-200/den (higher trust score)"
+
+  session_health:
+    monitor: "dubai_monitor.py v1.0"
+    alert: "ntfy topic: Filip — bridge down, session expired, throttle activated"
+    watchdog: "*/5 min — auto-restart + ntfy"
+
+# =========================
+# MONITORING & NTFY
+# =========================
+monitoring:
+  ntfy:
+    url: "https://ntfy.oneflow.cz"
+    topic: "Filip"
+    bearer: "[read from master.env: ntfy_bearer]"  # NIKDY hardcode
+
+  alerts:
+    - "Outreach summary (denní)"
+    - "Bridge down"
+    - "Session expired"
+    - "Monitor report (acceptance rate)"
+    - "Follow-up stats"
+    - "Throttle activated/deactivated"
+
+  cron_schedule:
+    outreach: "Po-Pá 10:00 + 15:00 UTC"
+    mass_search: "Neděle 06:00 UTC"
+    followup: "Po-Pá 12:00 UTC"
+    monitor: "Po-Pá 08:00 UTC"
+    watchdog: "*/5 min"
+    health_check_flash: "*/15 min"
+
+# =========================
+# DATABASE SCHEMA
+# =========================
+bridge_db:
+  path: "/root/linkedin-bridge/bridge.db (SQLite)"
+  tables:
+    dubai_prospects:
+      key_columns: [public_id, full_name, headline, category, status]
+      status_values: [new, queued, sent, connected, replied, failed]
+    outreach_sent:
+      key_columns: [public_id, person, message_text, ab_variant, sent_at]
+    followup_sent:
+      key_columns: [public_id, person, message_text, template_used, sent_at]
+    conversations: "messaging threads"
+    send_log: "všechny pokusy"
+    message_queue: "pending messages"
+
+# =========================
+# API ENDPOINTS (BRIDGE)
+# =========================
+bridge_api:
+  base: "http://YOUR_ALFA_WG_IP:8200"  # Alfa WG IP — DEAD
+  endpoints:
+    connect: "POST /outreach/connect"
+    message: "POST /outreach/message"
+    search: "POST /outreach/search"
+    ghl_webhook: "POST /webhook/ghl"
+    check_pending: "GET /outreach/check-pending"
+
+# =========================
+# MIGRATION GUIDE (Alfa → Flash)
+# =========================
+migration_to_flash:
+  steps:
+    1: "rsync /root/linkedin-bridge/ z Alfa na Flash (když Alfa přístupná)"
+    2: "Aktualizovat API port, WireGuard IP reference"
+    3: "Přesměrovat Flash cron jobs"
+    4: "Test playwright na Flash (headless, --no-sandbox)"
+    5: "Update ecosystem-map.md + project_dubai_outreach.md"
+  risk: "Flash IP (YOUR_VPS_PUBLIC_IP) je blokovaná Proofpointem — LinkedIn může blokovat odlišně"
+  alternative: "Dedikovaná residential proxy pro LinkedIn requests"
+
+# =========================
+# FAKTA
+# =========================
+facts:
+  - date: 2026-04-13
+    fact: "Alfa VPS unreachable — LinkedIn bridge DOWN. 110+ GHL leadů platná."
+    confidence: HIGH
+  - date: 2026-04-08
+    fact: "Playwright stability fix: global context pool max 30 uses + GPU disable flags"
+    confidence: HIGH
+  - date: 2026-04-08
+    fact: "Auto-throttle fungoval: acceptance rate < 15% → .throttle flag → 20/den limit"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "[ASSUMED] Flash IP může být problematická pro LinkedIn — ověřit před migrací"
+    confidence: MED
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - outbound-sales-science.yaml
+  - crm-ghl.yaml
+  - data-enrichment.yaml
+
+related_memory:
+  - project_dubai_outreach.md
+  - cold_email_setup.md
+  - infra_vps.md

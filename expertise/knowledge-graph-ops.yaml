@@ -1,0 +1,213 @@
+domain: knowledge-graph-ops
+last_updated: 2026-04-13
+description: Graphiti temporal KG — query patterns, graphiti_search/graphiti_add usage, entity design, KG vs MEMORY.md decision
+
+# =========================
+# GRAPHITI STACK
+# =========================
+stack:
+  library: "getzep/graphiti 0.28.2"
+  db: "KuzuDB 0.11.3 (embedded, no server)"
+  db_path: "/root/graphiti_oneflow (na Flash)"
+  llm: "claude-haiku-4-5 via OpenRouter (free tier)"
+  embeddings: "openai/text-embedding-3-small via OpenRouter"
+  mcp_server: "/root/graphiti_mcp_server.py (FastMCP stdio)"
+  cost: "$0/měsíc (free tiers)"
+
+  mcp_config:
+    name: "graphiti-oneflow"
+    transport: "SSH stdio na Flash"
+    tools:
+      - name: "graphiti_search"
+        signature: "graphiti_search(query: str, limit: int = 5)"
+        returns: "List faktů s datumem valid_at"
+      - name: "graphiti_add"
+        signature: "graphiti_add(content: str, source: str, name: str)"
+        returns: "Episode ID"
+
+# =========================
+# KDY POUŽÍT GRAPHITI vs MEMORY.md
+# =========================
+kg_vs_memory:
+  use_graphiti_when:
+    - "Hledáš fakta s časovým kontextem ('co bylo pravda kdy')"
+    - "Cross-session recall bez znalosti přesného souboru"
+    - "Entity relationships (osoba ↔ firma ↔ projekt)"
+    - "Task historii z Conductoru (auto-sync každých 5 min)"
+    - "Rychlé fuzzy vyhledávání přes celý OneFlow knowledge base"
+    - "Query kombinuje více entit (Filip + OneFlow + Dubai + Q2 2026)"
+
+  use_memory_md_when:
+    - "Znáš přesný soubor (User profile, Feedback rules, Credential expiry)"
+    - "Behaviorální pravidla a preferences (feedback/*.md)"
+    - "Strukturovaná reference data (infra, credentials, API keys)"
+    - "Aktualizuješ existující záznam (edit .md souboru)"
+    - "Index/pointer na jiný zdroj (MEMORY.md jako router)"
+
+  use_expertise_yaml_when:
+    - "Potřebuješ doménové znalosti (API patterns, regulatory, tech specs)"
+    - "Knowledge-router.md říká 'načti tento YAML'"
+    - "Task vyžaduje structured domain context (ne free-form recall)"
+
+# =========================
+# QUERY PATTERNS
+# =========================
+query_patterns:
+  basic_entity_search:
+    example: "graphiti_search('Dubai LinkedIn outreach', limit=5)"
+    use_case: "Rychlý recall projektu nebo systému"
+    tip: "Použij entity jméno přímo — Graphiti BM25 + semantic"
+
+  temporal_query:
+    example: "graphiti_search('cold email status 2026', limit=3)"
+    use_case: "Zjistit aktuální stav s časovým kontextem"
+    tip: "Přidej rok nebo měsíc pro lepší temporal relevance"
+
+  cross_entity:
+    example: "graphiti_search('Flash VPS Conductor tasks', limit=5)"
+    use_case: "Relace mezi dvěma entitami"
+    tip: "Kombinuj dvě entity jménem v jednom query"
+
+  decision_recall:
+    example: "graphiti_search('Alfa VPS shutdown decision', limit=3)"
+    use_case: "Proč bylo rozhodnutí učiněno"
+    tip: "Přidej 'decision' nebo 'rozhodnutí' do query"
+
+  status_check:
+    example: "graphiti_search('Proofpoint block status', limit=3)"
+    use_case: "Aktuální stav systému nebo projektu"
+
+  session_context:
+    pattern: |
+      # Na začátku session s komplexním task — extrahuj klíčová slova z prvního user message
+      keywords = extract_from_message(user_message)  # Dubai, GHL, cold email, atd.
+      results = graphiti_search(keywords, limit=5)
+      # Použij výsledky jako kontext před odpovědí
+    when: "Complex multi-domain tasks (ne triviální ops)"
+
+# =========================
+# ADD PATTERNS
+# =========================
+add_patterns:
+  episode_types:
+    decision:
+      pattern: "graphiti_add('Rozhodnutí: {co}, Důvod: {proč}, Datum: {date}', source='decision', name='{topic}')"
+      example: "graphiti_add('Rozhodnutí: Alfa VPS zrušit u Wedos. Důvod: 500 Kč/měs, nepoužívaná. Datum: 2026-04-13', source='decision', name='Alfa VPS shutdown')"
+
+    fact:
+      pattern: "graphiti_add('{fakt s kontextem}', source='fact', name='{entity}')"
+      example: "graphiti_add('OneFlow cold email pipeline: 414 kontaktů, send PAUSED (Proofpoint), IP YOUR_VPS_PUBLIC_IP', source='fact', name='cold email status 2026-04')"
+
+    task_result:
+      pattern: "graphiti_add('Task {name}: {co bylo uděláno}, výsledek: {result}', source='conductor', name='{task_name}')"
+      note: "Toto dělá graphiti_conductor_sync.py automaticky"
+
+    meeting_note:
+      pattern: "graphiti_add('Schůzka s {person} dne {date}: {klíčové body}', source='meeting', name='{person} {date}')"
+
+  best_practices:
+    - "Content popis: 2-5 vět s kontextem — Graphiti umí extrahovat entity"
+    - "Source: volitelný label — 'decision', 'fact', 'meeting', 'conductor'"
+    - "Name: krátký identifikátor pro retrieval — 'Dubai pipeline 2026-04'"
+    - "Přidej datum do content pokud je relevantní"
+    - "Nepoužívej bullet lists v content — prose funguje lépe pro entity extraction"
+
+# =========================
+# KRITICKÝ KOD PATTERN
+# =========================
+critical_code_pattern:
+  problem: "Dvě různé KuzuDatabase instance na stejné cestě = FTS indexy neviditelné mezi sebou"
+  solution: |
+    driver = KuzuDriver(db=DB_PATH)          # db=, ne database_path=
+    conn = kuzu.Connection(driver.db)         # STEJNÁ instance jako driver
+    conn.execute("CALL CREATE_FTS_INDEX(...)")
+    conn.close()
+    graphiti = Graphiti(graph_driver=driver, ...)  # graph_driver=, ne driver=
+  note: "Bez tohoto patternu full-text search nevrací výsledky"
+
+# =========================
+# SKRIPTY NA FLASH
+# =========================
+scripts:
+  spike: "/root/graphiti_spike.py — ověřovací test (6 epizod, 3 queries)"
+  import_memory: "/root/graphiti_import_memory.py — jednorázový import 95 memory souborů"
+  mcp_server: "/root/graphiti_mcp_server.py — FastMCP stdio (graphiti_search + graphiti_add)"
+  conductor_sync: "/root/graphiti_conductor_sync.py — cron */5 min, loguje hotové Conductor tasky"
+
+  conductor_sync_cron: "*/5 * * * * python3 /root/graphiti_conductor_sync.py >> /root/graphiti_conductor_sync.log 2>&1"
+
+# =========================
+# ENTITY DESIGN GUIDELINES
+# =========================
+entity_design:
+  what_graphiti_extracts:
+    - "Osoby (Filip Dopita, Martin Šimek, Adam Bernat)"
+    - "Firmy (OneFlow, Wedos, Contabo)"
+    - "Projekty (Dubai outreach, Cold email, Conductor)"
+    - "Systémy (Flash VPS, Alfa VPS, Graphiti)"
+    - "Rozhodnutí a fakta s timestamps"
+
+  temporal_advantage:
+    description: "Každý fact má valid_at timestamp — graphiti ví co bylo pravda kdy"
+    example: "Query 'Alfa VPS status' vrátí historii: active → paused → shutdown"
+    use_case: "Audit trail + rozhodovací kontext"
+
+  retrieval_modes:
+    bm25: "Keyword match — přesné výrazy"
+    semantic: "Embedding similarity — synonyma, kontext"
+    graph_traversal: "Entity relationships — co s čím souvisí"
+    combined: "Graphiti kombinuje všechny tři automaticky"
+
+# =========================
+# STARTUP HOOK (DOPORUČENÝ PATTERN)
+# =========================
+startup_hook:
+  when: "Na začátku session s komplexním task (ne triviální ops)"
+  pattern: |
+    1. Extrahuj 2-3 klíčová slova z prvního user message
+    2. graphiti_search("{keywords}", limit=5)
+    3. Použij výsledky jako background context
+    4. Pokračuj bez oznámení (silent background)
+
+  example_trigger_words:
+    ["Dubai", "GHL", "cold email", "Conductor", "Alfa", "Flash", "investice", "scraper", "pipeline"]
+
+  skip_when:
+    - "Triviální ops (grep, ls, mv, read)"
+    - "Uživatel řekne 'nespouštěj graphiti'"
+    - "Task je zcela mimo OneFlow ekosystém"
+
+# =========================
+# IMPORT STAV
+# =========================
+import_state:
+  memory_files_imported: 95
+  source: "/mac/.claude/projects/-Users-YOUR_USERNAME/memory/"
+  import_date: "2026-04 (přesné datum neznámo)"
+  note: "Import byl jednorázový — pro nové memory soubory použij graphiti_add manuálně nebo přidej do import skriptu"
+
+# =========================
+# FAKTA
+# =========================
+facts:
+  - date: 2026-04-13
+    fact: "Graphiti nasazen na Flash, MCP aktivní, 95 memory souborů importováno, conductor sync cron běží"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "Graphiti NEPOUŽÍVANÝ v session startup — F-001 z Mythos auditu, nejvyšší EVOI-NC (30.6)"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "KuzuDriver pattern: db= a graph_driver= jsou mandatory — database_path= a driver= selhávají"
+    confidence: HIGH
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - data-enrichment.yaml
+  - vps-infra.yaml
+
+related_memory:
+  - project_graphiti.md
+  - project_conductor.md
+  - obsidian_system.md

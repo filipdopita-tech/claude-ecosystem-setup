@@ -1,0 +1,309 @@
+domain: data-enrichment
+last_updated: 2026-04-13
+description: CZ data pipeline — ARES, Apollo, Hunter, ISIR, SMTP verify, email waterfall, scraping
+
+# =========================
+# PIPELINE OVERVIEW
+# =========================
+pipeline:
+  name: OneFlow Scraping Engine v4.0
+  location: "/root/scraper/engine/ (Alfa VPS — PAUSED, migrate to Flash)"
+  total_records: 10067
+  sheets_id: "12LBNKEFQfOwdE2FAo4aAp-QCP6QZImARGjKgS5sBGjE"
+  orchestrator: "python3 oneflow_engine.py {command}"
+
+  commands:
+    daily: "daily (ARES incremental + crowdfunding + enrichment)"
+    weekly: "full (nedele — kompletni scan)"
+    enrich: "enrich (web enrichment kontaktu)"
+    enrich_emails: "enrich-emails (email waterfall)"
+    monitor: "monitor (ARES changes + ISIR)"
+    status: "status"
+
+  email_waterfall:
+    priority_order:
+      1: "web_crawl (scrape kontaktni stranky)"
+      2: "Hunter.io (25 hledani/mesic FREE)"
+      3: "Apollo.io (75 kreditu/mesic FREE)"
+      4: "pattern_generation (jmeno@firma.cz variace)"
+      5: "smtp_verify (RCPT TO overeni)"
+    cost: "$0/mesic (free tiery)"
+    state_file: "/root/scraper/state/waterfall_usage.json"
+    usage_check: "python3 email_waterfall.py usage"
+
+# =========================
+# ARES API
+# =========================
+ares_api:
+  base_url: "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest"
+  dokumentace: "https://ares.gov.cz/stranky/detail-sluzby"
+
+  endpoints:
+    search:
+      url: "/ekonomicke-subjekty"
+      params:
+        - ico: "ICO firmy"
+        - obchodniJmeno: "nazev firmy (partial match)"
+        - nace: "NACE kod"
+        - stat: "CZ"
+        - start: "offset pro strankovani"
+        - pocet: "pocet zaznamu (max 1000)"
+      response_fields:
+        - ico, obchodniJmeno, pravniForma
+        - sidlo (adresa)
+        - datum_vzniku, datum_zaniku
+        - nace_kody
+
+    detail:
+      url: "/ekonomicke-subjekty/{ico}"
+      returns: "kompletni zaznam vcetne jednatelu, spolecniku"
+
+    obchodni_rejstrik:
+      url: "/ekonomicke-subjekty/{ico}/zapis-vr"
+      returns: "jednatele, spolecnici, zakladni kapital, zmeny"
+      alias: "ARES VR API"
+
+    monitor:
+      ucel: "detekce zmen u sledovanych firem"
+      implementace: "ares_monitor.py — porovnava s ulozenim stavem"
+
+  nace_kody_target:
+    finance: ["64", "65", "66"]  # financni sluzby
+    real_estate: ["68"]
+    energy: ["35"]
+    logistics: ["49", "52"]
+    holding: ["70"]
+
+  rate_limits:
+    poznamka: "[ASSUMED] Public API, bez autentizace. Merne pomale. Pouzivat s 1-2s delay."
+    proxy: "proxy manager refresh kazdych 6h"
+
+  cron_schedule:
+    daily: "0 2 * * *"
+    monitor: "0 7 * * *"
+    weekly_full: "0 1 * * 0"
+
+# =========================
+# APOLLO.IO API
+# =========================
+apollo:
+  free_tier_credits: 75  # per month
+  api_key_location: "/root/.credentials/master.env (APOLLO_API_KEY)"
+  tracking: "/root/scraper/state/waterfall_usage.json"
+
+  endpoints:
+    people_search:
+      url: "https://api.apollo.io/v1/mixed_people/search"
+      params:
+        - person_titles: ["CEO", "jednatel", "CFO", "founder"]
+        - organization_domains: ["firma.cz"]
+        - contact_email_status: ["verified", "unverified"]
+      credits_per_call: 1
+
+    email_reveal:
+      url: "https://api.apollo.io/v1/people/match"
+      params:
+        - first_name, last_name
+        - organization_name
+        - domain
+      credits_per_call: 1
+
+  best_practices:
+    - "Pouzivat az po Hunter.io (nizsi kredit limit)"
+    - "Prioritizovat firmy kde Hunter selhal"
+    - "Overit SMTP pred ulozenim (smtp_verifier.py)"
+    - "Nemazat profily — Apollo si pamatuje co uz jsme revealili"
+
+# =========================
+# HUNTER.IO API
+# =========================
+hunter:
+  free_tier_searches: 25  # per month
+  api_key_location: "/root/.credentials/master.env (HUNTER_API_KEY)"
+
+  endpoints:
+    domain_search:
+      url: "https://api.hunter.io/v2/domain-search"
+      params:
+        - domain: "firma.cz"
+        - limit: 10
+      returns: "vsechny emaily na domene + pattern"
+
+    email_finder:
+      url: "https://api.hunter.io/v2/email-finder"
+      params:
+        - domain: "firma.cz"
+        - first_name, last_name
+      returns: "email + confidence score"
+
+    email_verifier:
+      url: "https://api.hunter.io/v2/email-verifier"
+      params:
+        - email: "test@firma.cz"
+      returns: "result: deliverable/risky/undeliverable"
+
+  strategy:
+    - "Pouzivat jako prvni (vice searches nez Apollo ma kreditu)"
+    - "domain-search odhaluje pattern emailing (prvni.druhy@ vs p.druhy@)"
+    - "Pattern pouzit pro generovani dalsich emailu"
+
+# =========================
+# SMTP VERIFICATION
+# =========================
+smtp_verifier:
+  script: "/root/scraper/engine/smtp_verifier.py"
+  method: "RCPT TO overeni bez odeslani mailu"
+
+  logic:
+    1: "Connect to MX server firmy"
+    2: "EHLO oneflow-team.cz"
+    3: "MAIL FROM: <verify@oneflow-team.cz>"
+    4: "RCPT TO: <testovany@firma.cz>"
+    5: "Interpret response (250=exists, 550=nexists, 421=greylisted)"
+
+  catch_all_detection:
+    problem: "Nektera domeny akceptuji VSECHNY emaily (catch-all)"
+    detection: "Testovat random@firma.cz — pokud 250, je catch-all"
+    handling: "Ulozit jako catch_all=true, nizsi confidence"
+
+  results:
+    valid: "RCPT TO = 250"
+    invalid: "RCPT TO = 550/551/553"
+    catch_all: "random test = 250"
+    greylisted: "421 — zkusit znovu po 5 minutach"
+    unknown: "connection timeout, blocked"
+
+# =========================
+# ISIR MONITORING
+# =========================
+isir:
+  popis: "Insolventni rejstrik — sledovat emitenity a jednatele"
+  url: "https://isir.justice.cz"
+  script: "/root/scraper/engine/isir_monitor.py"
+
+  co_sledovat:
+    - "Jednatele emitentskych firem"
+    - "Firmy v pipeline (pred podpisem smlouvy)"
+    - "Existujici klienty (ongoing monitoring)"
+
+  api:
+    poznamka: "[ASSUMED] ISIR ma REST API — overit dokumentaci na justice.cz"
+    alternativa: "Web scraping ISIR vyhledavace"
+
+# =========================
+# CUZK (KATASTR)
+# =========================
+cuzk:
+  popis: "Katastr nemovitosti — overeni zastavnich prav pro RE emise"
+  script: "/root/scraper/engine/cuzk_checker.py"
+  url: "https://www.cuzk.cz"
+
+  co_overovat:
+    - "Vlastnictvi nemovitosti (je emitent skutecne vlastnik?)"
+    - "Zastavni prava (jine pohledavky na zastavene NEM?)"
+    - "Vecna bremena"
+    - "Exekuce na nemovitosti"
+
+# =========================
+# WEB ENRICHMENT
+# =========================
+web_enricher:
+  script: "/root/scraper/engine/web_enricher.py"
+  zdroje:
+    - "Firmy.cz"
+    - "Zlate stranky"
+    - "DuckDuckGo (search API)"
+    - "Primy web crawl kontaktni stranky"
+
+  extrahovana_data:
+    - "telefon (formaty: +420, 00420, 777xxx)"
+    - "email (regex na kontaktni strance)"
+    - "adresa (validace vs ARES)"
+
+  best_practices:
+    - "Delay 1-2s mezi requesty"
+    - "Rotate User-Agent"
+    - "Timeout 10s pro pomale weby (noncritical)"
+    - "Cache pozitivnich vysledku (neopakovat enrichment)"
+
+# =========================
+# CROWDFUNDING SCRAPING
+# =========================
+crowdfunding:
+  script: "/root/scraper/engine/crowdfunding_scraper.py"
+  platformy:
+    fundlift: "https://www.fundlift.cz"
+    upvest: "https://www.upvest.cz"
+    startovac: "https://startovac.cz"
+
+  ucel: "Identifikovat aktivni emitenty (supply-side sourcing)"
+  scoring: "emitent_pipeline.py — 0-100 score, tier A-D"
+
+# =========================
+# SCORING SYSTEMY
+# =========================
+emitent_scoring:
+  script: "/root/scraper/engine/emitent_pipeline.py"
+  skore: "0-100"
+  tiers:
+    A: "> 75 — HOT, primat outreach"
+    B: "50-75 — warm, standard sequence"
+    C: "25-50 — cool, low priority"
+    D: "< 25 — nekvalifikovany"
+
+  criteria:
+    financial:
+      - "EBITDA / revenue ratio"
+      - "Zadluzenost (debt/equity)"
+      - "Obrat (revenue scale)"
+      - "ISIR = none (mandatory)"
+    operational:
+      - "Pocet let cinnosti (> 2)"
+      - "Pocet zamestnancu"
+      - "Webova prezentace"
+    intent:
+      - "Crowdfunding aktivita"
+      - "Zmeny v OR (kapital, jednatele)"
+      - "NACE kod (target sectors)"
+
+# =========================
+# GOOGLE SHEETS EXPORT
+# =========================
+sheets_export:
+  script: "/root/scraper/engine/sheets_export.py"
+  sheets_id: "12LBNKEFQfOwdE2FAo4aAp-QCP6QZImARGjKgS5sBGjE"
+  service_account: "oneflow-scraper-16c5ffa7b35b.json"
+  tabs: 51
+  deduplication: "ICO — primarni klic"
+  batch_write: true
+
+# =========================
+# FAKTA
+# =========================
+facts:
+  - date: 2026-04-09
+    fact: "Engine v4.0 nasazen na Alfa — nyni PAUSED (Alfa down). Potrebuje migraci na Flash."
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "10067 firem v databazi, 414 S/A/B kontaktu v cold email pipeline"
+    confidence: HIGH
+  - date: 2026-04-09
+    fact: "CNB scraper disabled — vyzaduje mTLS certifikat"
+    confidence: HIGH
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - email-deliverability.yaml
+  - outbound-sales-science.yaml
+  - crm-ghl.yaml
+
+related_memory:
+  - project_scraping_engine.md
+  - cold_email_setup.md
+  - google_contacts_api.md
+
+related_scripts:
+  flash_path: "/opt/conductor/ (po migraci)"
+  alfa_path: "/root/scraper/engine/ (puvodni)"

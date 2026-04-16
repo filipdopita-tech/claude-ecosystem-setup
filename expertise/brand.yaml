@@ -1,0 +1,120 @@
+domain: brand
+last_updated: 2026-01-01
+description: Company brand DNA — voice, visual, content pillars, positioning, banned words
+# CUSTOMIZE: Nahraď celý obsah svým brand manuálem
+
+# =========================
+# VOICE & TONE
+# =========================
+voice:
+  style: direct       # direct | conversational | formal | casual
+  confidence: high    # high | medium | low
+  language: cs        # cs | en | both
+  signature: "[YOUR_NAME]"
+  emoji_limit: 2
+
+  forbidden_openers:
+    - "Dobrý den,"
+    - "S pozdravem,"
+    - "Přeji hezký den"
+
+  banned_phrases:
+    # CUSTOMIZE: Přidej své zakázané fráze
+    - inovativní           # → nový
+    - revoluční
+    - komplexní řešení
+    - win-win
+    - synergie
+    - paradigma
+    - disruptivní
+    - v dnešní době        # → teď
+
+  ai_patterns_to_remove:
+    - "Seznamy s přesně 5/10 položkami"
+    - "Furthermore/Moreover"
+    - "uniform sentence length"
+    - "em dash abuse"
+
+# =========================
+# VISUAL IDENTITY
+# =========================
+visual:
+  philosophy: monochrome  # CUSTOMIZE: monochrome | colorful | minimal
+
+  # CUSTOMIZE: Nahraď svými barvami
+  dark_palette:
+    background: "#0A0A0C"
+    fills: "#1A1A1A"
+    gray: "#555555"
+    black: "#000000"
+
+  light_palette:
+    background: "#F2F0ED"
+    borders: "#E5E3E0"
+    accent: "#C8C4BF"
+
+  typography:
+    primary_font: "Inter Tight"  # CUSTOMIZE: Tvůj font
+
+  formats:
+    instagram: "1080x1350"
+    linkedin: "1200x627"
+    og_image: "1200x630"
+
+  principles:
+    - "Alternating dark/light surfaces"
+    - "No saturated colors in premium B2B context"
+    - "Typography-first design"
+
+# =========================
+# CONTENT STRATEGY
+# =========================
+content:
+  # CUSTOMIZE: Definuj svých 4-5 pilierů
+  pillars:
+    - name: "[YOUR_PILLAR_1]"
+      percentage: 30
+      description: "Core business content"
+    - name: "[YOUR_PILLAR_2]"
+      percentage: 25
+      description: "Behind the scenes / BTS"
+    - name: "[YOUR_PILLAR_3]"
+      percentage: 20
+      description: "Market / industry insights"
+    - name: "Personal"
+      percentage: 15
+      description: "Founder story"
+    - name: "AI/Tech"
+      percentage: 10
+      description: "Tools and innovation"
+
+  metrics_priority:
+    - saves
+    - shares
+    - comments
+    - profile_visits
+    - reach
+
+# =========================
+# POSITIONING
+# =========================
+positioning:
+  # CUSTOMIZE: Nahraď svým brand positioning
+  tagline: "[YOUR_TAGLINE]"
+  target_audience: "[YOUR_TARGET_AUDIENCE]"
+  unique_value: "[YOUR_UNIQUE_VALUE_PROPOSITION]"
+  proof_points:
+    - "[METRIC_1]"
+    - "[METRIC_2]"
+    - "[METRIC_3]"
+
+# =========================
+# CONTENT WORKFLOW
+# =========================
+workflow:
+  steps:
+    - "Načti brand assets z ~/Documents/[YOUR_BRAND_ASSETS_DIR]/"
+    - "Skeptic audit — zpochybni každé tvrzení"
+    - "Red-team audit — najdi slabé místo"
+    - "Check banned words"
+  cta_pattern: "Comment [KEYWORD] + Save CTA"

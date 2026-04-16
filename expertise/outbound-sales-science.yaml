@@ -1,0 +1,293 @@
+domain: outbound-sales-science
+last_updated: 2026-04-13
+description: Cold email + LinkedIn outreach věda — A/B testing, reply psychology, sekvence, CZ-specifika pro OneFlow
+
+# =========================
+# ONEFLOW OUTREACH STACK
+# =========================
+stack:
+  cold_email:
+    domains: [oneflow-team.cz, oneflowteam.cz, helponeflow.cz, help-oneflow.cz, joinoneflow.cz]
+    volume_per_day: 50  # při aktivním sendu, PAUSED (Proofpoint block)
+    sequence_length: 5
+    intervals_days: [0, 3, 7, 14, 21]
+    ip_primary: "YOUR_VPS_PUBLIC_IP"  # Flash — BLOCKED Proofpoint
+    ip_backup: "YOUR_ALFA_VPS_PUBLIC_IP"   # Alfa — CZ IP, neblokovaný
+    campaign: "OneFlow Podcast Outreach (campaign_id=2)"
+
+  linkedin:
+    status: PAUSED  # Alfa VPS down 2026-04-12
+    volume_per_day: 50  # 2 runs Po-Pa: 10:00 + 15:00 UTC
+    daily_limit_connects: 50
+    daily_limit_messages: 10  # follow-up DMs
+    response_rate_benchmark: "5-8%"
+
+  warm_intro:
+    sources: [existing_clients, partners, podcast_guests]
+    response_rate_benchmark: "40-60%"
+    priority: HIGHEST
+
+# =========================
+# SEKVENCE (COLD EMAIL)
+# =========================
+cold_email_sequence:
+  email_1:
+    day: 0
+    subject_formula: "{personalization} + {curiosity_gap}"
+    body_max_words: 120
+    structure: [personalizace, value_stat, teaser, soft_cta]
+    cta: "nízký závazek — odpovědní otázka"
+    notes: "Nikdy Re: v prvním emailu — spam signal"
+
+  email_2:
+    day: 3
+    subject_formula: "Re: {previous_subject}"
+    body_max_words: 80
+    structure: [bump_reference, alternative_angle, cta]
+    notes: "Re: threading jen od emailu 2+"
+
+  email_3:
+    day: 7
+    subject_formula: "{fresh_insight_nebo_case_study}"
+    body_max_words: 150
+    structure: [social_proof, specific_opportunity, medium_cta]
+
+  email_4:
+    day: 14
+    subject_formula: "{direct_question}"
+    body_max_words: 60
+    structure: [single_question, no_pitch]
+    notes: "Nejkratší email — jeden otazník, nic víc"
+
+  email_5:
+    day: 21
+    subject_formula: "Nechávám to být"
+    body_max_words: 50
+    structure: [break_up, door_open, final_value]
+    notes: "Break-up email — highest reply rate ze všech. Nechej dveře otevřené."
+
+  current_templates:
+    email_1: "Exkluzivní nabídka podcastu OneFlow Cast (day 0)"
+    email_2: "Ze 67 000 Kč jsme klientovi vyraisovali 10 000 000 Kč (day 3, Re: threading)"
+
+# =========================
+# A/B TESTING FRAMEWORK
+# =========================
+ab_testing:
+  linkedin_variants:
+    distribution: {A: 40, B: 20, C: 20, D: 20}  # procenta
+    categories: [fund, RE, HNWI, generic]
+    variant_styles:
+      A: "original (control)"
+      B: "krátký/direktní"
+      C: "otázka-hook"
+      D: "social proof"
+    tracking_column: "outreach_sent.ab_variant (bridge.db)"
+
+  cold_email_ab:
+    tracking: "unified_actions.ab_variant"
+    variable_to_test_first: "subject line (nejvyšší leverage)"
+    sample_size_min: 100  # před závěrem
+
+  auto_throttle:
+    trigger: "acceptance rate < 15%"
+    action: "MAX_PER_DAY = 20 (místo 50)"
+    reset: "acceptance rate >= 20%"
+    mechanism: ".throttle flag file (Alfa)"
+    check_time: "08:00 UTC denně"
+
+# =========================
+# REPLY PSYCHOLOGY
+# =========================
+reply_psychology:
+  why_people_reply:
+    - "Specifická personalizace (ne generic template)"
+    - "Naučil je něco nového o jejich situaci"
+    - "Přesně pojmenoval jejich bolest"
+    - "Break-up email přišel v pravý čas"
+    - "Referral — někdo je poslal"
+
+  why_people_ignore:
+    - "Odesílatel neví kdo jsou (missing research)"
+    - "První email začíná 'Dovolte mi...'"
+    - "Subject = marketing slogan"
+    - "Moc textu, nulová hodnota"
+    - "Odkaz hned v prvním emailu"
+    - "Fake urgency ('Exkluzivní nabídka na 24h')"
+
+  cz_specific_patterns:
+    - "Vykání povinné v B2B (nikdy tykání bez pokynu)"
+    - "'Dovoluji si' = okamžitý spam pocit — NIKDY"
+    - "Investoři v CZ jsou skeptičtější než DE/AT/UK — více důkazů"
+    - "Referral na společného kontakta funguje 3-5x lépe"
+    - "Telefon v podpisu zvyšuje response rate (přidává důvěryhodnost)"
+
+# =========================
+# CIALDINI APPLIED (ONEFLOW)
+# =========================
+cialdini_oneflow:
+  reciprocity:
+    pattern: "Poskytni hodnotu před ask (DD report, market data)"
+    example: "Posíláme Vám ten makro report, co jsme o tom mluvili."
+
+  commitment:
+    pattern: "Malé commitmenty → velké"
+    ladder: "Newsletter → free konzultace → malá investice → velká investice"
+
+  social_proof:
+    pattern: "Konkrétní čísla + podobné klienty"
+    example: "14 klientů má portfolio 10M+ a 5 z nich investovalo do {deal}"
+    warning: "NIKDY identifikovatelné klienty bez souhlasu"
+
+  authority:
+    pattern: "Track record + third-party validace"
+    example: "200M+ zprostředkováno, 5 let DD zkušeností"
+
+  liking:
+    pattern: "Filip story + relatable pain + nefalšovaná expertise"
+
+  scarcity:
+    pattern: "Real limits only (allocation, deadline, ECSP limits)"
+    warning: "NIKDY fake urgency — CNB to sleduje. Reputační risk."
+
+# =========================
+# QUALIFICATION FRAMEWORKS
+# =========================
+qualification:
+  bant_plus_meddpicc:
+    budget: "Velikost portfolia investovatelného teď"
+    authority: "Jediný rozhodovatel"
+    need: "Zájem o konkrétní asset class"
+    timeline: "Připraven v 3 měsících"
+
+  investor_meeting_spin:
+    situation: "Jaké máte portfolio?"
+    problem: "Co vás na tom trápí?"
+    implication: "Co to znamená dlouhodobě?"
+    need_payoff: "Kdybyste to měl vyřešené, co by to znamenalo?"
+
+  objection_handling_voss:
+    step_1_validate: "Chápu vás. To je legitimní obava."
+    step_2_label: "Zní to, jako byste měl špatnou zkušenost s X."
+    step_3_isolate: "Kdybychom tohle vyřešili, je to jediná překážka?"
+    step_4_reframe: "Co kdybychom to obrátili takhle..."
+
+# =========================
+# SCHWARTZ AWARENESS LEVELS
+# =========================
+schwartz:
+  level_1_unaware:
+    style: "Curious story, pain point identification"
+    message: "Věděl jste, že..."
+
+  level_2_problem_aware:
+    style: "Validate pain, preview solution"
+    message: "Když vás trápí X..."
+
+  level_3_solution_aware:
+    style: "Compare solutions, differentiate"
+    message: "X máte — ale co Y, které je..."
+
+  level_4_product_aware:
+    style: "Feature comparison, social proof"
+    message: "Proč OneFlow místo Portu nebo Upvest..."
+
+  level_5_most_aware:
+    style: "Direct offer, scarcity, specific deal"
+    message: "Konkrétní emise X s {yield} do {deadline}"
+
+# =========================
+# COLD EMAIL METRICS
+# =========================
+metrics:
+  benchmarks:
+    open_rate_good: "> 40%"
+    reply_rate_good: "> 3%"
+    bounce_rate_danger: "> 3% → auto-pause"
+    spam_rate_danger: "> 0.1% → immediate pause"
+
+  current_stats_2026_04_12:
+    sent: 163
+    bounced: 4
+    replied: 0
+    in_sequence: 414  # unified_contacts
+
+  pipeline_funnel:
+    sheet_firms: 10257
+    tier_s_a_b: 414
+    queued: 188
+    sent: 163
+    replied: 0
+    notes: "Proofpoint block → 0 nových sendů od 2026-04-13"
+
+# =========================
+# MESSAGING RULES
+# =========================
+messaging_rules:
+  do:
+    - "Personalizuj specifický detail z profilu"
+    - "Začni hodnotou, ne ask"
+    - "Čísla místo přídavných jmen"
+    - "Krátké věty, jeden bod/odstavec"
+    - "Konči otázkou nebo jasným next step"
+    - "Příloha nebo odkaz max 1 v celém emailu"
+
+  dont:
+    - "'Dovoluji si' nebo 'Rád bych' jako opening"
+    - "Generic templates bez personalizace"
+    - "Fake urgency"
+    - "Stack claimy bez důkazů"
+    - "Víceodstavcové zdi textu"
+    - "'Mám pro vás exkluzivní nabídku' v předmětu"
+    - "Re: v předmětu prvního emailu"
+
+  subject_line_formulas:
+    good:
+      - "{Firma} + {specifický insight}"
+      - "Otázka na {jejich problém}"
+      - "{Příloha nebo data} pro {Firma}"
+    bad:
+      - "Exkluzivní nabídka!!!"
+      - "Oportunita spolupráce"
+      - "FW: Důležité"
+
+# =========================
+# LINKEDIN SEQUENCE
+# =========================
+linkedin_sequence:
+  connect_note_max_chars: 300
+  step_1_connect: "Personalized note — 1 věta proč se chci propojit"
+  step_2_thanks: "Thanks after accept — bez pitche (3-5 dní)"
+  step_3_value: "Sdílení hodnoty — insight, report (7 dní)"
+  step_4_value_2: "Druhý insight + soft mention OneFlow (14 dní)"
+  step_5_meeting_ask: "Přímá žádost o call (21 dní)"
+
+# =========================
+# FAKTA
+# =========================
+facts:
+  - date: 2026-04-13
+    fact: "Cold email send PAUSED — Proofpoint block na Flash IP (YOUR_VPS_PUBLIC_IP)"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "LinkedIn bridge DOWN — Alfa VPS unreachable od 2026-04-12"
+    confidence: HIGH
+  - date: 2026-04-12
+    fact: "Break-up email (email_5) má nejvyšší reply rate ze sekvence — specifické pro CZ B2B"
+    confidence: MED
+  - date: 2026-04-12
+    fact: "A/B test LinkedIn: A=40% control, B/C/D=20% každý, tracking v outreach_sent.ab_variant"
+    confidence: HIGH
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - investor-outreach.yaml
+  - crm-ghl.yaml
+  - email-deliverability.yaml
+  - linkedin-automation.yaml
+
+related_memory:
+  - cold_email_setup.md
+  - project_dubai_outreach.md

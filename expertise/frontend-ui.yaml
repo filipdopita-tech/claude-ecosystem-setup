@@ -1,0 +1,246 @@
+domain: frontend-ui
+last_updated: 2026-04-14
+description: >
+  Modern frontend UI stack — shadcn/ui ekosystém, Tailwind v4, React patterns,
+  MapLibre/mapcn, library evaluation. Načíst při: React app, shadcn, component library,
+  Tailwind, mapcn, mapová komponenta, web app frontend.
+
+# =========================
+# SHADCN/UI EKOSYSTÉM
+# =========================
+shadcn_ui:
+  what_it_is: >
+    NE package — copy-paste komponenty. Instaluješ zdrojový kód přímo do projektu.
+    Vlastníš kód, můžeš ho libovolně měnit. Základ: Radix UI primitives + Tailwind CSS.
+  version: "CLI v4 (2026)"
+  registry: "components.json definuje kde jsou komponenty, jaký styl, které deps"
+
+  install:
+    init: "npx shadcn@latest init"
+    add_component: "npx shadcn@latest add [component-name]"
+    update: "npx shadcn@latest diff  # zobrazí co se změnilo v upstream"
+    list_available: "npx shadcn@latest add --list"
+
+  key_components:
+    navigation: [NavigationMenu, Breadcrumb, Pagination, Sidebar]
+    overlay: [Dialog, Sheet, Drawer, Popover, Tooltip, HoverCard]
+    forms: [Form, Input, Select, Checkbox, RadioGroup, Switch, Slider, DatePicker]
+    data: [Table, DataTable, Card, Badge, Avatar]
+    feedback: [Toast, Alert, Progress, Skeleton, Spinner]
+    layout: [Separator, ScrollArea, Collapsible, Accordion, Tabs, ResizablePanel]
+    charts: [AreaChart, BarChart, LineChart, PieChart, RadarChart]  # via Recharts
+
+  patterns:
+    component_location: "src/components/ui/"
+    custom_variants: "Používej cva() (class-variance-authority) pro varianty"
+    composition: "Radix primitives + styling = shadcn pattern. Nikdy neimportuj Radix přímo."
+    dark_mode: "Přidej class 'dark' na <html>. Tailwind dark: prefix auto-funguje."
+    theming: "CSS variables v globals.css — --background, --foreground, --primary atd."
+
+  components_json_key_fields:
+    style: '"default" nebo "new-york"'
+    tailwind.baseColor: '"slate" | "gray" | "zinc" | "neutral" | "stone"'
+    aliases.components: '"@/components"'
+    aliases.utils: '"@/lib/utils"'
+
+  gotchas:
+    - "Po `add` vždy zkontroluj co se přidalo — může to přepsat existující soubor"
+    - "Komponenty závisí na cn() utility — vždy importuj z @/lib/utils"
+    - "DataTable potřebuje TanStack Table v8 (@tanstack/react-table)"
+    - "Charts potřebují recharts^2.12"
+
+# =========================
+# TAILWIND CSS v4
+# =========================
+tailwind_v4:
+  key_changes_from_v3:
+    - "CSS-first config — tailwind.config.js je deprecated, vše v CSS"
+    - "@theme directive místo theme() funkce v JS"
+    - "Automatický content detection — no purge config nutný"
+    - "Nativní CSS variables pro všechny tokeny"
+    - "Nové utility: field-sizing, @starting-style, dynamic viewport units"
+
+  config_in_css: |
+    @import "tailwindcss";
+
+    @theme {
+      --color-primary: #0A0A0C;
+      --font-sans: "Inter Tight", sans-serif;
+      --radius-lg: 0.75rem;
+    }
+
+  v4_new_utilities:
+    - "size-* (width + height zároveň)"
+    - "inset-* (top+right+bottom+left)"
+    - "forced-color-adjust-none"
+    - "mask-* utilities"
+    - "@variant dark { ... } v CSS"
+
+  migration_from_v3:
+    tool: "npx @tailwindcss/upgrade"
+    breaking: ["prefix changes", "arbitrary value syntax", "config JS deprecated"]
+
+# =========================
+# REACT PATTERNS (2026)
+# =========================
+react_patterns:
+  server_vs_client:
+    server_components: "Default v Next.js 14+. Fetch data, no useState/useEffect."
+    client_components: '"use client" directive. Potřebné pro: hooks, events, browser APIs.'
+    rule: "Push 'use client' co nejníže v tree. Server wraps client, ne naopak."
+
+  state_management:
+    local: "useState + useReducer"
+    server_state: "TanStack Query (React Query) v5"
+    global: "Zustand (lightweight) nebo Jotai (atomic)"
+    forms: "React Hook Form + Zod validation"
+    url_state: "nuqs (type-safe URL search params)"
+
+  data_fetching:
+    server: "async/await přímo v Server Component"
+    client: "TanStack Query useQuery()"
+    mutations: "TanStack Query useMutation() nebo Server Actions"
+
+  performance:
+    - "React.memo() jen když profiler ukáže problém"
+    - "useMemo() pro expensive calculations, ne pro objekty bez výpočtu"
+    - "Virtualizace: @tanstack/react-virtual pro dlouhé listy"
+    - "Image: next/image s sizes prop"
+    - "Fonts: next/font — eliminuje CLS"
+
+  typescript_patterns:
+    component_props: "type Props = { ... } nad komponentou"
+    no_react_fc: "Nepoužívej React.FC — radši explicitní return type"
+    generic_components: "<T extends object> pro reusable data components"
+
+# =========================
+# MAPCN / MAPLIBRE
+# =========================
+mapcn:
+  what_it_is: >
+    React map komponenty nad MapLibre GL. shadcn/ui-compatible styl.
+    Zero config, one command setup.
+  repo: "https://github.com/AnmolSaini16/mapcn"
+  stars: 7038  # k 2026-04-14
+  created: "2025-12-28"
+  status: "young (4 měsíce), ale aktivní — 368 forks, poslední push 2026-04-03"
+
+  install: "npx mapcn@latest add map"  # ověř v docs
+
+  license_critical:
+    basemap: "CARTO Basemaps (default)"
+    commercial_use: "VYŽADUJE CARTO Enterprise licenci — platí se"
+    free_alternatives:
+      maptiler: "MapTiler Cloud — free tier 100k requests/měs, pak $25/měs"
+      openstreetmap: "OSM tiles — free, ale pomalejší, fair use policy"
+      stadia_maps: "Stadia Maps — free tier 200k requests/měs"
+    how_to_swap: "Předej tileUrl prop nebo nastav defaultStyle"
+
+  components:
+    - "Map (base)"
+    - "Marker + Popup"
+    - "Tooltip"
+    - "Route (polyline)"
+    - "Controls: Zoom, Compass, Locate, Fullscreen"
+
+  maplibre_vs_mapbox:
+    maplibre: "Open source fork Mapboxu. Žádné API key pro rendering. MIT."
+    mapbox: "Proprietární, vyžaduje API key, pricing na views"
+    why_maplibre: "Free, open, same API jako Mapbox v1"
+
+  use_when:
+    - "Potřebuješ interaktivní mapu v React/Next.js"
+    - "Už používáš shadcn/ui — integrace triviální"
+    - "Potřebuješ: markers, routes, custom popups"
+
+  avoid_when:
+    - "Jednoduchý static map embed → Google Maps iframe stačí"
+    - "Need Google-specific features (Street View, Places autocomplete)"
+
+# =========================
+# LIBRARY EVALUATION FRAMEWORK
+# =========================
+library_evaluation:
+  quick_checks:
+    stars: ">1K = community validation. >5K = established."
+    star_trajectory: "Spočítej stars/měsíc od createdAt. Organický = gradual. Fake = spike."
+    fork_ratio:
+      healthy: "fork_count / stars < 10%"
+      warning: "> 20% = lidé ho hodně customizují = API nestabilní nebo nepokrývá usecase"
+      example: "mapcn: 368/7038 = 5.2% — ok"
+    last_commit: "< 3 měsíce = aktivní. > 1 rok = warning."
+    open_issues_ratio: "open/closed < 20% = zdravé. > 50% = maintainer overwhelmed."
+    contributors: "> 5 aktivních = bus factor ok. 1 = riziko opuštění."
+
+  license_matrix:
+    MIT: "Komerční použití OK. Kopíruj, měň, prodávej. Jen zachovat copyright notice."
+    Apache_2_0: "Komerční OK. Navíc chrání před patent claims."
+    GPL_v3: "POZOR — pokud linkuješ, tvůj kód musí být GPL taky."
+    LGPL: "Library exception — komerční OK pokud dynamicky linkuješ."
+    SSPL: "POZOR — MongoDB/Elastic trap. Self-hosting = musíš open-source celou platformu."
+    BSL: "Business Source License — po X letech → open. Dočasně restricted."
+    Commercial_required: "Zkontroluj README sekci 'Commercial use' nebo LICENSE.md"
+
+  red_flags:
+    - "Stars spike za 1 týden bez virálního důvodu = HN/Reddit farming nebo bought"
+    - "Žádné testy v repo (grep pro *.test.* nebo *.spec.*)"
+    - "CHANGELOG chybí = verzování chaos"
+    - "Breaking changes bez major version bump"
+    - "Deps na abandoned packages"
+    - "README je placeholder"
+    - "Issues closed bez komentáře (spam close)"
+
+  gh_commands:
+    repo_overview: "gh repo view owner/repo --json name,description,stargazerCount,pushedAt,forkCount,createdAt,licenseInfo,primaryLanguage"
+    check_issues: "gh issue list -R owner/repo --state open --limit 20"
+    recent_commits: "gh api repos/owner/repo/commits?per_page=10 | jq '.[].commit.message'"
+    contributors: "gh api repos/owner/repo/contributors?per_page=10 | jq '.[].login'"
+    releases: "gh release list -R owner/repo --limit 5"
+    check_tests: "gh api repos/owner/repo/contents | jq '.[].name' | grep -i test"
+
+# =========================
+# NEXT.JS STACK (Filip's default)
+# =========================
+nextjs_stack:
+  version: "Next.js 15 (App Router)"
+  package_manager: "pnpm (fastest)"
+  styling: "Tailwind v4 + shadcn/ui"
+  state: "Zustand + TanStack Query v5"
+  forms: "React Hook Form + Zod"
+  db: "Prisma + PostgreSQL (nebo SQLite pro quick projects)"
+  auth: "NextAuth v5 (Auth.js)"
+  deploy: "Vercel (nejjednodušší) nebo VPS s Docker"
+
+  init_command: |
+    npx create-next-app@latest my-app \
+      --typescript --tailwind --eslint \
+      --app --src-dir --import-alias "@/*"
+
+  add_shadcn: "cd my-app && npx shadcn@latest init"
+
+  file_structure:
+    app: "Routes, layouts, pages (Server Components)"
+    components: "ui/ (shadcn), custom/ (vlastní)"
+    lib: "utils.ts, db.ts, auth.ts"
+    hooks: "use*.ts client hooks"
+    types: "global TypeScript types"
+
+# =========================
+# VÝKONNOSTNÍ BASELINE
+# =========================
+performance_targets:
+  LCP: "< 2.5s (good)"
+  FID: "< 100ms (good)"
+  CLS: "< 0.1 (good)"
+  bundle_size: "< 200KB gzipped first load"
+  tools:
+    measure: "next build && npx @next/bundle-analyzer"
+    lighthouse: "npx lighthouse https://url --view"
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related:
+  - expertise/design-visual.yaml  # OneFlow visual tokens + CSS patterns
+  - knowledge/code/github-recon.md  # Systematic repo evaluation
+  - knowledge/code/code-patterns.yaml  # TypeScript strict patterns

@@ -1,0 +1,244 @@
+domain: email-deliverability
+last_updated: 2026-04-13
+description: Technicka deliverability — DMARC/DKIM/SPF, warming, Proofpoint, Google Postmaster, cold email ops
+
+# =========================
+# CURRENT STATUS (2026-04-13)
+# =========================
+current_status:
+  flash_ip: "YOUR_VPS_PUBLIC_IP"
+  proofpoint_block: ACTIVE  # 554 Blocked
+  send_daemon: PAUSED
+  alfa_ip: "YOUR_ALFA_VPS_PUBLIC_IP"  # CZ IP, neblokovan
+  delisting_url: "https://support.proofpoint.com/dnsbl-lookup.cfm"
+  action_required: "Submit delisting request + warm-up plan"
+
+# =========================
+# DNS NASTAVENI (vsechny domeny)
+# =========================
+dns_config:
+  domeny_cold_email:
+    - oneflow-team.cz
+    - oneflowteam.cz
+    - helponeflow.cz
+    - help-oneflow.cz
+    - joinoneflow.cz
+
+  spf:
+    format: "v=spf1 ip4:{ip_primary} ip4:{ip_backup} -all"
+    current: "v=spf1 ip4:YOUR_ALFA_VPS_PUBLIC_IP ip4:YOUR_VPS_PUBLIC_IP -all"
+    rule: "-all je mandatory (hard fail). ~all je slabe."
+
+  dkim:
+    selector: "default"
+    implementation: OpenDKIM
+    key_size: 2048  # minimum, idealne 4096
+    rotation: "doporuceno kazdych 6 mesicu"
+    test_cmd: "dig TXT default._domainkey.{domena}"
+
+  dmarc:
+    current: "p=quarantine; pct=100"
+    progression:
+      1_start: "p=none; rua=mailto:dmarc@{domena}"  # reporting only
+      2_monitor: "p=quarantine; pct=10"  # partial quarantine
+      3_enforce: "p=quarantine; pct=100"  # full quarantine
+      4_strict: "p=reject; pct=100"  # maximum
+    aggregate_reports: "rua= tag — nastavit pro monitoring"
+    forensic_reports: "ruf= tag — volitelne"
+
+  mx:
+    primary: "mail.{domena}"
+    backup: optional
+
+  reverse_dns:
+    critical: true
+    rule: "PTR zaznam IP musi odpovidal A zaznamu mailserveru"
+    check: "dig -x {ip}"
+
+# =========================
+# WARMING STRATEGIE
+# =========================
+warming:
+  principles:
+    - "Konzistentni frekvence > burst. Gmail penalizuje oba extremy."
+    - "Zacni s nejlepsi reputaci kontakty (engaged, real mailboxes)"
+    - "Postupne zvysuj volume: 20/den → 50 → 100 → 200 → 500"
+    - "Monitor open rates a bounce rates kazdy den prvni 4 tydny"
+    - "Gmail reputace != SendGrid score — jsou nezavisle systemy"
+
+  week_1:
+    volume_per_day: 20
+    recipients: "existujici kontakty, zname emaily"
+    content: "personalizovane, high-value"
+
+  week_2:
+    volume_per_day: 50
+    recipients: "tier A kontakty"
+
+  week_3:
+    volume_per_day: 100
+
+  week_4_plus:
+    volume_per_day: 200
+    check: "Google Postmaster Tools — overit reputation score"
+
+  warming_tools:
+    - "Mailreach.io"
+    - "Warmup Inbox"
+    - "Lemwarm"
+    - "Manualni: 5-10 mailu denni na Gmail ucty pratelu"
+
+# =========================
+# BLACKLIST MANAGEMENT
+# =========================
+blacklists:
+  kriticky:
+    - name: Proofpoint
+      check: "https://support.proofpoint.com/dnsbl-lookup.cfm"
+      delisting: "Submit form, 24-72h processing"
+      prevention: "Bounce rate < 2%, complaint rate < 0.1%"
+    - name: Spamhaus
+      check: "https://check.spamhaus.org"
+      delisting: "https://check.spamhaus.org/removal/"
+    - name: Barracuda
+      check: "https://www.barracudacentral.org/lookups"
+      delisting: "https://www.barracudacentral.org/lookups/request-removal"
+
+  monitoring:
+    local_script: "/root/cold_email/blacklist_check.py"
+    frequency: "2x denne (cron)"
+    alert: "ntfy topic: Filip"
+
+  threshold_pause:
+    bounce_rate: "3%"  # auto-pause send daemon
+    min_sample: 50  # minimalni pocet odeslaných pred pause
+
+# =========================
+# GOOGLE POSTMASTER TOOLS
+# =========================
+google_postmaster:
+  setup: "https://postmaster.google.com — overit domenu"
+  metrics:
+    spam_rate:
+      good: "< 0.1%"
+      bad: "> 0.3% → permanent reputation damage"
+    domain_reputation: "[HIGH/MEDIUM/LOW/BAD]"
+    ip_reputation: "[HIGH/MEDIUM/LOW/BAD]"
+    delivery_errors: "SMTP errors breakdown"
+  frequency: "kontrolovat denne pri aktivni kampani"
+  alert_threshold: "spam_rate > 0.08% → pause okamzite"
+
+# =========================
+# SMTP TECHNICKE NASTAVENI
+# =========================
+smtp_config:
+  postfix:
+    rate_limiting:
+      smtpd_client_connection_rate_limit: 30  # connections per minute
+      default_destination_rate_delay: "1s"
+      smtp_destination_concurrency_limit: 2
+    queue:
+      maximal_queue_lifetime: "5d"
+      bounce_queue_lifetime: "5d"
+    tls:
+      smtpd_use_tls: yes
+      smtp_tls_security_level: may
+      smtpd_tls_security_level: may
+
+  dovecot:
+    imap_port: 143
+    imaps_port: 993
+    auth: "passwd-file /etc/dovecot/virtual-users.passwd"
+
+# =========================
+# COLD EMAIL TECH PATTERNS
+# =========================
+cold_email_patterns:
+  subject_lines:
+    good:
+      - "Kratky, < 50 znaku"
+      - "Personalizovany element"
+      - "Bez spam slov (free, guaranteed, click here)"
+      - "Otazka nebo curiosity gap"
+    bad:
+      - "RE: bez predchozi konverzace"
+      - "Vykricniky, CAPS LOCK"
+      - "Emoji v cold emailu"
+      - "Prvni email s RE: v subject"
+
+  body:
+    max_links: 1  # vice odkazu = spam signal
+    images: "avoid v cold emailu. Pokud nutne, 1 max."
+    html_vs_plaintext: "plain text deliverability > HTML"
+    signature:
+      include: [jmeno, firma, telefon]
+      exclude: [logo, banner, unsubscribe link v prvnim mailu]
+
+  timing:
+    best_days: [Tue, Wed, Thu]
+    best_hours: "8:00-10:00 local time prijemce"
+    avoid: [Mon_morning, Fri_afternoon, weekends]
+
+  sequence:
+    optimal_length: 5
+    intervals_days: [0, 3, 7, 14, 21]
+    break_up_email: "email 5 — 'Nechavam to byt'"
+
+  unsubscribe:
+    povinnost: "CAN-SPAM, GDPR — nutny mechanismus"
+    gdpr: "Souhlas pro obchodni komunikaci — cold email = [ASSUMED] legtimni zajem"
+
+# =========================
+# DIAGNOSTIKA (pri problemech)
+# =========================
+diagnostics:
+  step_1: "Gmail Postmaster Tools — zkontroluj spam_rate a domain reputation"
+  step_2: "Sandbox test — 5-10 mailu na Gmail prijatele pred bulk sendem"
+  step_3: "Zkontroluj SMTP logy: /var/log/mail.log"
+  step_4: "Overit blacklists: blacklist_check.py"
+  step_5: "MXToolbox: https://mxtoolbox.com/SuperTool.aspx"
+  step_6: "Mail-tester.com — spam score test (pouzit testem pred spustenim kampane)"
+
+  common_issues:
+    proofpoint_block:
+      symptom: "554 Blocked"
+      action: "Delisting form + alternativni IP nebo domena"
+    low_open_rate:
+      symptom: "< 15% open rate"
+      action: "Gmail Postmaster → spam rate. Porovnej s sandbox testem."
+    high_bounce:
+      symptom: "> 3% bounce"
+      action: "SMTP verify pred odesilnim. Pouzit smtp_verifier.py"
+    spam_folder:
+      symptom: "Open rate = 0, smtp = delivered"
+      action: "Sandbox test. Skontroluj content spam words."
+
+# =========================
+# KLICOVE POUCENI
+# =========================
+lessons:
+  - fact: "Gmail reputace nezavisi na SendGrid/Postmark score — jsou nezavisle systemy"
+    confidence: HIGH
+    source: "cold_email incident 2026-04-12"
+  - fact: "Prilis malo mailu = domena vychladne = spam. Prilis mnoho = spam. Optimum = konzistentni frekvence."
+    confidence: HIGH
+  - fact: "Proofpoint blokuje cele IP, ne jen domenu — nove domeny na stejne IP nepomohou"
+    confidence: HIGH
+  - fact: "First email s Re: v subject = spam signal na Gmail"
+    confidence: HIGH
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - outbound-sales-science.yaml
+  - data-enrichment.yaml
+
+related_memory:
+  - cold_email_setup.md
+  - knowledge_email_deliverability.md
+
+related_scripts:
+  - "/root/cold_email/send_daemon.py"
+  - "/root/cold_email/blacklist_check.py"
+  - "/root/cold_email/smtp_verifier.py"

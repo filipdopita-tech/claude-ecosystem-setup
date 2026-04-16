@@ -1,0 +1,57 @@
+# Credentials — NEVER commit
+mcp-keys.env
+*.env
+.env*
+*.key
+*.pem
+*.p12
+*.pfx
+master.env
+credentials/
+.credentials/
+
+# Personal memory (auto-generated, user-specific)
+projects/
+memory/
+**/memory/
+
+# Backups created by install.sh
+_backup_*/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V7
+.Trashes
+Icon?
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (MCP servers)
+node_modules/
+.npm/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Temporary
+*.tmp
+*.bak
+.tmp/

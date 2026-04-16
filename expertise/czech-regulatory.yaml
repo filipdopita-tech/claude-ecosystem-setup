@@ -1,0 +1,203 @@
+domain: czech-regulatory
+last_updated: 2026-04-13
+description: CZ regulatorní rámec pro OneFlow — dluhopisy, AML, ČNB, ECSP, ZISIF, ZPKT
+confidence_notes: "Sections marked [ASSUMED] require legal verification. Core laws HIGH confidence."
+
+# =========================
+# ONEFLOW REGULATORY STATUS
+# =========================
+oneflow_status:
+  entity_type: zprostredkovatel_investic  # NOT regulated financial institution
+  cnb_license: false  # OneFlow nema licenci CNB
+  aml_obligated: true  # povinnost AML zakon 253/2008
+  ecsp_license_needed: "[ASSUMED] Pokud provozuje platformu pro nabidku investic verejnosti"
+  notes:
+    - "OneFlow neni regulovany subjekt CNB (banka, pojistovna, AIF, UCITS, ECSP)"
+    - "Ale podleha AML povinnostem jako zprostredkovatel"
+    - "Kazda emise dluhopisu emitentem (ne OneFlow) — OneFlow je jen agent/zprostredkovatel"
+
+# =========================
+# KLICOVE ZAKONY
+# =========================
+laws:
+  dluhopisy:
+    zakon: "190/2004 Sb. o dluhopisech"
+    klicove_body:
+      - "Dluhopis = cenny papir, emitent = dluznik, majitel = veritel"
+      - "Emise dluhopisu nevyzaduje licenci CNB (emitent muze byt bezna s.r.o.)"
+      - "Prospekt: vyzadovan u verejne nabidky nad 1M EUR nebo 150+ investoru"
+      - "Pod prahem prospektu: staci emisni podminky (bez registrace CNB)"
+      - "ISIN: nutny pro regulovane trhy, pro soukrome emise volitelny"
+    emisni_podminky_minimum:
+      - nominalni hodnota
+      - vynosnost (kupony nebo diskont)
+      - datum splatnosti
+      - emitent (ICO, sidlo)
+      - podrizeny status (ano/ne)
+
+  prospekt_regulation:
+    zakon: "EU 2017/1129 (implementovano v CZ)"
+    exemptions_bez_prospektu:
+      - "Celkova hodnota emise < 1M EUR (za 12 mesicu)"
+      - "Max 149 investoru (qualifying investors) — soukroma nabidka"
+      - "Jmenovita hodnota jednoho dluhopisu >= 100 000 EUR (institucionalni)"
+      - "Pouze pro qualified investors (profesionalni klienti)"
+    risk:
+      - "[ASSUMED] Pri kombinaci dvou exempt podminek nutno overit s pravnikem"
+      - "CNB sleduje emise, i kdyz prospekt nevyzadovan"
+
+  aml:
+    zakon: "253/2008 Sb. o opatrenich proti legalizaci vynosu z TCC"
+    povinny_subjekt: "[ASSUMED] OneFlow jako zprostredkovatel financnich sluzeb"
+    povinnosti:
+      - "KYC (Know Your Customer) pri onboardingu investora"
+      - "Overeni identity (OP/pas, adresa, PEP check)"
+      - "Sledovani transakci nad 10 000 EUR"
+      - "Hlaseni podezrelych transakci FIU (financni zpravodajska jednotka MF)"
+      - "Uchovavani dokumentu 10 let (append-only)"
+      - "Rizikova kategorizace klientu (low/medium/high)"
+    pep_check:
+      databaze: ["worldcheck", "dow_jones_risk", "CNB_seznam"]
+      frekvence: "pri onboardingu + rozsahle zmeny v profilu"
+
+  zisif:
+    zakon: "240/2013 Sb. o investicnich spolecnostech a investicnich fondech"
+    relevance_pro_oneflow: "Nizka — OneFlow neni AIF ani UCITS"
+    kdyz_relevantni:
+      - "Pokud by OneFlow spravoval kolektivni investicni fond"
+      - "Pokud by meli Assets Under Management > 100M EUR"
+    poznamka: "[ASSUMED] OneFlow jako zprostredkovatel nepodleha ZISIF"
+
+  zpkt:
+    zakon: "256/2004 Sb. o podnikani na kapitalovem trhu (MiFID II implementace)"
+    relevance_pro_oneflow: "Stredni — pokud zprostredkovava investicni sluzby"
+    klicove_body:
+      - "Investicni zprostredkovatel vyzaduje registraci u CNB"
+      - "Povinnost best execution"
+      - "Povinnost suitability assessment (je investice vhodna pro klienta?)"
+      - "Povinnost disclosure (poplatky, konflikty zajmu)"
+    poznamka: "[ASSUMED] OneFlow musi overit zda jejich cinnost vyzaduje registraci zprostredkovatele"
+
+  ecsp:
+    regulation: "EU 2020/1503 (ECSP — European Crowdfunding Service Providers)"
+    platnost_v_cz: "od 10. 11. 2023"
+    kdyz_povinny:
+      - "Provoz platformy pro crowdfunding"
+      - "Nabidka investic verejnosti pres online platformu"
+      - "Nad 5M EUR celkove za 12 mesicu"
+    licence:
+      udeluje: "CNB"
+      vyzaduje: "kapital, governance, IT security, AML systemy"
+    poznamka: "[ASSUMED] Pokud OneFlow provozuje online platformu pro nabidku dluhopisu, ECSP muze byt povinny"
+
+# =========================
+# KYC / INVESTOR ONBOARDING
+# =========================
+kyc_process:
+  standard_retail:
+    dokumenty:
+      - obcansky_prukaz_nebo_pas
+      - potvrzeni_adresy_max_3_mesice  # utility bill, bankovni vypis
+      - zdroj_financnich_prostredku  # explanation letter
+    pep_check: mandatory
+    sanction_check: mandatory  # EU, UN, OFAC
+
+  professional_investor:
+    kriteria_alespon_2_ze_3:
+      - "Portfolio financnich nastroju > 500 000 EUR"
+      - "Alespon 10 obchodu s inv. nastroji za kvartal (min 4 kvartaly)"
+      - "Pracoval min 1 rok v financich v relevantni pozici"
+    dokumentace:
+      - escritura_de_calificacion  # opt-up form
+      - potvrzeni_splneni_kriterii
+
+  pep_enhanced_due_diligence:
+    poznamka: "Politicky exponovana osoba = enhanced DD"
+    kroky:
+      - Overit zdroj majetku (wealth) i zdroj prostredku (funds)
+      - Senior management approval
+      - Zvysena frekvence monitorovani
+
+# =========================
+# EMISE DLUHOPISU — CHECKLIST
+# =========================
+emise_checklist:
+  dokumenty:
+    - emisni_podminky  # legal review required
+    - ratingova_sprava  # optional, zvysuje duveru
+    - pravni_stanovisko  # k emisnim podminkam
+    - audit_rocni_zaverek_emitentu  # posledni 2-3 roky
+    - firemni_dokumenty  # stanovy, vypis OR
+    - DSCR_analyza  # pokud RE zajisteni
+
+  cznb_reporting:
+    povinnost: "[ASSUMED] Pokud jsou cenné papíry přijaty na trh, nebo nad prahy"
+    cnb_isds: "nutno overit s pravnikem"
+
+  registrace_centralni_depozitar:
+    kdyz: "Pokud emitent chce ISIN a dematerializaci"
+    kde: "CDCP (Centralni depozitar cennych papiru)"
+    poplatek: "[ASSUMED] ~5 000 - 20 000 Kc"
+
+# =========================
+# KOMUNIKACE S REGULATOREM
+# =========================
+cnb_contact:
+  web: "https://www.cnb.cz"
+  databaze_licenci: "https://apl.cnb.cz/apljerrsdad/JERRS.WEB07.INTRO_PAGE?p_lang=cz"
+  dotazy: "podatelna@cnb.cz"
+  monitoring:
+    - "CNB Zpravy a informace (RSS)"
+    - "EUR-Lex pro EU narizeni"
+    - "zakonyprolidi.cz pro zmeny zakonu"
+
+# =========================
+# RED FLAGS (pro DD investoru)
+# =========================
+red_flags_emitent:
+  financial:
+    - "DSCR < 1.1"
+    - "Zadluzenost > 70% (LTV)"
+    - "Negativni EBITDA posledni 2 roky"
+    - "Insolvence spolecnika nebo jednatele (ISIR check)"
+    - "Exekuce (check executors.cz)"
+  legal:
+    - "Emise bez emisnich podminek"
+    - "Emitent je shell company bez prokazatelne cinnosti"
+    - "Obchod se sprizneneymi osobami bez disclosure"
+    - "CNB enforcement action v posledni 3 letech"
+  operational:
+    - "Jediny jedatel = jediny vlastnik bez oversight"
+    - "Chybejici audit (pro emise > 5M Kc)"
+
+# =========================
+# FACTS
+# =========================
+facts:
+  - date: 2026-04-13
+    fact: "OneFlow nema licenci CNB — stale muze zprostredkovavat investice jako neregulovered subjekt s AML povinnosti"
+    source: "legal analysis + cnb.cz"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "Emise dluhopisu do 1M EUR bez prospektu — exemption z narizeni EU 2017/1129"
+    source: "EU 2017/1129 Article 1(3)"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "AML zakon 253/2008 — OneFlow jako zprostredkovatel pravdepodobne podleha"
+    source: "[ASSUMED] — nutno overit s pravnikem"
+    confidence: MED
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - investor-outreach.yaml
+  - oneflow-brand.yaml
+
+related_knowledge:
+  - "~/.claude/knowledge/legal-compliance.md"
+  - "~/.claude/knowledge/finance.md"
+
+related_memory:
+  - project_nabidka_asr.md
+  - business_model.md

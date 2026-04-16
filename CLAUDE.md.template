@@ -1,0 +1,45 @@
+# Claude Code — [YOUR_SETUP_NAME]
+# CUSTOMIZE: Přejmenuj a doplň podle svého setupu
+
+## ARCHITEKTURA
+# CUSTOMIZE: Vyber architekturu podle svého setupu:
+
+### Varianta A: Mac-only (bez VPS)
+- Všechny soubory na Macu, ~/.claude/ je jediný config root
+- Credentials: ~/.claude/mcp-keys.env
+
+### Varianta B: Mac + VPS (remote compute)
+- VPS je REMOTE COMPUTE ENGINE pro Mac. Mac = source of truth.
+- Mac filesystem mountnutý na /mac (SSHFS přes WireGuard)
+- /mac = /Users/[YOUR_USERNAME] na Macu — plný read/write přístup
+- Všechny soubory TVOŘ a UPRAVUJ primárně na /mac, ne lokálně na VPS
+- VPS lokální soubory (/root/workspace/) jsou jen dočasné nástroje
+
+## Klíčové cesty
+# CUSTOMIZE: Uprav cesty podle své struktury
+- /mac/Documents/ — Mac Documents
+- /mac/Desktop/ — Mac Desktop
+- /mac/.claude/ — Claude Code config (skills, rules, memory)
+- /mac/scripts/ — Mac skripty
+- /mac/Documents/[YOUR_VAULT_NAME]/ — Obsidian vault (pokud používáš)
+- /mac/Documents/claude-history/ — Chat historie
+
+## Memory & Credentials
+- Credentials: ~/.claude/mcp-keys.env (NIKDY nevypisuj z hlavy — vždy čti ze souborů)
+
+## Pravidla
+# CUSTOMIZE: Přidej svá pravidla
+- 0 halucinací — ověřuj fakta, nikdy nevymýšlej
+- NIKDY neodesílej emaily/zprávy bez pokynu
+- NIKDY nevytvářej náklady bez schválení
+- Nedotazuj se — dělej rovnou (KROMĚ: odesílání, mazání, platby)
+
+## SSH (jen pro Varianta B)
+# CUSTOMIZE: Doplň své SSH detaily nebo tuto sekci odstraň
+- Na Mac: ssh mac ([YOUR_MAC_WG_IP])
+- SSHFS mount: /mac = /Users/[YOUR_USERNAME] (auto-reconnect)
+- WG subnet: [YOUR_WG_SUBNET] (VPS=.1, Mac=.2)
+
+## graphify (pokud používáš)
+- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.

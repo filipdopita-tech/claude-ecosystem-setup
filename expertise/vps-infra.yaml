@@ -1,0 +1,260 @@
+domain: vps-infra
+last_updated: 2026-04-09
+description: VPS Flash + Alfa infrastruktura — specs, SSH, WG, sluzby, routing, deployment
+
+# =========================
+# TOPOLOGIE
+# =========================
+topology:
+  vps_flash:
+    provider: Contabo
+    ip_public: YOUR_VPS_PUBLIC_IP
+    ip_wg: 10.X.0.1
+    specs:
+      ram_gb: 12
+      vcpu: 6
+      ssd_gb: 200
+    role: compute_engine_claude_code_orchestration
+    ssh: "ssh root@10.X.0.1  # VPN only"
+
+  vps_alfa:
+    provider: Wedos
+    ip_public: YOUR_ALFA_VPS_PUBLIC_IP
+    ip_wg: 10.X.0.3
+    specs:
+      ram_gb: 5.8
+      vcpu: 2
+      ssd_gb: 40
+    role: email_cz_ip_legacy_services
+    ssh: "ssh root@YOUR_ALFA_VPS_PUBLIC_IP"
+
+  mac:
+    role: source_of_truth_mount_point
+    ip_wg: 10.X.0.2
+    mount: "/mac = /Users/YOUR_USERNAME (SSHFS auto-reconnect)"
+    access_from_flash: direct_fs
+
+wireguard:
+  subnet: 10.X.0.0/24
+  peers:
+    flash: 10.X.0.1
+    mac: 10.X.0.2
+    alfa: 10.X.0.3
+  notes:
+    - "2026-04-03 migrace z 10.0.0.0/24 kvuli LAN kolizi na Macu"
+
+# =========================
+# SLUZBY (FLASH)
+# =========================
+services_flash:
+  kb_api:
+    port_local: 18830
+    purpose: "Knowledge Base API (SQLite FTS5)"
+    systemd: true
+    monit: true
+
+  killswitch:
+    port_public: 18900
+    purpose: "Emergency kill switch"
+
+  oneflow_affiliate:
+    port_public: 18800
+    purpose: "Partner dashboard"
+
+  imessage_bridge:
+    port_local: 8100
+    purpose: "iMessage API"
+
+  multi_ai_chat:
+    port_local: 8090
+    purpose: "Multi-AI chat gateway"
+
+  lead_scoring:
+    port_local: 18840
+    port_wg: 18840
+    purpose: "OneFlow Lead Scoring API"
+
+  systems_api:
+    port_local: 18850
+    port_wg: 18850
+    purpose: "Systems Status API"
+
+  conductor:
+    type: orchestrator
+    purpose: "Claude Code task orchestration, free API workers"
+    pidfile: true
+
+  oneflow_bot:
+    type: telegram_bot
+    purpose: "Filip's TG assistant"
+
+  beskyd_form:
+    type: form_handler
+
+  fluent_bit:
+    purpose: "Log collector -> ntfy alerts"
+
+  caddy:
+    ports: [80, 443]
+    purpose: "Reverse proxy, aktivni od 2026-04-08"
+
+  mutagen:
+    purpose: "Bidirectional sync .claude/ mezi Mac a Flash"
+
+  autohealing_stack:
+    layers:
+      - monit: "kb-api, killswitch, affiliate, conductor, sshd, fluent-bit, perms-watcher, mac-mount, research-engine, caddy, fail2ban, alfa-vpn, mac-vpn + 7 screen processes"
+      - docker_autoheal: "autoheal container"
+      - beszel_agent: "system monitoring"
+      - guardian: "mac-guardian every 15min"
+
+# =========================
+# SLUZBY (ALFA)
+# =========================
+services_alfa:
+  postfix_dovecot:
+    ports: [25, 143, 993]
+    domain: mail.oneflow-team.cz
+    tls: "Lets Encrypt cert (2026-04-08, expiry 2026-07-07)"
+    dmarc: "p=quarantine"
+    spf: "-all"
+
+  nginx:
+    ports: [80, 443]
+    purpose: "Reverse proxy *.oneflow.cz"
+
+  ntfy:
+    port: 2586
+    purpose: "Push notifications"
+
+  wa_bridge_go:
+    port: 18810
+    purpose: "WhatsApp Bridge (Go)"
+
+  whatsapp_bridge:
+    port: 8085
+    purpose: "WA Baileys fallback"
+
+  oneflow_dashboard:
+    port: 3000
+    stack: "Next.js via PM2"
+
+  mariadb:
+    port_local: 3306
+
+  beszel_agent:
+    port: 45876
+    purpose: "System monitor"
+
+  DISABLED:
+    li_bridge_api: "LinkedIn SN trial expired 2026-04-12"
+    li_ghl_sync: "CPU leak, masked + cron disabled"
+
+# =========================
+# CRONY (FLASH)
+# =========================
+crons_flash:
+  orphan_cleaner: "*/5 * * * *"
+  mount_mac: "*/5 * * * *"
+  mac_guardian: "*/15 * * * *"
+  nightly_sync: "0 2 * * *"
+  config_backup: "0 4 * * *"
+  ai_brain_sync: "*/30 * * * *"
+  ai_brain_daily: "0 1 * * *"
+  morning_briefing: "0 7 * * *"      # 2026-04-09 added
+  feedback_loop: "0 9 * * 1"          # 2026-04-09 weekly
+
+# =========================
+# ROUTING (nove sluzby)
+# =========================
+routing_decision_tree:
+  question_1: "Je to email nebo vyzaduje CZ IP?"
+  yes_1: "Alfa (Wedos)"
+  no_1: "Flash (Contabo)"
+
+  question_2: "Je to Claude Code session / orchestration?"
+  yes_2: "VZDY Flash"
+
+  question_3: "Je to scheduled task (cron)?"
+  yes_3: "Flash (vsechny crony centralizovat)"
+
+  question_4: "Vyzaduje to persistent storage > 40GB?"
+  yes_4: "Flash (200GB SSD)"
+
+# =========================
+# DEPLOYMENT PATTERN
+# =========================
+deployment_pattern:
+  standard_stack:
+    - systemd_unit_Restart_always
+    - Monit_watchdog
+    - Fluent_Bit_log_ship_to_ntfy
+    - Caddy_reverse_proxy_if_public
+    - ntfy_alerts
+
+  file_locations:
+    systemd: "/etc/systemd/system/"
+    monit: "/etc/monit/conf.d/"
+    fluent_bit: "/etc/fluent-bit/conf.d/"
+    caddy: "/etc/caddy/Caddyfile"
+    credentials: "/root/.credentials/master.env"
+
+# =========================
+# ZNAME PROBLEMY (audit 2026-04-08)
+# =========================
+known_issues_resolved:
+  - "Caddy active"
+  - "config-backup cron"
+  - "SSHFS /mac healthcheck"
+  - "li-ghl-sync CPU leak disabled"
+  - "WG subnet 10.X.0.0/24"
+  - "Alfa disk 53%"
+  - "Postfix TLS Lets Encrypt"
+  - "DMARC p=quarantine, SPF -all"
+
+known_issues_active:
+  - id: agent_cards_jwt
+    expires: 2026-04-21
+    reminder_sent: true
+  - id: linkedin_sn_trial
+    expires: 2026-04-12
+    action: let_expire
+
+# =========================
+# FACTS
+# =========================
+facts:
+  - date: 2026-04-08
+    fact: Kompletni ecosystem audit dokoncen, vsechny kriticke problemy vyreseny
+    source: pm_ecosystem_audit_2026_04_03.md
+
+  - date: 2026-04-09
+    fact: Morning Briefing + Feedback Loop + Quality Gate nasazeny jako soucast Dopita OS v1.0
+    source: session_handoff.md
+
+# =========================
+# COMMANDS
+# =========================
+commands:
+  ssh_flash: "ssh root@10.X.0.1"
+  ssh_alfa: "ssh root@YOUR_ALFA_VPS_PUBLIC_IP"
+  ssh_mac_from_flash: "ssh mac  # = 10.X.0.2"
+  mount_mac: "/mac  # automounted via SSHFS"
+  systemctl_restart: "ssh root@10.X.0.1 'systemctl restart {service}'"
+  monit_reload: "ssh root@10.X.0.1 'monit reload'"
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - code-patterns.yaml
+
+related_rules:
+  - ~/.claude/rules/ecosystem-map.md
+
+related_memory:
+  - vps_wedos_main.md
+  - vps_contabo_outreach.md
+  - infra_vps.md
+  - infra_vps_routing_rules.md
+  - infra_autohealing_stack.md

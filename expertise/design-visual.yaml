@@ -1,0 +1,667 @@
+domain: design-visual
+last_updated: 2026-04-13
+description: Moderní HTML/CSS/visual design — trendy 2025-2026, premium patterns, brand manuál workflow. Načíst při jakémkoli designovém tasku.
+
+# =========================
+# KRITICKÝ INSIGHT: DVĚ VERZE
+# Zdroj: reálné nabídky (nabidka-patricny-2026.html, nabidka-asr-2026-v4-web.html)
+# =========================
+oneflow_two_modes:
+  documents:
+    description: "PDF nabídky, brand manuály, reporty — black & white + béžová paleta. BEZ gold."
+    dark_bg: "#0A0A0C (blíže černé než web)"
+    dark_gradient: "linear-gradient(165deg, #000000, #0A0A0C, #111115)"
+    light_bg: "#F2F0ED (teplá béžová bílá)"
+    text_dark: "#1A1A1A"
+    text_light: "#F2F0ED"
+    font: "Inter Tight 300/400/500/600/700"
+    rhythm: "Dark ↔ Light stránky se STŘÍDAJÍ (cover dark → obsah light → dark → light...)"
+    accent: "ŽÁDNÝ — elegance přes black & white kontrast"
+
+  web_digital:
+    description: "Landing pages, web app, social assets — dark luxury monochrome."
+    dark_bg: "#0A0A0C"
+    font: "Inter Tight"
+    accent: "ŽÁDNÝ — elegance přes black & white kontrast"
+
+# =========================
+# DESIGN PHILOSOPHY
+# =========================
+philosophy:
+  premium_rule: "Méně je více. Každý element musí buď informovat nebo vést. Nic jen tak."
+  alternating_rhythm: "Dark cover → Light obsah → opakuj. Kontrast stránek = vizuální dech."
+  dark_luxury:
+    documents: "#0A0A0C near-black s gradient overlay + subtle white radial orbs"
+    web: "#0A0A0C + #1A1A1A monochrome depth — ŽÁDNÉ saturované barvy"
+  typography_hierarchy:
+    rule: "Max 2 font weights na stránce. Kontrast přes velikost, ne váhu."
+    heading_tracking: "Velké headings: -1.2 to -2.5px tracking (tighter = prestižnější)"
+    body_line_height: "1.6–1.7 pro čitelnost"
+    font_family: "Inter Tight všude — NE Playfair Display"
+
+# =========================
+# ONEFLOW CSS TOKENS (single source of truth)
+# =========================
+tokens:
+  document_colors:
+    dark_bg: "#0A0A0C"
+    dark_bg_gradient: "linear-gradient(165deg, #000000, #0A0A0C, #111115)"
+    dark_overlay_orbs: "radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.04), transparent 70%)"
+    light_bg: "#F2F0ED"
+    light_card_bg: "#f0eeeb"
+    light_card_border: "#e8e6e2"
+    text_on_dark: "#F2F0ED"
+    text_secondary_dark: "rgba(255,255,255,0.45)"
+    text_on_light: "#1A1A1A"
+    text_secondary_light: "#555555"
+    muted: "#C8C4BF"
+    border_light: "#E5E3E0"
+    border_dark: "rgba(255,255,255,0.06)"
+    dark_card_bg: "#151517"
+    dark_card_border: "#222225"
+    cta_bg: "linear-gradient(165deg, #0F0F0F, #1A1A1A, #2A2A2A)"
+
+  web_colors:
+    bg_base: "#0A0A0C"
+    bg_elevated: "#111115"
+    bg_overlay: "#1A1A1A"
+    text_primary: "#F2F0ED"
+    text_secondary: "rgba(242,240,237,0.6)"
+    text_muted: "#555555"
+    accent: "#C8C4BF"
+    border_subtle: "rgba(255,255,255,0.08)"
+    border_medium: "rgba(255,255,255,0.12)"
+
+  spacing_scale:
+    base: 4px
+    values: [4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
+    rule: "Vždy násobky 4. Nikdy 10px, 15px, 22px."
+
+  radius:
+    small: 6px      # tags, badges
+    default: 10px   # cards, inputs
+    large: 16px     # modals, hero cards
+    pill: 9999px    # buttons, chips
+
+  shadows:
+    card: "0 4px 24px rgba(0,0,0,0.4)"
+    elevated: "0 8px 40px rgba(0,0,0,0.5)"
+    inset_glow: "inset 0 1px 0 rgba(255,255,255,0.08)"  # premium top glow
+
+# =========================
+# MODERNÍ CSS TECHNIKY 2026
+# =========================
+css_techniques:
+
+  dark_glassmorphism:
+    description: "THE estetika 2026. Backdrop blur + ambient orby."
+    code: |
+      .glass-card {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.36);
+      }
+      /* Fallback povinný */
+      @supports not (backdrop-filter: blur(1px)) {
+        .glass-card { background: rgba(15,17,19,0.92); }
+      }
+    rules:
+      - "Blur max 15px — nad tím je nečitelné"
+      - "Ne na velkých plochách (>50% viewport) — performance hit"
+      - "-webkit- prefix povinný (Safari)"
+      - "Vždy @supports fallback"
+
+  ambient_orbs:
+    description: "Subtle white orby za UI — dávají hloubku dark backgroundu."
+    code: |
+      .orb-white {
+        position: absolute;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+        filter: blur(80px);
+        pointer-events: none;
+        will-change: transform;
+        transform: translateZ(0); /* GPU layer */
+      }
+      .orb-dim {
+        background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+        filter: blur(60px);
+      }
+    placement:
+      - "Top-left nebo bottom-right — ne center"
+      - "Z-index nižší než content"
+      - "Opacity 0.15–0.30 — subtilní"
+
+  bento_grid:
+    description: "Modulární mřížka. Apple/Google keynote styl. CTR +23%."
+    code: |
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: 120px;
+        gap: 16px;
+        grid-auto-flow: dense; /* vyplní mezery */
+      }
+      .bento-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+      .bento-card:hover {
+        transform: scale(1.01);
+        border-color: rgba(255,255,255,0.15);
+      }
+      /* Velikosti */
+      .bento-sm   { grid-column: span 3; grid-row: span 2; }
+      .bento-md   { grid-column: span 6; grid-row: span 2; }
+      .bento-lg   { grid-column: span 6; grid-row: span 4; }
+      .bento-hero { grid-column: span 8; grid-row: span 4; }
+      .bento-full { grid-column: span 12; grid-row: span 2; }
+      /* Mobile fallback */
+      @media (max-width: 640px) {
+        .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        [class*="bento-"] { grid-column: span 2; grid-row: span 2; }
+      }
+
+  scroll_driven_animations:
+    description: "Animace při scrollu BEZ JavaScriptu. Chrome/Edge plně, Safari 26+."
+    code: |
+      /* Fade-in při vstupu do view */
+      .reveal {
+        animation: fade-up linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 30%;
+      }
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(32px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      /* Reading progress bar */
+      .progress-bar {
+        position: fixed; top: 0; left: 0;
+        height: 2px; width: 100%;
+        background: var(--text);
+        transform-origin: left;
+        animation: progress linear;
+        animation-timeline: scroll(root);
+      }
+      @keyframes progress {
+        from { transform: scaleX(0); }
+        to   { transform: scaleX(1); }
+      }
+      /* Shrinking header při scrollu */
+      header {
+        animation: shrink linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0px 80px;
+      }
+      @keyframes shrink {
+        to { padding-block: 8px; background: rgba(15,17,19,0.95); }
+      }
+      /* Firefox fallback povinný */
+      @supports not (animation-timeline: scroll()) {
+        .reveal { opacity: 1; transform: none; }
+      }
+
+  oklch_colors:
+    description: "Perceptuálně uniformní barvy. Tailwind v4 nativní. Lepší než HSL."
+    why: "HSL má nekonzistentní jas napříč hue. OKLCH = stejný jas = profesionální paleta."
+    code: |
+      :root {
+        --bg-950:   oklch(5% 0.002 250);  /* #0A0A0C */
+        --bg-900:   oklch(8% 0.002 250);  /* #111115 */
+        --bg-800:   oklch(11% 0.002 250); /* #1A1A1A */
+        --text:     #F2F0ED;
+        --muted:    #C8C4BF;
+        --gray:     #555555;
+      }
+      /* Relative color syntax — odvoď tint od base barvy */
+      .muted-tinted { background: oklch(from var(--muted) l 0.01 h); }
+    tool: "oklch.fyi — generátor palety v browseru"
+
+  property_registered:
+    description: "Animovatelné CSS proměnné s typováním. @property = CSS Houdini."
+    code: |
+      @property --gradient-angle {
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+      }
+      @property --mesh-x {
+        syntax: "<percentage>";
+        initial-value: 20%;
+        inherits: false;
+      }
+      /* Gradient border animace */
+      .animated-border {
+        --gradient-angle: 0deg;
+        background: linear-gradient(var(--gradient-angle), #1A1A1A, #555555, #1A1A1A);
+        animation: rotate-gradient 4s linear infinite;
+      }
+      @keyframes rotate-gradient { to { --gradient-angle: 360deg; } }
+    browser_support: "Chrome 85+, Safari 16.4+, Firefox 128+"
+
+  mesh_gradient:
+    description: "Vrstvené radial-gradient bez knihoven. CSS-only."
+    code: |
+      .mesh-hero {
+        background-color: #0A0A0C;
+        background-image:
+          radial-gradient(ellipse 80% 60% at 20% 80%,
+            rgba(255,255,255,0.03) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 80% at 80% 20%,
+            rgba(255,255,255,0.02) 0%, transparent 60%),
+          radial-gradient(ellipse 100% 50% at 50% 100%,
+            rgba(0,0,0,0.8) 0%, transparent 80%);
+      }
+
+  fluid_typography:
+    description: "Plynulé škálování textu mezi breakpointy. Žádné media queries pro typo."
+    code: |
+      :root {
+        --text-hero: clamp(2.5rem, 5vw + 1rem, 5rem);
+        --text-h1:   clamp(1.75rem, 3vw + 0.5rem, 3rem);
+        --text-h2:   clamp(1.25rem, 2vw + 0.25rem, 1.875rem);
+        --text-body: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+      }
+      /* Variable font — Inter nebo Geist */
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-optical-sizing: auto;
+        font-variation-settings: 'wght' 400;
+      }
+
+  container_queries:
+    description: "Responsivita na úrovni komponenty, ne viewportu. Budoucnost layoutu."
+    code: |
+      .card-wrapper { container-type: inline-size; container-name: card; }
+      @container card (min-width: 400px) {
+        .card-body { flex-direction: row; }
+        .card-title { font-size: 1.25rem; }
+      }
+
+  view_transitions:
+    description: "Plynulé page transitions. Nativní CSS API, bez knihoven."
+    code: |
+      /* Jen CSS — prohlížeč udělá cross-fade automaticky */
+      @view-transition { navigation: auto; }
+      /* Custom transition pro specifické elementy */
+      .hero-image { view-transition-name: hero; }
+      ::view-transition-old(hero) { animation: fade-out 0.3s ease; }
+      ::view-transition-new(hero) { animation: fade-in 0.3s ease; }
+    browser_support: "Chrome 111+, Edge 111+. Safari/Firefox partial."
+
+# =========================
+# PREMIUM DETAIL PATTERNS
+# =========================
+premium_details:
+  inset_top_glow:
+    description: "Subtle shimmer na horní hraně karty — signature OneFlow detail."
+    code: "box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);"
+
+  gradient_text:
+    description: "White fade gradient na headings. Používat střídmě."
+    code: |
+      .gradient-heading {
+        background: linear-gradient(135deg, #F2F0ED 0%, rgba(242,240,237,0.6) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+  dot_grid_bg:
+    description: "Subtilní dot grid za content — depth bez ruchu."
+    code: |
+      .dot-grid-bg {
+        background-image: radial-gradient(
+          circle, rgba(255,255,255,0.06) 1px, transparent 1px
+        );
+        background-size: 24px 24px;
+      }
+
+  noise_texture:
+    description: "Film grain overlay — premium texturu. Opacity max 0.04."
+    code: |
+      .noise::after {
+        content: '';
+        position: absolute; inset: 0;
+        background-image: url("data:image/svg+xml,..."); /* SVG feTurbulence */
+        opacity: 0.03;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+  card_hover_shimmer:
+    description: "Subtle shimmer při hover na card."
+    code: |
+      .card { position: relative; overflow: hidden; }
+      .card::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .card:hover::before { opacity: 1; }
+      .card:hover { border-color: rgba(255,255,255,0.15); }
+
+  separator:
+    description: "1px linka mezi sekcemi. Elegantní fade-out."
+    code: |
+      .separator {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+        border: none; margin: 32px 0;
+      }
+
+# =========================
+# TYPOGRAPHY SYSTEM
+# =========================
+typography:
+  font_family: "Inter Tight — VŽDY. NE Playfair Display, NE plain Inter."
+  google_fonts_import: "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap"
+
+  document_scale:
+    cover_h1:   "56px / weight 700 / letter-spacing -2.5px / line-height 1.02"
+    h1:         "36px / weight 700 / letter-spacing -1.2px / line-height 1.15"
+    h2:         "22–26px / weight 700 / letter-spacing -0.3 to -0.8px"
+    h3:         "13–16px / weight 700 / letter-spacing -0.2–0.3px"
+    body:       "12.5–13px / weight 400 / line-height 1.6–1.65"
+    body_small: "10.5–11px / weight 400 / line-height 1.55"
+    metric:     "28–56px / weight 700 / letter-spacing -1 to -1.5px"
+    tag:        "9–10px / weight 600 / letter-spacing 2–2.5px / UPPERCASE"
+    overline:   "9–10px / weight 600 / letter-spacing 2–2.5px / UPPERCASE / opacity 0.5"
+    footer:     "9–10px / weight 400 / color #C8C4BF"
+
+  web_scale:
+    hero:  "clamp(2.5rem, 5vw, 5rem) / weight 700 / tracking -2.5px"
+    h1:    "clamp(1.75rem, 3vw, 3rem) / weight 700 / tracking -1.2px"
+    h2:    "1.5rem / weight 600 / tracking -0.8px"
+    body:  "1rem / weight 300–400 / line-height 1.7"
+    label: "0.75rem / weight 500 / tracking 0.1em / UPPERCASE"
+
+  rules:
+    - "Inter Tight všude — NE jiný font"
+    - "Velké headings: negativní letter-spacing povinný (-1.2px minimum)"
+    - "Max 2 font weights na jedné stránce"
+    - "Body text: line-height min 1.6"
+    - "Max-width 65ch pro body odstavce"
+
+# =========================
+# LAYOUT PRINCIPLES
+# =========================
+layout:
+  grid:
+    desktop: "12-column, gap 16–24px"
+    tablet: "6-column, gap 16px"
+    mobile: "2-column nebo 1-column, gap 12px"
+
+  spacing_rhythm:
+    within_section: "16–24px"
+    between_sections: "48–64px"
+    page_padding: "48–64px horizontálně, 40–56px vertikálně"
+
+  visual_hierarchy:
+    rule: "1 hero element, 2–3 secondary, zbytek tertiary"
+    attention_flow: "Top-left → right → down (F-pattern nebo Z-pattern)"
+
+  white_space:
+    rule: "Luxus = prostor. Víc white space = vyšší percepce hodnoty."
+
+# =========================
+# PDF/PRINT SPECIFICS
+# =========================
+pdf_patterns:
+  engine: "Puppeteer doporučen (JS support). WeasyPrint pro statické dokumenty."
+  puppeteer_config:
+    printBackground: true    # POVINNÉ pro dark mode
+    format: "A4"
+    margin: "40px všechny strany"
+  css_rules:
+    - "@page { size: A4; margin: 0; } — žádný vestavěný margin, vlastní padding"
+    - "print-color-adjust: exact — zachová barvy"
+    - ".page { width: 210mm; height: 297mm; page-break-after: always; }"
+    - "Flexbox column layout pro .pc-flex — fill stránku"
+    - "Pozor: backdrop-filter NEFUNGUJE v WeasyPrint"
+
+  page_layout:
+    padding: "48px 56px (top/bottom 44–48px, sides 56px)"
+    footer: "Absolutně pozicovaný bottom: 28px — stránkování"
+
+# =========================
+# DESIGN TOOL WORKFLOW
+# =========================
+tools:
+  stitch:
+    url: "stitch.withgoogle.com"
+    mcp: "npx @_davideast/stitch-mcp proxy"
+    use_for: "Moodboard, rychlé koncepty, export HTML/Tailwind"
+    avoid_for: "Produkční brand manuál, animace, dark luxury"
+    limit: "350 gen/měsíc (Standard), 50 (Experimental)"
+
+  v0_dev:
+    url: "v0.dev"
+    use_for: "Produkční React komponenty, shadcn/ui integrace"
+    price: "$20/měsíc"
+
+  shadcn_tailwind_v4:
+    use_for: "Design systém základ, theming přes OKLCH"
+    key_feature: "CSS-first konfigurace (@theme místo tailwind.config.js)"
+
+  oklch_fyi:
+    url: "oklch.fyi"
+    use_for: "Generování barevné palety v prohlížeči"
+
+# =========================
+# CHECKLISTS
+# =========================
+design_checklist_before_delivery:
+  visual:
+    - "Žádné saturované barvy (gold, orange) — pouze monochrome?"
+    - "Spacing v násobcích 4px?"
+    - "Max 2 font weights použity?"
+    - "Heading letter-spacing negativní u velkých textů?"
+    - "Dark backgrounds: min kontrast 4.5:1 pro body text?"
+    - "Hover states na interaktivních prvcích?"
+    - "-webkit- prefix na backdrop-filter?"
+    - "@supports fallback pro backdrop-filter?"
+  pdf_specific:
+    - "printBackground: true v Puppeteer config?"
+    - "print-color-adjust: exact na barvených prvcích?"
+    - "@page margin: 0 a vlastní padding v .pc?"
+    - "Footer absolutně pozicovaný (ne flex na konci)?"
+    - "Fonty načteny? (Ne Google Fonts v offline PDF)"
+  performance:
+    - "backdrop-filter blur max 15px?"
+    - "Animace will-change nebo translateZ(0) na GPU vrstvě?"
+    - "Ambient orby pointer-events: none?"
+
+# =========================
+# DOCUMENT COMPONENTS (z reálných nabídek)
+# =========================
+document_components:
+
+  page_dark:
+    code: |
+      .page-dark { background: #0A0A0C; color: #F2F0ED; }
+      .page-dark::before {
+        content: ''; position: absolute; inset: 0; z-index: 0;
+        background: linear-gradient(165deg, #000000, #0A0A0C, #111115);
+      }
+      .page-dark::after {
+        content: ''; position: absolute; inset: 0; z-index: 1;
+        background:
+          radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.04), transparent 70%),
+          radial-gradient(ellipse at 80% 70%, rgba(255,255,255,0.02), transparent 60%);
+      }
+      .page-dark .page-content { position: relative; z-index: 2; }
+
+  page_light:
+    code: |
+      .page-light { background: #F2F0ED; color: #1A1A1A; }
+
+  glass_card_light:
+    code: |
+      .glass-card {
+        background: rgba(255,255,255,0.65);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 12px;
+        padding: 28px 32px;
+      }
+
+  glass_card_dark:
+    code: |
+      .glass-card-dark {
+        background: rgba(255,255,255,0.04);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 28px 32px;
+      }
+
+  standard_card_light:
+    code: |
+      .card { background: #f0eeeb; border: 1px solid #e8e6e2; border-radius: 10px; padding: 22px 26px; }
+
+  standard_card_dark:
+    code: |
+      .card-dark { background: #151517; border: 1px solid #222225; border-radius: 10px; padding: 22px 26px; }
+
+  cta_block:
+    code: |
+      .cta-block {
+        background: linear-gradient(165deg, #0F0F0F, #1A1A1A, #2A2A2A);
+        border-radius: 12px; padding: 32px 36px;
+        color: #F2F0ED; position: relative; overflow: hidden;
+      }
+      .cta-block::before {
+        content: ''; position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.03), transparent);
+      }
+      .cta-block * { position: relative; z-index: 1; }
+
+  tag:
+    code: |
+      .tag {
+        display: inline-block; font-weight: 600; font-size: 10px;
+        letter-spacing: 2px; text-transform: uppercase;
+        padding: 5px 14px; border-radius: 4px;
+      }
+      .tag-light   { background: #1A1A1A; color: #F2F0ED; }
+      .tag-dark    { background: rgba(255,255,255,0.08); color: #999; border: 1px solid rgba(255,255,255,0.06); }
+      .tag-outline { background: transparent; border: 1px solid #E5E3E0; color: #555; }
+
+  divider:
+    code: |
+      .divider { height: 1px; border: none; margin: 24px 0; }
+      .page-light .divider { background: linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent); }
+      .page-dark  .divider { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
+
+  highlight_bar:
+    code: |
+      .bar { width: 3px; border-radius: 2px; flex-shrink: 0; align-self: stretch; }
+      .page-light .bar { background: #1A1A1A; }
+      .page-dark  .bar { background: rgba(255,255,255,0.12); }
+
+  bullet_list:
+    code: |
+      ul li { padding: 4px 0 4px 16px; position: relative; font-size: 12.5px; line-height: 1.6; }
+      ul li::before {
+        content: ''; position: absolute; left: 0; top: 11px;
+        width: 4px; height: 4px; border-radius: 50%; background: #C8C4BF;
+      }
+      .page-dark ul li::before { background: rgba(255,255,255,0.15); }
+
+  footer:
+    code: |
+      .footer {
+        position: absolute; bottom: 40px; left: 60px; right: 60px;
+        font-size: 10px; color: #C8C4BF;
+        display: flex; justify-content: space-between;
+      }
+      .page-dark .footer { color: rgba(255,255,255,0.15); }
+
+  page_system:
+    code: |
+      @page { size: A4; margin: 0; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: 'Inter Tight', sans-serif; -webkit-font-smoothing: antialiased; }
+      .page { width: 210mm; height: 297mm; margin: 0 auto; position: relative; overflow: hidden; page-break-after: always; }
+      .page-content { padding: 50px 60px; height: 100%; }
+      @media screen { .page { box-shadow: 0 2px 60px rgba(0,0,0,0.18); margin: 30px auto; } }
+      @media print { body { background: none; } .page { box-shadow: none; margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
+anti_patterns:
+  - "Playfair Display nebo jiný font než Inter Tight"
+  - "Gold (#cdb186) nebo orange (#795b38) kdekoliv — brand je MONOCHROME"
+  - "Čistá černá #000000 jako bg — použij #0A0A0C nebo gradient"
+  - "Uniformní stránky bez alternace dark/light rytmu"
+  - "Tag border-radius >6px — OneFlow tagy jsou ostré (4px)"
+  - "Straight solid divider místo gradient fade-in/out"
+  - "Footer v normal flow — musí být position: absolute"
+  - "Moc gradientů — každý element soutěží o pozornost"
+  - "HSL barvy místo OKLCH (nekonzistentní jas) — na webu"
+  - "Malý text na tmavém pozadí (<11px, <rgba(255,255,255,0.4))"
+  - "Jakákoliv saturovaná barva — OneFlow je striktně monochrome"
+  - "Em dash v textu — zakázaný v OneFlow voice"
+  - "Uniform font sizes — žádná hierarchie"
+  - "Letter-spacing 0 na headings >20px — vždy negativní"
+
+# =========================
+# BRAND MANUAL STRUCTURE
+# =========================
+brand_manual:
+  folder_structure: |
+    brand-manual/
+    ├── index.html          # obsah + navigace
+    ├── 01-logo.html        # logo system, clearspace, do's/dont's
+    ├── 02-colors.html      # paleta, hex/oklch, usage rules
+    ├── 03-typography.html  # typefaces, scale, specimen
+    ├── 04-spacing.html     # grid, spacing scale
+    ├── 05-components.html  # buttons, cards, forms
+    ├── 06-photography.html # foto styl, moodboard
+    ├── 07-voice.html       # tone of voice, banned words
+    └── assets/
+        ├── fonts/
+        ├── logos/
+        └── examples/
+
+  color_swatch_html: |
+    <div class="swatch" style="--c: #0A0A0C">
+      <span class="name">Dark BG</span>
+      <span class="hex">#0A0A0C</span>
+    </div>
+    <div class="swatch" style="--c: #1A1A1A">
+      <span class="name">Near Black</span>
+      <span class="hex">#1A1A1A</span>
+    </div>
+    <div class="swatch" style="--c: #F2F0ED">
+      <span class="name">Warm White</span>
+      <span class="hex">#F2F0ED</span>
+    </div>
+    <div class="swatch" style="--c: #C8C4BF">
+      <span class="name">Accent Warm</span>
+      <span class="hex">#C8C4BF</span>
+    </div>
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_files:
+  research: "/Users/YOUR_USERNAME/docs/design-research.md"
+  stitch_systems: "/Users/YOUR_USERNAME/docs/design-stitch-systems.md"
+  brand_dna: "/Users/YOUR_USERNAME/docs/DESIGN.md"
+  oneflow_brand: "~/.claude/expertise/oneflow-brand.yaml"
+
+related_knowledge:
+  - "knowledge_design_2026.md (memory)"

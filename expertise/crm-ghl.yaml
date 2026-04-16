@@ -1,0 +1,234 @@
+domain: crm-ghl
+last_updated: 2026-04-13
+description: GoHighLevel CRM — integrace, pipeline, kontakty, tagy, webhooky, API patterns pro OneFlow
+
+# =========================
+# ONEFLOW GHL SETUP
+# =========================
+setup:
+  platform: GoHighLevel (GHL)
+  credentials_location: "~/.claude/mcp-keys.env nebo /root/.credentials/master.env"
+  api_version: "v2"
+  base_url: "https://rest.gohighlevel.com/v1"  # v1 je aktivni
+  base_url_v2: "https://services.leadconnectorhq.com"  # v2 pro nove endpointy
+
+  location_id: "[read from master.env: GHL_LOCATION_ID]"
+  api_key_var: "GHL_API_KEY"
+
+# =========================
+# KONTAKTY
+# =========================
+contacts:
+  create_endpoint: "POST /contacts"
+  search_endpoint: "GET /contacts/search"
+  update_endpoint: "PUT /contacts/{contactId}"
+
+  required_fields:
+    - email  # primarni klic pro dedupl
+    - firstName, lastName
+    - phone  # +420 format
+
+  optional_fields:
+    - companyName
+    - address1, city, postalCode, country
+    - tags: []
+    - customField: {}
+    - source
+
+  deduplication:
+    strategy: "email = primarni klic"
+    ghl_behavior: "GHL automaticky merguje kontakty se stejnym emailem"
+    warning: "Phone deduplication je slabsi — muze vytvorit duplicity"
+
+  stats_2026_04:
+    total: 110  # dubai leads
+    pipeline_cold_email: 414
+
+# =========================
+# TAGS SYSTEM
+# =========================
+tags:
+  active_tags:
+    sourcing:
+      - "dubai"         # Dubai LinkedIn leads
+      - "ares-scan"     # z ARES scraping engine
+      - "crowdfunding"  # z Fundlift/Upvest
+
+    qualification:
+      - "tier-a-hot"    # score > 75
+      - "tier-b"        # score 50-75
+      - "tier-c"        # score 25-50
+
+    outreach:
+      - "cold-email"    # pridan do cold email sequence
+      - "linkedin-connect"
+      - "linkedin-odepsal"  # odpoved na LI
+      - "email-replied"
+
+    investor:
+      - "hnwi"          # High Net Worth Individual
+      - "developer"     # RE developer
+      - "fund"          # investicni fond
+
+    status:
+      - "unsubscribed"
+      - "bounced"
+      - "do-not-contact"
+
+  tagging_rules:
+    - "Tag = lowercase, hyphen-separated"
+    - "Nikdy necislit tagy (dubai-1, dubai-2) — pouzivat custom fields"
+    - "Duplicitni tagy GHL automaticky ignoruje"
+
+# =========================
+# PIPELINES
+# =========================
+pipelines:
+  default_stages:
+    - "New Lead"
+    - "Contacted"
+    - "Interested"
+    - "Meeting Scheduled"
+    - "Meeting Done"
+    - "Proposal Sent"
+    - "Negotiation"
+    - "Won"
+    - "Lost"
+
+  oneflow_stages:
+    - "Sourced"    # z automatickeho scrapingu
+    - "Enriched"   # email/phone overeny
+    - "Queued"     # v cold email sequence
+    - "Contacted"  # alespon 1 email odeslan
+    - "Replied"    # odpoved prijata
+    - "Qualified"  # splnuje ICP
+    - "Meeting"    # schuzka domluvena
+    - "Closed"
+
+# =========================
+# GHL SYNC (cold email → GHL)
+# =========================
+ghl_sync:
+  script: "/root/cold_email/ghl_sync.py"
+  trigger: "*/15 * * * * (cron na Flash)"
+  state_file: "/root/cold_email/ghl_sync_state.json"
+  log: "/root/cold_email/ghl_sync.log"
+
+  sync_logic:
+    new_contact:
+      trigger: "email odeslan"
+      action: "POST /contacts — vytvorit s tagy"
+    email_sent:
+      trigger: "send_daemon.py potvrdi send"
+      action: "Add tag cold-email + update pipeline stage"
+    reply_received:
+      trigger: "reply_forwarder detekuje reply"
+      action: "Add tag email-replied + move to Replied stage"
+    bounce:
+      trigger: "bounce detekovan"
+      action: "Add tag bounced + add to suppression list"
+
+  known_stats:
+    created: 16
+    updated: 1326
+    errors: 28
+
+# =========================
+# WEBHOOKY
+# =========================
+webhooks:
+  ghl_to_system:
+    format: "POST na endpoint v nasem systemu"
+    content_type: "application/json"
+    authentication: "GHL signature header (verify!)"
+    events:
+      - contact.created
+      - contact.updated
+      - opportunity.status_changed
+      - form.submitted
+
+  system_to_ghl:
+    pattern: "REST API volani pri events v nasem systemu"
+    throttle: "GHL limit: [ASSUMED] 100 req/min"
+
+# =========================
+# CUSTOM FIELDS
+# =========================
+custom_fields:
+  create_endpoint: "POST /custom-fields"
+  recommended_fields:
+    - name: "ICO"           # CZ company ID
+    - name: "NACE"          # industry code
+    - name: "Emitent Score" # 0-100 scoring
+    - name: "Emitent Tier"  # A/B/C/D
+    - name: "Last ARES Check"
+    - name: "Email Waterfall Status"  # web/hunter/apollo/pattern/smtp
+    - name: "ISIR Status"   # clean/insolvency
+    - name: "AB Variant"    # pro A/B testing cold email
+
+# =========================
+# API PATTERNS
+# =========================
+api_patterns:
+  auth_header:
+    v1: "Authorization: Bearer {GHL_API_KEY}"
+    v2: "Authorization: Bearer {ACCESS_TOKEN}"
+
+  rate_limiting:
+    poznamka: "[ASSUMED] 100 requests/min. Pouzivat exponential backoff."
+    retry_pattern: "if 429: sleep(60), retry"
+
+  pagination:
+    pattern: "?startAfter={lastId}&limit=100"
+
+  bulk_operations:
+    contacts: "Neexistuje bulk endpoint — iterovat s delay"
+    tags: "PATCH /contacts/{id} s tags array"
+
+  error_handling:
+    401: "Invalid API key — zkontroluj GHL_API_KEY v master.env"
+    422: "Validation error — zkontroluj required fields"
+    429: "Rate limit — implementuj backoff"
+    500: "GHL server error — retry 3x"
+
+# =========================
+# GHL WORKFLOWS (automations)
+# =========================
+workflows:
+  useful_automations:
+    - trigger: "Tag added: email-replied"
+      action: "Notify Filip via email/SMS"
+    - trigger: "Form submitted"
+      action: "Add to pipeline + send intro email"
+    - trigger: "Opportunity stage: Meeting Scheduled"
+      action: "Calendar invite + reminder sequence"
+
+  oneflow_aktive:
+    - "[ASSUMED] Overit v GHL Automation sekci jake workflows jsou aktivni"
+
+# =========================
+# FAKTA
+# =========================
+facts:
+  - date: 2026-04-08
+    fact: "GHL sync aktivni z cold email pipeline, 15-min interval"
+    confidence: HIGH
+  - date: 2026-04-08
+    fact: "110+ Dubai leads v GHL s tagy dubai, tier-a-hot, developer, fund"
+    confidence: HIGH
+  - date: 2026-04-13
+    fact: "Dubai LinkedIn bridge DOWN (Alfa VPS unreachable) — leady v GHL stale platne"
+    confidence: HIGH
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - outbound-sales-science.yaml
+  - data-enrichment.yaml
+  - linkedin-automation.yaml
+
+related_memory:
+  - ghl_integration.md
+  - cold_email_setup.md
+  - project_dubai_outreach.md

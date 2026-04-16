@@ -1,0 +1,244 @@
+domain: investor-outreach
+last_updated: 2026-04-09
+description: Cold outreach, ICP, sales psychology, sequence frameworks pro OneFlow investor acquisition
+
+# =========================
+# ICP (Ideal Customer Profile)
+# =========================
+icp:
+  primary:
+    name: HNWI_Czech_Sophisticated
+    portfolio_min_czk: 10000000
+    age_range: 35-60
+    profession: [founder_exit, senior_exec, lawyer, doctor_specialist, developer_RE]
+    psychographics:
+      - Uz zvlada burzu a ETF
+      - Hleda alternativni asset classes
+      - Nema cas na detailni DD
+      - Ceni premium service
+      - Skepticky k marketingovym reecim
+
+  secondary:
+    name: Affluent_Retail_500k_plus
+    portfolio_min_czk: 500000
+    age_range: 30-55
+    profession: [mid_senior_exec, lawyer_junior, freelance_senior]
+    psychographics:
+      - Chce vic nez banka
+      - Netrpi na podradnem marketingu
+      - Ceni transparentnost
+      - Nema ECP qualifikaci
+
+  tertiary:
+    name: Founders_Seeking_Fundraising
+    size: 5M_plus_CZK_raise
+    profession: [tech_founder, RE_developer, SME_founder]
+    needs:
+      - Pomoc s emitent roli
+      - Pristup k siti investoru
+      - Legal + prospekt podpora
+
+# =========================
+# OUTREACH CHANNELS
+# =========================
+channels:
+  linkedin:
+    volume_per_day: 30
+    connection_note_max_chars: 300
+    message_sequence: [connect, thanks, value_1, value_2, meeting_ask]
+    response_rate_benchmark: "5-8%"
+
+  email_cold:
+    volume_per_day: 50
+    sequence_length: 5
+    interval_days: [0, 3, 7, 14, 21]
+    response_rate_benchmark: "2-4%"
+
+  warm_intro:
+    source: [existing_clients, partners, podcast_guests]
+    response_rate_benchmark: "40-60%"
+    priority: highest
+
+  events:
+    types: [HNWI_meetups, founder_breakfasts, private_dinners]
+    frequency: "2-3 per month"
+
+# =========================
+# SALES FRAMEWORKS
+# =========================
+frameworks:
+  cold_lead_first_touch:
+    framework: Challenger_plus_AIDA
+    structure:
+      - Attention: provocative_truth_about_market
+      - Interest: teach_something_new
+      - Desire: show_specific_opportunity
+      - Action: low_commitment_next_step
+
+  qualification:
+    framework: BANT_plus_MEDDPICC
+    criteria:
+      - Budget: portfolio_size_investable_now
+      - Authority: sole_decision_maker
+      - Need: specific_asset_class_interest
+      - Timeline: ready_in_3_months
+
+  investor_meeting:
+    framework: SPIN_plus_Cialdini
+    spin_questions:
+      situation: "Jake mate portfolio?"
+      problem: "Co vas na tom trapi?"
+      implication: "Co to znamena dlouhodobe?"
+      need_payoff: "Kdybyste to mel vyresene, co by to znamenalo?"
+
+  objection_handling:
+    framework: Voss_Label_Isolate_Reframe
+    steps:
+      1_validate: "Chapu vas. To je legitimni obava."
+      2_label: "Zni to, jako byste mel spatnou zkusenost s X."
+      3_isolate: "Kdybychom tohle vyresili, je to jedina prekazka?"
+      4_reframe: "Co kdybychom to obratili takhle..."
+
+  closing:
+    framework: Scarcity_plus_Ackerman
+    steps:
+      1_scarcity: real_deadline_or_allocation_limit
+      2_ackerman_starting: 65_percent_of_target
+      3_anchor_moves: [85, 95, 100_with_specific_number]
+      4_no_oriented_close: "Kdybyste se dnes nerozhodl, co by se stalo?"
+
+# =========================
+# EMAIL SEQUENCE TEMPLATE
+# =========================
+email_sequence_cold:
+  length: 5
+  emails:
+    email_1:
+      day: 0
+      subject_formula: "{personalization} + {curiosity}"
+      body_max_words: 120
+      structure: [personalizace, value_stat, teaser, soft_cta]
+      cta: low_commitment_reply_question
+    email_2:
+      day: 3
+      subject_formula: "Re: {previous_subject}"
+      body_max_words: 80
+      structure: [bump_reference, alternative_angle, cta]
+    email_3:
+      day: 7
+      subject_formula: "{fresh_insight_or_case_study}"
+      body_max_words: 150
+      structure: [social_proof, specific_opportunity, medium_cta]
+    email_4:
+      day: 14
+      subject_formula: "{direct_question}"
+      body_max_words: 60
+      structure: [single_question, no_pitch]
+    email_5:
+      day: 21
+      subject_formula: "Nechavam to byt"
+      body_max_words: 50
+      structure: [break_up, door_open, final_value]
+
+# =========================
+# CIALDINI 6 APPLIED
+# =========================
+cialdini:
+  reciprocity:
+    how: "Poskytnuti hodnoty pred ask (free DD, market report)"
+    example: "Posilame Vam ten makro report, co jsme o tom mluvili."
+  commitment:
+    how: "Male commitmenty vedouci k velkym"
+    example: "Dam si newsletter -> free konzultace -> male investice -> velke investice"
+  social_proof:
+    how: "Zmineni podobnych klientu + konkretni cisla"
+    example: "14 nasich klientu ma portfolio 10M+ a 5 z nich investovalo do {deal}"
+    warning: Nikdy nepouzivat identifikovatelne klienty bez souhlasu
+  authority:
+    how: "Track record + third-party validace"
+    example: "5 let DD zkusenosti, 200M+ zprostredkovano, audit KPMG"
+  liking:
+    how: "Filip story + relatable pain + nefalkovana expertíza"
+    example: Filipuv founder story
+  scarcity:
+    how: "Real limits (allocation, deadline, ECSP limits)"
+    warning: Nikdy fake urgency. CNB to kontroluje.
+
+# =========================
+# SCHWARTZ AWARENESS LEVELS
+# =========================
+schwartz_matching:
+  level_1_unaware:
+    copy_style: Curious story, pain point identification
+    message: "Vedel jste, ze..."
+  level_2_problem_aware:
+    copy_style: Validate pain, preview solution
+    message: "Kdyz vas trapi X..."
+  level_3_solution_aware:
+    copy_style: Compare solutions, differentiate
+    message: "X mate - ale co Y, ktere je..."
+  level_4_product_aware:
+    copy_style: Feature comparison, social proof
+    message: "Proc OneFlow misto Portu nebo Upvest..."
+  level_5_most_aware:
+    copy_style: Direct offer, scarcity, specific deal
+    message: "Konkretni emise X s {yield} do {deadline}"
+
+# =========================
+# MESSAGING RULES
+# =========================
+messaging:
+  do:
+    - Personalize specific detail from profile
+    - Start with value, not ask
+    - Use numbers not adjectives
+    - Short sentences
+    - End with question or clear next step
+  dont:
+    - "Dovoluji si / Rad bych fraze"
+    - "Generic templates"
+    - "Fake urgency"
+    - "Stack claims without proof"
+    - "Multi-paragraph walls"
+    - "Mam pro vas exkluzivni nabidku"
+
+# =========================
+# FILIP_SIGNATURE
+# =========================
+signature_template:
+  short: "Dopita"
+  standard: |
+    Dopita
+    OneFlow | Investice, ktere daj smysl
+    +420 {phone}
+    oneflow.cz
+
+# =========================
+# FACTS
+# =========================
+facts:
+  - date: 2026-04-09
+    fact: LinkedIn SN trial expires 2026-04-12, no auto-renew
+    source: linkedin_sales_navigator.md memory
+  - date: 2026-04-09
+    fact: Primary outreach channel po expire = cold email (Alfa VPS CZ IP)
+    source: cold_email_setup.md
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - oneflow-brand.yaml
+  - content-creation.yaml
+
+related_rules:
+  - ~/.claude/rules/expertise-sales-psychology.md
+  - ~/.claude/rules/filip-style-clone.md
+  - ~/.claude/rules/competitive-intel.md
+
+related_memory:
+  - project_dubai_outreach.md
+  - cold_email_setup.md
+
+related_agents:
+  - outbound-strategist

@@ -1,0 +1,1 @@
+/Users/filipdopita/.claude/skills/gstack/gstack-upgrade/SKILL.md
