@@ -170,7 +170,7 @@ claude
 | Guide | Contents |
 |---|---|
 | [Mac Setup](docs/SETUP_MAC.md) | Prerequisites, install walkthrough, directory structure, troubleshooting |
-| [VPS Setup](docs/SETUP_VPS.MD) | WireGuard VPN, SSHFS mount, Claude Code on VPS, sync strategy |
+| [VPS Setup](docs/SETUP_VPS.md) | WireGuard VPN, SSHFS mount, Claude Code on VPS, sync strategy |
 | [MCP Servers](docs/MCP_SERVERS.md) | GitHub, Notion, Calendar, Playwright, Context7 — configs + troubleshooting |
 | [Customization](docs/CUSTOMIZATION.md) | Identity, brand voice, infrastructure map, adding skills/expertise |
 
