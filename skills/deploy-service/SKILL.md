@@ -1,12 +1,12 @@
 ---
 name: deploy-service
 description: "Deploy nové služby na VPS (Flash/VPS-SECONDARY). Systemd + Monit + Fluent Bit + Caddy + ntfy alert. Trigger: 'nasaď službu', 'deploy na VPS', 'nový service', 'přidej na server'."
-compatibility: Requires SSH access to VPS VPS-PRIMARY (YOUR_VPS_IP) and/or VPS-SECONDARY (89.221.212.203) via WireGuard.
+compatibility: Requires SSH access to VPS VPS-PRIMARY (YOUR_VPS_IP) and/or VPS-SECONDARY (YOUR_SECONDARY_VPS_PUBLIC_IP) via WireGuard.
 metadata:
   requires-env: SSH_KEY
   allowed-hosts:
     - YOUR_VPS_IP
-    - 89.221.212.203
+    - YOUR_SECONDARY_VPS_PUBLIC_IP
   version: "1.0"
 ---
 
@@ -113,7 +113,7 @@ EOF"
 ### Krok 6: Caddy reverse proxy (pokud web-facing)
 ```bash
 # Pouze na VPS-SECONDARY pro *.[your-company].com
-ssh root@89.221.212.203 "cat >> /etc/caddy/Caddyfile << 'EOF'
+ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP "cat >> /etc/caddy/Caddyfile << 'EOF'
 
 [subdomain].[your-company].com {
     reverse_proxy localhost:[port]
@@ -123,7 +123,7 @@ ssh root@89.221.212.203 "cat >> /etc/caddy/Caddyfile << 'EOF'
 }
 EOF"
 
-ssh root@89.221.212.203 "caddy reload --config /etc/caddy/Caddyfile"
+ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP "caddy reload --config /etc/caddy/Caddyfile"
 ```
 Na VPS-PRIMARY: Caddy na portu 80/443, podobný postup.
 

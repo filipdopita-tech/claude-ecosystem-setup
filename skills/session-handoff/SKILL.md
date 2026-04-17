@@ -48,7 +48,7 @@ type: project
 
 Pro každé klíčové rozhodnutí ze sekce "Klíčová rozhodnutí":
 1. Formuluj jako: "[CO] bylo rozhodnuto [PROČ] v kontextu [SITUACE]"
-2. Zavolej `graphiti_add` s tímto obsahem (MCP graphiti-oneflow)
+2. Zavolej `graphiti_add` s tímto obsahem (MCP [YOUR_GRAPHITI_SERVER])
 3. Max 3-5 rozhodnutí per session — jen skutečně klíčová (architektura, bezpečnost, strategie)
 
 Cíl: Graphiti ví nejen CO se stalo, ale PROČ — reasoning kompounduje across sessions.

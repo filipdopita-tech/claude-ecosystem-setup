@@ -244,7 +244,7 @@ migration_to_flash:
     3: "Přesměrovat VPS-PRIMARY cron jobs"
     4: "Test playwright na VPS-PRIMARY (headless, --no-sandbox)"
     5: "Update ecosystem-map.md + project_dubai_outreach.md"
-  risk: "VPS-PRIMARY IP (173.212.220.67) je blokovaná Proofpointem — LinkedIn může blokovat odlišně"
+  risk: "VPS-PRIMARY IP (YOUR_VPS_PUBLIC_IP_2) je blokovaná Proofpointem — LinkedIn může blokovat odlišně"
   alternative: "Dedikovaná residential proxy pro LinkedIn requests"
 
 # =========================

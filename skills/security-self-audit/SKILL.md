@@ -9,8 +9,8 @@ metadata:
   requires-env: SSH_KEY
   allowed-hosts:
     - YOUR_VPS_IP
-    - 89.221.212.203
-    - 173.212.220.67
+    - YOUR_SECONDARY_VPS_PUBLIC_IP
+    - YOUR_VPS_PUBLIC_IP_2
   version: "1.1"
 ---
 
@@ -27,7 +27,7 @@ metadata:
 
 Audit se spouští na **obou VPS**:
 - **Flash** (VPS-PROVIDER): `ssh root@YOUR_VPS_IP`
-- **Alfa** (VPS-PROVIDER-2): `ssh root@89.221.212.203`
+- **Alfa** (VPS-PROVIDER-2): `ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP`
 
 Pokud uživatel specifikuje jen jeden server, audituj jen ten. Default = oba.
 
@@ -322,7 +322,7 @@ Po dokončení obou auditů vytvoř:
 | Server | Score | FAILs | WARNs | PASSes |
 |---|---|---|---|---|
 | VPS-PRIMARY (YOUR_VPS_IP) | XX% | N | N | N |
-| VPS-SECONDARY (89.221.212.203) | XX% | N | N | N |
+| VPS-SECONDARY (YOUR_SECONDARY_VPS_PUBLIC_IP) | XX% | N | N | N |
 | **CELKEM** | **XX%** | **N** | **N** | **N** |
 
 ## Top Priority Actions
@@ -417,8 +417,8 @@ Pořadí závažnosti:
 ╔══════════════════════════════════════════════════════════╗
 ║              SECURITY AUDIT — YYYY-MM-DD                 ║
 ╠══════════════════════════════════════════════════════════╣
-║ VPS-PRIMARY  173.212.220.67 │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
-║ VPS-SECONDARY   89.221.212.203 │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
+║ VPS-PRIMARY  YOUR_VPS_PUBLIC_IP_2 │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
+║ VPS-SECONDARY   YOUR_SECONDARY_VPS_PUBLIC_IP │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
 ╠══════════════════════════════════════════════════════════╣
 ║ URGENTNÍ: [pokud jsou FAILy — stručný seznam]           ║
 ╠══════════════════════════════════════════════════════════╣

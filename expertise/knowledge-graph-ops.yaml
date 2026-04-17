@@ -15,7 +15,7 @@ stack:
   cost: "$0/měsíc (free tiers)"
 
   mcp_config:
-    name: "graphiti-oneflow"
+    name: "[YOUR_GRAPHITI_SERVER]"
     transport: "SSH stdio na VPS-PRIMARY"
     tools:
       - name: "graphiti_search"
@@ -96,7 +96,7 @@ add_patterns:
 
     fact:
       pattern: "graphiti_add('{fakt s kontextem}', source='fact', name='{entity}')"
-      example: "graphiti_add('[YOUR_COMPANY] cold email pipeline: 414 kontaktů, send PAUSED (Proofpoint), IP 173.212.220.67', source='fact', name='cold email status 2026-04')"
+      example: "graphiti_add('[YOUR_COMPANY] cold email pipeline: 414 kontaktů, send PAUSED (Proofpoint), IP YOUR_VPS_PUBLIC_IP_2', source='fact', name='cold email status 2026-04')"
 
     task_result:
       pattern: "graphiti_add('Task {name}: {co bylo uděláno}, výsledek: {result}', source='conductor', name='{task_name}')"

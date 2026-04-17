@@ -8,7 +8,7 @@ description: VPS VPS-PRIMARY + VPS-SECONDARY infrastruktura — specs, SSH, WG, 
 topology:
   vps_flash:
     provider: VPS-PROVIDER
-    ip_public: 173.212.220.67
+    ip_public: YOUR_VPS_PUBLIC_IP_2
     ip_wg: YOUR_VPS_IP
     specs:
       ram_gb: 12
@@ -19,14 +19,14 @@ topology:
 
   vps_alfa:
     provider: VPS-PROVIDER-2
-    ip_public: 89.221.212.203
+    ip_public: YOUR_SECONDARY_VPS_PUBLIC_IP
     ip_wg: YOUR_SECONDARY_VPS_IP
     specs:
       ram_gb: 5.8
       vcpu: 2
       ssd_gb: 40
     role: email_cz_ip_legacy_services
-    ssh: "ssh root@89.221.212.203"
+    ssh: "ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP"
 
   mac:
     role: source_of_truth_mount_point
@@ -237,7 +237,7 @@ facts:
 # =========================
 commands:
   ssh_flash: "ssh root@YOUR_VPS_IP"
-  ssh_alfa: "ssh root@89.221.212.203"
+  ssh_alfa: "ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP"
   ssh_mac_from_flash: "ssh mac  # = YOUR_MAC_WG_IP"
   mount_mac: "/mac  # automounted via SSHFS"
   systemctl_restart: "ssh root@YOUR_VPS_IP 'systemctl restart {service}'"

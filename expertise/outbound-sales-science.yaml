@@ -11,8 +11,8 @@ stack:
     volume_per_day: 50  # při aktivním sendu, PAUSED (Proofpoint block)
     sequence_length: 5
     intervals_days: [0, 3, 7, 14, 21]
-    ip_primary: "173.212.220.67"  # VPS-PRIMARY — BLOCKED Proofpoint
-    ip_backup: "89.221.212.203"   # VPS-SECONDARY — CZ IP, neblokovaný
+    ip_primary: "YOUR_VPS_PUBLIC_IP_2"  # VPS-PRIMARY — BLOCKED Proofpoint
+    ip_backup: "YOUR_SECONDARY_VPS_PUBLIC_IP"   # VPS-SECONDARY — CZ IP, neblokovaný
     campaign: "[YOUR_COMPANY] Podcast Outreach (campaign_id=2)"
 
   linkedin:
@@ -267,7 +267,7 @@ linkedin_sequence:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "Cold email send PAUSED — Proofpoint block na VPS-PRIMARY IP (173.212.220.67)"
+    fact: "Cold email send PAUSED — Proofpoint block na VPS-PRIMARY IP (YOUR_VPS_PUBLIC_IP_2)"
     confidence: HIGH
   - date: 2026-04-13
     fact: "LinkedIn bridge DOWN — VPS-SECONDARY VPS unreachable od 2026-04-12"
