@@ -1,6 +1,6 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 202 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 200 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
 
 ---
 
@@ -25,7 +25,7 @@ claude
 
 | Component | Count | What it does |
 |---|---|---|
-| Skills | 202 | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, and 198 more |
+| Skills | 200 | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, and 196 more |
 | Hooks | 40 | Auto-run on Claude Code events: format on save, security guard, session state, desktop notifications |
 | Expertise YAMLs | 14 | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, and more |
 | Knowledge MDs | 29 | Reference documents: coding standards, sales psychology, design patterns, compliance, finance |
@@ -47,8 +47,8 @@ claude
 │   ├── knowledge-router.md  # Domain → expertise file mapping
 │   └── domains/             # Cold email, compliance, investment rules
 ├── expertise/       # 14 domain YAMLs (loaded on-demand)
-├── knowledge/       # 29 reference MDs + 12 code standards
-├── skills/          # 202 slash-command skill directories
+├── knowledge/       # 17 reference MDs + 12 code standards (29 total)
+├── skills/          # 200 slash-command skill directories
 ├── hooks/           # 40 automation scripts
 ├── settings.json    # Claude Code config + hook wiring
 └── projects/
@@ -191,7 +191,7 @@ Run any skill with `/skill-name` in Claude Code:
 /ultraplan       → Cloud planning with assume-failure-first
 ```
 
-Browse all 202 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
+Browse all 200 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
 
 ---
 

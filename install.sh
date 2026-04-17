@@ -517,7 +517,7 @@ echo
 echo -e "  ${CYAN}9.${NC} Install Obsidian + Dataview for the memory vault"
 echo     "     See docs/SETUP_OBSIDIAN.md"
 echo
-echo -e "  ${CYAN}10.${NC} Check skills index — 202 skills across all domains"
+echo -e "  ${CYAN}10.${NC} Check skills index — 200 skills across all domains"
 echo      "      Each skill: ~/.claude/skills/<name>/SKILL.md"
 echo      "      Invoke with: /skill-name in Claude Code chat"
 echo
@@ -525,7 +525,7 @@ echo -e "${BOLD}Test your setup:${NC}"
 echo
 echo     "  claude --version                   # verify CLI"
 echo     "  ls ~/.claude/rules/                # verify rules installed"
-echo     "  ls ~/.claude/skills/ | wc -l       # verify skills (expect 202)"
+echo     "  ls ~/.claude/skills/ | wc -l       # verify skills (expect 200)"
 echo     "  ls ~/.claude/hooks/ | wc -l        # verify hooks (expect 40)"
 echo
 echo -e "${BOLD}Documentation:${NC}"
