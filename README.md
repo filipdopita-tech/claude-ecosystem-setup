@@ -1,6 +1,6 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 200 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 245 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
 
 ---
 
@@ -191,7 +191,7 @@ Run any skill with `/skill-name` in Claude Code:
 /ultraplan       → Cloud planning with assume-failure-first
 ```
 
-Browse all 200 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
+Browse all 245 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
 
 ---
 

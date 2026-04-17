@@ -517,7 +517,7 @@ echo
 echo -e "  ${CYAN}9.${NC} Install Obsidian + Dataview for the memory vault"
 echo     "     See docs/SETUP_OBSIDIAN.md"
 echo
-echo -e "  ${CYAN}10.${NC} Check skills index — 200 skills across all domains"
+echo -e "  ${CYAN}10.${NC} Check skills index — 245 skills across all domains"
 echo      "      Each skill: ~/.claude/skills/<name>/SKILL.md"
 echo      "      Invoke with: /skill-name in Claude Code chat"
 echo
