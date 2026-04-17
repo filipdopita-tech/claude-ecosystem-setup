@@ -63,7 +63,7 @@ reel_structure:
     - "8-22s: Value (3 body, 1 cislo)"
     - "22-30s: CTA (Comment KEYWORD)"
   script_rules:
-    - Zadny intro "Ahoj, jsem Filip..."
+    - Zadny intro "Ahoj, jsem [YOUR_NAME]..."
     - Jet rovnou do hodnoty
     - Prvni 3 slova = HOOK
     - Posledni slova = CTA
@@ -96,7 +96,7 @@ hook_formulas:
 storybrand:
   hero: investor_czech_500k_plus
   problem: rozdrobena_investice_neprehlednost_ceskeho_trhu
-  guide: OneFlow
+  guide: [YOUR_COMPANY]
   plan:
     - konzultace
     - vyber_prilezitosti
@@ -175,17 +175,17 @@ kpi:
 facts:
   - date: 2026-04-09
     fact: IG priorituje watch time pred saves (zmena oproti 2024-2025)
-    source: Filip research, Instagram creator blog
+    source: [YOUR_NAME] research, Instagram creator blog
 
   - date: 2026-04-09
     fact: Carousel 10% engagement rate je best-performing format na CZ finance niche
-    source: OneFlow internal analytics
+    source: [YOUR_COMPANY] internal analytics
 
 # =========================
 # CROSS-REFERENCES
 # =========================
 related_expertise:
-  - oneflow-brand.yaml
+  - [your-service].yaml
 
 related_rules:
   - ~/.claude/rules/expertise-marketing.md

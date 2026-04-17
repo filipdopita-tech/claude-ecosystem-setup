@@ -6,14 +6,14 @@ description: LinkedIn Voyager API, Playwright automation, Dubai pipeline, A/B te
 # CURRENT STATUS
 # =========================
 current_status:
-  bridge_status: DOWN  # Alfa VPS unreachable od 2026-04-12
-  bridge_location: "Alfa VPS /root/linkedin-bridge/ — DEAD"
+  bridge_status: DOWN  # VPS-SECONDARY VPS unreachable od 2026-04-12
+  bridge_location: "VPS-SECONDARY VPS /root/linkedin-bridge/ — DEAD"
   data_status: "110+ leadů v GHL = PLATNÁ DATA"
   migration_options:
-    A: "Flash migration — přesunout linkedin-bridge z Alfa na Flash"
+    A: "VPS-PRIMARY migration — přesunout linkedin-bridge z VPS-SECONDARY na VPS-PRIMARY"
     B: "Archive — exportovat GHL leady do cold email pipeline"
-    C: "Alfa restart — obnovit Wedos (čeká na zrušení)"
-  recommendation: "Option A nebo B — Alfa se ruší"
+    C: "VPS-SECONDARY restart — obnovit VPS-PROVIDER-2 (čeká na zrušení)"
+  recommendation: "Option A nebo B — VPS-SECONDARY se ruší"
 
 # =========================
 # ARCHITEKTURA SYSTÉMU
@@ -177,7 +177,7 @@ throttle_logic:
 
   session_health:
     monitor: "dubai_monitor.py v1.0"
-    alert: "ntfy topic: Filip — bridge down, session expired, throttle activated"
+    alert: "ntfy topic: [YOUR_NAME] — bridge down, session expired, throttle activated"
     watchdog: "*/5 min — auto-restart + ntfy"
 
 # =========================
@@ -185,8 +185,8 @@ throttle_logic:
 # =========================
 monitoring:
   ntfy:
-    url: "https://ntfy.oneflow.cz"
-    topic: "Filip"
+    url: "https://ntfy.[your-company].com"
+    topic: "[YOUR_NAME]"
     bearer: "[read from master.env: ntfy_bearer]"  # NIKDY hardcode
 
   alerts:
@@ -226,7 +226,7 @@ bridge_db:
 # API ENDPOINTS (BRIDGE)
 # =========================
 bridge_api:
-  base: "http://YOUR_ALFA_WG_IP:8200"  # Alfa WG IP — DEAD
+  base: "http://YOUR_SECONDARY_VPS_IP:8200"  # VPS-SECONDARY WG IP — DEAD
   endpoints:
     connect: "POST /outreach/connect"
     message: "POST /outreach/message"
@@ -235,16 +235,16 @@ bridge_api:
     check_pending: "GET /outreach/check-pending"
 
 # =========================
-# MIGRATION GUIDE (Alfa → Flash)
+# MIGRATION GUIDE (VPS-SECONDARY → VPS-PRIMARY)
 # =========================
 migration_to_flash:
   steps:
-    1: "rsync /root/linkedin-bridge/ z Alfa na Flash (když Alfa přístupná)"
+    1: "rsync /root/linkedin-bridge/ z VPS-SECONDARY na VPS-PRIMARY (když VPS-SECONDARY přístupná)"
     2: "Aktualizovat API port, WireGuard IP reference"
-    3: "Přesměrovat Flash cron jobs"
-    4: "Test playwright na Flash (headless, --no-sandbox)"
+    3: "Přesměrovat VPS-PRIMARY cron jobs"
+    4: "Test playwright na VPS-PRIMARY (headless, --no-sandbox)"
     5: "Update ecosystem-map.md + project_dubai_outreach.md"
-  risk: "Flash IP (YOUR_VPS_PUBLIC_IP) je blokovaná Proofpointem — LinkedIn může blokovat odlišně"
+  risk: "VPS-PRIMARY IP (173.212.220.67) je blokovaná Proofpointem — LinkedIn může blokovat odlišně"
   alternative: "Dedikovaná residential proxy pro LinkedIn requests"
 
 # =========================
@@ -252,7 +252,7 @@ migration_to_flash:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "Alfa VPS unreachable — LinkedIn bridge DOWN. 110+ GHL leadů platná."
+    fact: "VPS-SECONDARY VPS unreachable — LinkedIn bridge DOWN. 110+ GHL leadů platná."
     confidence: HIGH
   - date: 2026-04-08
     fact: "Playwright stability fix: global context pool max 30 uses + GPU disable flags"
@@ -261,7 +261,7 @@ facts:
     fact: "Auto-throttle fungoval: acceptance rate < 15% → .throttle flag → 20/den limit"
     confidence: HIGH
   - date: 2026-04-13
-    fact: "[ASSUMED] Flash IP může být problematická pro LinkedIn — ověřit před migrací"
+    fact: "[ASSUMED] VPS-PRIMARY IP může být problematická pro LinkedIn — ověřit před migrací"
     confidence: MED
 
 # =========================

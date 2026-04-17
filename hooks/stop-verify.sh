@@ -4,7 +4,7 @@
 # 2. Appends final usage snapshot to metrics/usage.jsonl
 # 3. Sends ntfy summary with usage stats
 
-NTFY_URL="https://ntfy.oneflow.cz/Filip"
+NTFY_URL="https://ntfy.[your-company].com/[YOUR_NAME]"
 NTFY_TOKEN="tk_ahfvizbkyyj78turo1rmevsthimek"
 USAGE_LOG="$HOME/.claude/metrics/usage.jsonl"
 

@@ -10,9 +10,9 @@ description: "Kondenzuj aktuální konverzaci do 5-7 bullet pointů pro copy-pas
 - **compact** = kdykoliv uprostřed session, krátký formát, output rovnou do chatu pro copy-paste
 
 ## Kdy použít
-- Filip řekne `/compact` nebo "COMPACT"
+- [YOUR_NAME] řekne `/compact` nebo "COMPACT"
 - Před přechodem na nový chat (když session běží dlouho ale není na konci)
-- Když Filip pracuje na něčem co chce paralelně otevřít v novém chatu
+- Když [YOUR_NAME] pracuje na něčem co chce paralelně otevřít v novém chatu
 - Po velkém taskem kde je potřeba předat state do další konverzace
 
 ## Output formát
@@ -47,7 +47,7 @@ Vypiš PŘESNĚ tohle, nic víc, nic míň:
 3. **Zachovej konkrétní data:** čísla, file paths, příkazy, URL. NE vague statements.
 4. **Žádné meta komentáře** jako "Podívejme se na..." nebo "Zde je shrnutí...". Jen raw obsah.
 5. **Poslední věta "Pro nový chat"** musí být self-contained — Claude v novém chatu má dostat vše co potřebuje k okamžitému pokračování.
-6. **Neukládej nikam** — compact je disposable snapshot, NE persistent state. Filip si ho sám zkopíruje kam potřebuje.
+6. **Neukládej nikam** — compact je disposable snapshot, NE persistent state. [YOUR_NAME] si ho sám zkopíruje kam potřebuje.
 7. **Rychlost > elegance.** Vypiš compact okamžitě, bez přípravných frází.
 
 ## Příklad dobrého compactu
@@ -59,7 +59,7 @@ Vypiš PŘESNĚ tohle, nic víc, nic míň:
 
 **Stav:**
 • [DONE] Stáhl 10 postů (8 reelů + 2 posty), transkribovány přes Whisper
-• [DONE] Report uložen: /path/to/your/report.md
+• [DONE] Report uložen: $HOME/Documents/research/claude-code-ig-analysis-2026-04-09.md
 • [DECIDED] COMPACT skill implementovat (missing piece mezi inline a session-handoff)
 • [DECIDED] CLAUDE.md rules diet = real win (1403 řádků loaded vždy)
 • [WIP] Caveman skill in progress
@@ -71,7 +71,7 @@ Vypiš PŘESNĚ tohle, nic víc, nic míň:
 - Blockery: Žádné
 
 **Pro nový chat:**
-Pokračuj v implementaci z reportu — zbývá dopsat zbývající části.
+Pokračuj v implementaci z reportu $HOME/Documents/research/claude-code-ig-analysis-2026-04-09.md — zbývá caveman skill + rules tree audit.
 ```
 
 ## Anti-patterns (NEDĚLEJ)

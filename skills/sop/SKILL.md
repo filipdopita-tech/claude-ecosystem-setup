@@ -1,9 +1,9 @@
 ---
 name: sop
-description: "Creates operational documentation for OneFlow ecosystem: service runbooks, deployment playbooks, troubleshooting guides, recovery procedures. Trigger: /sop, 'napiš runbook', 'zdokumentuj postup', 'playbook pro X', 'co dělat když X spadne', 'jak nasadit X'."
+description: "Creates operational documentation for [YOUR_COMPANY] ecosystem: service runbooks, deployment playbooks, troubleshooting guides, recovery procedures. Trigger: /sop, 'napiš runbook', 'zdokumentuj postup', 'playbook pro X', 'co dělat když X spadne', 'jak nasadit X'."
 ---
 
-# /sop — SOP Creator (OneFlow)
+# /sop — SOP Creator ([YOUR_COMPANY])
 
 ## Kdy aktivovat
 - Uživatel napíše `/sop`
@@ -30,7 +30,7 @@ description: "Creates operational documentation for OneFlow ecosystem: service r
 Zjisti ze zprávy:
 - Typ dokumentu (pokud neřekl → zeptej se jednou, jednou větou)
 - Název služby / procesu
-- Server: Flash (YOUR_VPS_IP) nebo Alfa (WG .3 / CZ IP)
+- Server: VPS-PRIMARY (YOUR_VPS_IP) nebo VPS-SECONDARY (WG .3 / CZ IP)
 
 ### 2. Načti kontext ekosystému
 
@@ -77,7 +77,7 @@ cat > ~/.claude/knowledge/sops/{slug}.md << 'EOF'
 EOF
 
 # Kritické recovery docs — ulož na obě místa
-cp ~/.claude/knowledge/sops/{slug}.md /mac/Documents/OneFlow-Vault/SOPs/{slug}.md
+cp ~/.claude/knowledge/sops/{slug}.md /mac/Documents/[YOUR_VAULT]/SOPs/{slug}.md
 ```
 
 Při uložení: echo "Saved to ~/.claude/knowledge/sops/{slug}.md" + nabídni otevření.

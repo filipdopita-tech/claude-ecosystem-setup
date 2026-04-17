@@ -17,9 +17,9 @@ V6, npm package: `npx bmad-method install`
 - **Complete lifecycle** — brainstorming → deployment
 - **Skills Architecture** (nové ve V6) — rozšiřitelné moduly
 
-## Srovnání s GSD (Filip's stack)
+## Srovnání s GSD ([YOUR_NAME]'s stack)
 
-| Dimenze | BMAD | GSD (Filip) |
+| Dimenze | BMAD | GSD ([YOUR_NAME]) |
 |---|---|---|
 | Zaměření | Role-based agents (PM, Dev, UX...) | Workflow-based phases |
 | Hloubka | Enterprise-grade, adaptivní | Lean, fast |

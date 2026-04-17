@@ -10,7 +10,7 @@ triggers:
 
 # Research via AI Gateway
 
-Use `ai-gateway.py` to answer research questions using free models (Gemma 4 31B → Gemini Flash → OpenRouter free) instead of burning Claude tokens.
+Use `ai-gateway.py` to answer research questions using free models (Gemma 4 31B → Gemini VPS-PRIMARY → OpenRouter free) instead of burning Claude tokens.
 
 ## Instructions
 
@@ -51,6 +51,6 @@ echo "USER_PROMPT" | ai-gateway.py --stdin --temperature 0.3
 
 Run `ai-gateway.py --list-models` for current list. Default chain:
 - Gemma 4 31B (AI Studio free, 15 RPM)
-- Gemini 2.5 Flash (AI Studio free)
+- Gemini 2.5 VPS-PRIMARY (AI Studio free)
 - DeepSeek R1 (OpenRouter free)
 - Qwen 3 Coder (OpenRouter free)

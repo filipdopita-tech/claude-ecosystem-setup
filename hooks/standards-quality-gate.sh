@@ -1,9 +1,9 @@
 #!/bin/bash
-# Standards Quality Gate - Pre-send checks for OneFlow content
-# Based on Dopita Operating System: standards as code guardrails
+# Standards Quality Gate - Pre-send checks for [YOUR_COMPANY] content
+# Based on [YOUR_NAME] Operating System: standards as code guardrails
 #
 # Checks content being written for:
-# 1. Banned words (OneFlow brand rules)
+# 1. Banned words ([YOUR_COMPANY] brand rules)
 # 2. Missing numbers/data (every post needs data)
 # 3. Missing CTA (every text ends with action)
 # 4. Disclaimer check (investment content)
@@ -60,7 +60,7 @@ if echo "$CONTENT" | grep -iqE "$INVESTMENT_WORDS"; then
 fi
 
 if [ -n "$WARNINGS" ]; then
-    echo "QUALITY GATE (Dopita Standards):"
+    echo "QUALITY GATE ([YOUR_NAME] Standards):"
     echo -e "$WARNINGS"
     echo "Oprav pred publikovanim."
 fi

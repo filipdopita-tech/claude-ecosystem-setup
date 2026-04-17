@@ -19,7 +19,7 @@ Kompatibilní s: Claude Code, Codex, OpenClaw, OpenCode.
 - **Multi-Workspace** — týmová isolace
 - **WebSocket streaming** — real-time progress
 
-## Srovnání s Paseo/Conductor (Filip's stack)
+## Srovnání s Paseo/Conductor ([YOUR_NAME]'s stack)
 
 | Dimenze | Multica | Paseo/Conductor |
 |---|---|---|
@@ -32,17 +32,17 @@ Kompatibilní s: Claude Code, Codex, OpenClaw, OpenCode.
 
 ## Proč NEINSTALOCAT
 
-1. **Paseo na YOUR_VPS_WG_IP:6767** je funkční, $0 cost, custom-fit pro OneFlow pipelines
-2. **Conductor** je optimalizovaný pro async file-queue model (OneFlow use case)
+1. **Paseo na YOUR_VPS_IP:6767** je funkční, $0 cost, custom-fit pro [YOUR_COMPANY] pipelines
+2. **Conductor** je optimalizovaný pro async file-queue model ([YOUR_COMPANY] use case)
 3. Multica přidává komplexitu (dashboard, DB, WebSocket) bez jasné výhody pro sólový workflow
-4. Apache-modified licence: "jen interní use, NE SaaS reselling" — limitující pokud OneFlow bude platformizovat
+4. Apache-modified licence: "jen interní use, NE SaaS reselling" — limitující pokud [YOUR_COMPANY] bude platformizovat
 
 ## Kdy reconsiderovat
 
-- OneFlow najme dalšího dev nebo VA který potřebuje UI task přiřazování
+- [YOUR_COMPANY] najme dalšího dev nebo VA který potřebuje UI task přiřazování
 - Paseo/Conductor dosáhne limitu maintainability
 - Potřeba formálního agent skill registry (multica reusable skills feature)
 
 ## Závěr
 
-Multica je pro AI-native týmy s UI workflow. Filip je sólový, custom stack funguje, přechod by byl YAGNI.
+Multica je pro AI-native týmy s UI workflow. [YOUR_NAME] je sólový, custom stack funguje, přechod by byl YAGNI.

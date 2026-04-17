@@ -1,12 +1,12 @@
 ---
 name: deploy-service
-description: "Deploy nové služby na VPS (Flash/Alfa). Systemd + Monit + Fluent Bit + Caddy + ntfy alert. Trigger: 'nasaď službu', 'deploy na VPS', 'nový service', 'přidej na server'."
-compatibility: Requires SSH access to VPS Flash (YOUR_VPS_IP) and/or Alfa (YOUR_VPS2_PUBLIC_IP) via WireGuard.
+description: "Deploy nové služby na VPS (Flash/VPS-SECONDARY). Systemd + Monit + Fluent Bit + Caddy + ntfy alert. Trigger: 'nasaď službu', 'deploy na VPS', 'nový service', 'přidej na server'."
+compatibility: Requires SSH access to VPS VPS-PRIMARY (YOUR_VPS_IP) and/or VPS-SECONDARY (89.221.212.203) via WireGuard.
 metadata:
   requires-env: SSH_KEY
   allowed-hosts:
     - YOUR_VPS_IP
-    - YOUR_VPS2_PUBLIC_IP
+    - 89.221.212.203
   version: "1.0"
 ---
 
@@ -22,13 +22,13 @@ metadata:
 ### Krok 1: Routing — kam nasadit?
 Přečti `~/.claude/rules/ecosystem-map.md` a rozhodní:
 
-| Kritérium | Flash (Contabo) | Alfa (Wedos) |
+| Kritérium | VPS-PRIMARY | VPS-SECONDARY (VPS-PROVIDER-2) |
 |---|---|---|
 | Potřebuje českou IP | - | ANO |
 | Email/SMTP | - | ANO |
 | Claude Code / AI workload | ANO | - |
 | Scraping (proxy) | ANO | - |
-| Web facing (oneflow.cz) | - | ANO |
+| Web facing ([your-company].com) | - | ANO |
 | Obecný backend/API | ANO | - |
 | Výpočetně náročné | ANO (12GB RAM) | NE (5.8GB) |
 
@@ -96,7 +96,7 @@ EOF"
 ssh [target] "monit reload"
 ```
 
-### Krok 5: Fluent Bit logging (pokud na Flash)
+### Krok 5: Fluent Bit logging (pokud na VPS-PRIMARY)
 ```bash
 ssh root@YOUR_VPS_IP "cat >> /etc/fluent-bit/parsers-custom.conf << 'EOF'
 [PARSER]
@@ -112,10 +112,10 @@ EOF"
 
 ### Krok 6: Caddy reverse proxy (pokud web-facing)
 ```bash
-# Pouze na Alfa pro *.oneflow.cz
-ssh root@YOUR_VPS2_PUBLIC_IP "cat >> /etc/caddy/Caddyfile << 'EOF'
+# Pouze na VPS-SECONDARY pro *.[your-company].com
+ssh root@89.221.212.203 "cat >> /etc/caddy/Caddyfile << 'EOF'
 
-[subdomain].oneflow.cz {
+[subdomain].[your-company].com {
     reverse_proxy localhost:[port]
     log {
         output file /var/log/caddy/[service-name].log
@@ -123,9 +123,9 @@ ssh root@YOUR_VPS2_PUBLIC_IP "cat >> /etc/caddy/Caddyfile << 'EOF'
 }
 EOF"
 
-ssh root@YOUR_VPS2_PUBLIC_IP "caddy reload --config /etc/caddy/Caddyfile"
+ssh root@89.221.212.203 "caddy reload --config /etc/caddy/Caddyfile"
 ```
-Na Flash: Caddy na portu 80/443, podobný postup.
+Na VPS-PRIMARY: Caddy na portu 80/443, podobný postup.
 
 ### Krok 7: Health check + ntfy alert
 ```bash
@@ -139,7 +139,7 @@ ssh [target] "curl -s -d '[service-name] deployed successfully on [target]' ntfy
 ### Krok 8: Aktualizuj ecosystem-map
 Po úspěšném nasazení uprav:
 - `~/.claude/rules/ecosystem-map.md` — přidej službu do tabulky
-- `~/.claude/projects/-Users-YOUR_USERNAME/memory/project_vps_new_services.md` — zaloguj
+- `~/.claude/projects/-Users-<username>/memory/project_vps_new_services.md` — zaloguj
 
 ### Krok 9: Ověření
 ```bash
@@ -162,7 +162,7 @@ ssh [target] "ss -tlnp | grep [port]"
 - [ ] Žádné hardcoded secrets (vše v .env)
 - [ ] Health endpoint existuje (/health nebo ekvivalent)
 - [ ] Ecosystem-map aktualizován
-- [ ] Fluent Bit (Flash) nebo log file (Alfa) nakonfigurován
+- [ ] Fluent Bit (VPS-PRIMARY) nebo log file (VPS-SECONDARY) nakonfigurován
 - [ ] ntfy notifikace odeslána
 - [ ] Port dokumentován v ecosystem-map tabulce
 
@@ -182,5 +182,5 @@ ssh [target] "ss -tlnp | grep [port]"
 1. **Neházkuj porty.** Vždy zkontroluj ecosystem-map.md jestli port není obsazený.
 2. **Nekopíruj secrets přes scp.** Credentials patří do master.env na cílovém VPS, ne do zdrojového kódu.
 3. **Nespouštěj službu bez Monit watcheru.** Každý service MUSÍ mít monit config.
-4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = 10.YOUR_WG.0.x, veřejné = 0.0.0.0.
+4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = 10.77.0.x, veřejné = 0.0.0.0.
 5. **Netestuj jen start.** Ověř i restart (`systemctl restart`) a recovery po kill (`kill -9`).

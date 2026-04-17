@@ -122,7 +122,7 @@ CALL       → Přidejte se nyní
 
 ---
 
-## Vizuální pravidla (OneFlow brand)
+## Vizuální pravidla ([YOUR_COMPANY] brand)
 
 **Barvy:**
 - BG: `#0f1113` | Text: `#ffffff` | Gold (highlights, klíčová čísla): `#cdb186`

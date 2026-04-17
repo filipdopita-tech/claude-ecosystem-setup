@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: Framework-agnostic root-cause debugging methodology. Use for ad-hoc bugs, test failures, or unexpected behavior when no project-specific debug workflow applies. For gstack projects prefer /investigate (adds telemetry + freeze hooks). For GSD phases prefer /gsd-debug (persistent debug state across context resets). This skill is the pure 4-phase methodology plus supplementary techniques (root-cause-tracing, defense-in-depth, condition-based-waiting).
 ---
 
 # Systematic Debugging
@@ -20,6 +20,17 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ```
 
 If you haven't completed Phase 1, you cannot propose fixes.
+
+## Alternatives — pick the right debug skill
+
+| Context | Skill | Why |
+|---|---|---|
+| gstack project (has `.claude/skills/gstack/`) | `/investigate` | Adds telemetry, freeze hooks, learnings capture, Boil-the-Lake framing |
+| GSD phase active (`.planning/phases/NN-*/`) | `/gsd-debug` | Persistent debug state in DEBUG.md, survives context resets |
+| One-line obvious bug, no context needed | `/debug` | Lightweight one-shot, no methodology overhead |
+| **Everything else** (ad-hoc, no framework, library code, standalone scripts) | **this skill** | Pure 4-phase methodology, framework-agnostic |
+
+If you loaded this skill for a gstack or GSD project, stop and switch — those skills wrap the same Iron Law with tooling that saves rework.
 
 ## When to Use
 

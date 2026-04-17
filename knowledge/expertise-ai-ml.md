@@ -17,7 +17,7 @@ Aktualizováno: 2026-04-03 (Anthropic Prompting Best Practices 4.6, Tool Use Doc
 ### Chain of Thought / Adaptive Thinking (Claude 4.6+)
 ```python
 client.messages.create(
-    model="claude-opus-4-6",
+    model="claude-opus-4-7",
     max_tokens=64000,
     thinking={"type": "adaptive"},
     output_config={"effort": "high"},  # high/medium/low/max

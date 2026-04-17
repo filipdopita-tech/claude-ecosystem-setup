@@ -1,6 +1,6 @@
 domain: crm-ghl
 last_updated: 2026-04-13
-description: GoHighLevel CRM — integrace, pipeline, kontakty, tagy, webhooky, API patterns pro OneFlow
+description: GoHighLevel CRM — integrace, pipeline, kontakty, tagy, webhooky, API patterns pro [YOUR_COMPANY]
 
 # =========================
 # ONEFLOW GHL SETUP
@@ -95,7 +95,7 @@ pipelines:
     - "Won"
     - "Lost"
 
-  oneflow_stages:
+  [your-service]:
     - "Sourced"    # z automatickeho scrapingu
     - "Enriched"   # email/phone overeny
     - "Queued"     # v cold email sequence
@@ -110,7 +110,7 @@ pipelines:
 # =========================
 ghl_sync:
   script: "/root/cold_email/ghl_sync.py"
-  trigger: "*/15 * * * * (cron na Flash)"
+  trigger: "*/15 * * * * (cron na VPS-PRIMARY)"
   state_file: "/root/cold_email/ghl_sync_state.json"
   log: "/root/cold_email/ghl_sync.log"
 
@@ -197,13 +197,13 @@ api_patterns:
 workflows:
   useful_automations:
     - trigger: "Tag added: email-replied"
-      action: "Notify Filip via email/SMS"
+      action: "Notify [YOUR_NAME] via email/SMS"
     - trigger: "Form submitted"
       action: "Add to pipeline + send intro email"
     - trigger: "Opportunity stage: Meeting Scheduled"
       action: "Calendar invite + reminder sequence"
 
-  oneflow_aktive:
+  [your-service]:
     - "[ASSUMED] Overit v GHL Automation sekci jake workflows jsou aktivni"
 
 # =========================
@@ -217,7 +217,7 @@ facts:
     fact: "110+ Dubai leads v GHL s tagy dubai, tier-a-hot, developer, fund"
     confidence: HIGH
   - date: 2026-04-13
-    fact: "Dubai LinkedIn bridge DOWN (Alfa VPS unreachable) — leady v GHL stale platne"
+    fact: "Dubai LinkedIn bridge DOWN (VPS-SECONDARY VPS unreachable) — leady v GHL stale platne"
     confidence: HIGH
 
 # =========================

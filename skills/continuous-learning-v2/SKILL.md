@@ -19,7 +19,7 @@ Storage: `~/.claude/homunculus/instincts/`
 - `auto-instincts.jsonl` — auto-generated z observations
 
 ## Typy instinktů
-- `feedback` — korekce/potvrzení od Filipa (confidence 0.8-0.95)
+- `feedback` — korekce/potvrzení od [YOUR_NAME] (confidence 0.8-0.95)
 - `failure` — opakující se chyby (auto-generated, confidence based on hits)
 - `interrupt` — detekované behavior loops (auto-generated, triggers rethink)
 - `decision` — tracked decision points (pending → clean/errors_followed)
@@ -57,7 +57,7 @@ Decision points jsou:
 
 ## Future Projection (Weekly Trajectory) (v2.2)
 
-`/root/weekly-trajectory.sh` na VPS Flash, cron pondělí 8:00:
+`/root/weekly-trajectory.sh` na VPS VPS-PRIMARY, cron pondělí 8:00:
 - Resource trends (disk/RAM 7d delta, projekce plnosti)
 - Stability trends (restarty tento vs minulý týden)
 - Learning health (observations, instinkty, loops, decisions)
@@ -67,7 +67,7 @@ Decision points jsou:
 
 ## Feedback Memory Integration
 
-Každá korekce od Filipa:
+Každá korekce od [YOUR_NAME]:
 1. OKAMŽITĚ vytvoř/aktualizuj feedback instinct
 2. Cross-reference s feedback_*.md
 3. 2+ stejné korekce → auto-promote na pravidlo
@@ -99,4 +99,4 @@ Match s confidence >= 0.6 → skip akce, use alternativa.
 | `~/.claude/homunculus/decision-points.jsonl` | Tracked infra decisions (max 200) |
 | `~/.claude/homunculus/loop-detections.jsonl` | Detected behavior loops |
 | `~/.claude/homunculus/instincts/` | seed + auto instincts |
-| `/root/weekly-trajectory.sh` (VPS Flash) | Weekly trend analysis + ntfy |
+| `/root/weekly-trajectory.sh` (VPS VPS-PRIMARY) | Weekly trend analysis + ntfy |

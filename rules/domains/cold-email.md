@@ -6,7 +6,7 @@
 PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 
 ```
-□ Proofpoint/Spamhaus status VPS IP? (viz ecosystem-map.md → VPS IP)
+□ Proofpoint PDR status? (viz ecosystem-map.md → VPS-PRIMARY IP)
 □ SPF/DKIM/DMARC všech domén platné? (mxtoolbox.com)
 □ Denní limit nepřekročen? (max 50 emailů/doménu/den v warmup fázi)
 □ Bounce rate < 2%? (nad tím = STOP, čekej na analýzu)
@@ -14,7 +14,7 @@ PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 □ Warm-up fáze dodržena? (min 21 dní před full volume)
 ```
 
-Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj uživateli.
+Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj [YOUR_NAME].
 
 ## Domain Health Thresholds
 
@@ -28,7 +28,7 @@ Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj uživateli.
 
 ## A/B/C Domain Strategy
 
-Aktuální konfigurace (viz `~/.claude/projects/memory/cold_email_setup.md`):
+Aktuální konfigurace (viz memory/cold_email_setup.md):
 - **Doména A**: hlavní → pro high-priority prospects
 - **Doména B**: testovací → nové sekvence
 - **Doména C**: warmup → žádné sales emaily
@@ -51,19 +51,17 @@ Max sekvencí najednou: 50 kontaktů/doménu
 ## Psychologické Principy (Cialdini aplikace)
 
 - **Reciprocita**: Email 1 vždy dává (insight, data, analýza) — nic neprosí
-- **Social proof**: konkrétní čísla z tvého track record
-- **Scarcity**: kapacitní limity jako fakt, ne jako manipulace
-- **Authority**: registrace, certifikace, média zmínky
+- **Social proof**: konkrétní čísla ("3 emise, 47M Kč, 0 defaultů")
+- **Scarcity**: "Přijímám max 2 nové emitenty Q2" — nikoli jako lež, ale jako fakt
+- **Authority**: CNB registrace, track record, média zmínky
 
-## Blacklist Check — pokud je VPS IP blokován
+## Proofpoint Situace (jako 2026-04-15)
 
-```
-1. Zkontroluj: mxtoolbox.com/blacklists.aspx
-2. Zkontroluj: spamhaus.org/lookup
-3. Pokud blokován → delisting request na příslušném blacklistu
-4. Alternativa: posílej přes SMTP relay (Mailgun/Brevo/Postmark)
-5. Stav zdokumentuj v: ~/.claude/projects/memory/cold_email_setup.md
-```
+VPS-PRIMARY IP je na Proofpoint PDR blocklist. Čeká na delisting (odesláno 2026-04-14).
+→ Do clearance: ŽÁDNÉ cold emaily z VPS-PRIMARY IP.
+→ Alternativa: posílej přes VPS-SECONDARY VPS (CZ IP) nebo SMTP relay (Mailgun/Brevo).
+
+Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-<username>/memory/cold_email_setup.md`
 
 ## Content Rules
 

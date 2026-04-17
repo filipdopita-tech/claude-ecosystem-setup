@@ -1,20 +1,20 @@
 domain: czech-regulatory
 last_updated: 2026-04-13
-description: CZ regulatorní rámec pro OneFlow — dluhopisy, AML, ČNB, ECSP, ZISIF, ZPKT
+description: CZ regulatorní rámec pro [YOUR_COMPANY] — dluhopisy, AML, ČNB, ECSP, ZISIF, ZPKT
 confidence_notes: "Sections marked [ASSUMED] require legal verification. Core laws HIGH confidence."
 
 # =========================
 # ONEFLOW REGULATORY STATUS
 # =========================
-oneflow_status:
+[your-service]:
   entity_type: zprostredkovatel_investic  # NOT regulated financial institution
-  cnb_license: false  # OneFlow nema licenci CNB
+  cnb_license: false  # [YOUR_COMPANY] nema licenci CNB
   aml_obligated: true  # povinnost AML zakon 253/2008
   ecsp_license_needed: "[ASSUMED] Pokud provozuje platformu pro nabidku investic verejnosti"
   notes:
-    - "OneFlow neni regulovany subjekt CNB (banka, pojistovna, AIF, UCITS, ECSP)"
+    - "[YOUR_COMPANY] neni regulovany subjekt CNB (banka, pojistovna, AIF, UCITS, ECSP)"
     - "Ale podleha AML povinnostem jako zprostredkovatel"
-    - "Kazda emise dluhopisu emitentem (ne OneFlow) — OneFlow je jen agent/zprostredkovatel"
+    - "Kazda emise dluhopisu emitentem (ne [YOUR_COMPANY]) — [YOUR_COMPANY] je jen agent/zprostredkovatel"
 
 # =========================
 # KLICOVE ZAKONY
@@ -48,7 +48,7 @@ laws:
 
   aml:
     zakon: "253/2008 Sb. o opatrenich proti legalizaci vynosu z TCC"
-    povinny_subjekt: "[ASSUMED] OneFlow jako zprostredkovatel financnich sluzeb"
+    povinny_subjekt: "[ASSUMED] [YOUR_COMPANY] jako zprostredkovatel financnich sluzeb"
     povinnosti:
       - "KYC (Know Your Customer) pri onboardingu investora"
       - "Overeni identity (OP/pas, adresa, PEP check)"
@@ -62,11 +62,11 @@ laws:
 
   zisif:
     zakon: "240/2013 Sb. o investicnich spolecnostech a investicnich fondech"
-    relevance_pro_oneflow: "Nizka — OneFlow neni AIF ani UCITS"
+    relevance_pro_oneflow: "Nizka — [YOUR_COMPANY] neni AIF ani UCITS"
     kdyz_relevantni:
-      - "Pokud by OneFlow spravoval kolektivni investicni fond"
+      - "Pokud by [YOUR_COMPANY] spravoval kolektivni investicni fond"
       - "Pokud by meli Assets Under Management > 100M EUR"
-    poznamka: "[ASSUMED] OneFlow jako zprostredkovatel nepodleha ZISIF"
+    poznamka: "[ASSUMED] [YOUR_COMPANY] jako zprostredkovatel nepodleha ZISIF"
 
   zpkt:
     zakon: "256/2004 Sb. o podnikani na kapitalovem trhu (MiFID II implementace)"
@@ -76,7 +76,7 @@ laws:
       - "Povinnost best execution"
       - "Povinnost suitability assessment (je investice vhodna pro klienta?)"
       - "Povinnost disclosure (poplatky, konflikty zajmu)"
-    poznamka: "[ASSUMED] OneFlow musi overit zda jejich cinnost vyzaduje registraci zprostredkovatele"
+    poznamka: "[ASSUMED] [YOUR_COMPANY] musi overit zda jejich cinnost vyzaduje registraci zprostredkovatele"
 
   ecsp:
     regulation: "EU 2020/1503 (ECSP — European Crowdfunding Service Providers)"
@@ -88,7 +88,7 @@ laws:
     licence:
       udeluje: "CNB"
       vyzaduje: "kapital, governance, IT security, AML systemy"
-    poznamka: "[ASSUMED] Pokud OneFlow provozuje online platformu pro nabidku dluhopisu, ECSP muze byt povinny"
+    poznamka: "[ASSUMED] Pokud [YOUR_COMPANY] provozuje online platformu pro nabidku dluhopisu, ECSP muze byt povinny"
 
 # =========================
 # KYC / INVESTOR ONBOARDING
@@ -175,7 +175,7 @@ red_flags_emitent:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "OneFlow nema licenci CNB — stale muze zprostredkovavat investice jako neregulovered subjekt s AML povinnosti"
+    fact: "[YOUR_COMPANY] nema licenci CNB — stale muze zprostredkovavat investice jako neregulovered subjekt s AML povinnosti"
     source: "legal analysis + cnb.cz"
     confidence: HIGH
   - date: 2026-04-13
@@ -183,7 +183,7 @@ facts:
     source: "EU 2017/1129 Article 1(3)"
     confidence: HIGH
   - date: 2026-04-13
-    fact: "AML zakon 253/2008 — OneFlow jako zprostredkovatel pravdepodobne podleha"
+    fact: "AML zakon 253/2008 — [YOUR_COMPANY] jako zprostredkovatel pravdepodobne podleha"
     source: "[ASSUMED] — nutno overit s pravnikem"
     confidence: MED
 
@@ -192,7 +192,7 @@ facts:
 # =========================
 related_expertise:
   - investor-outreach.yaml
-  - oneflow-brand.yaml
+  - [your-service].yaml
 
 related_knowledge:
   - "~/.claude/knowledge/legal-compliance.md"

@@ -11,7 +11,7 @@ Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
 - Fallback: Gemini 429 → OpenRouter (deepseek-r1:free, qwen3-coder:free) → Claude
 
 ## Šenkypl mód
-- AI řídí, Filip schvaluje. Plánuj, exekuuj, reportuj
+- AI řídí, [YOUR_NAME] schvaluje. Plánuj, exekuuj, reportuj
 - Klientské výstupy: Claude → Gemini fact-check (curl API) → self-review
 - Úkol 3+ kroky → nejdřív plán. Data-first: stáhni a analyzuj, neodpovídej z hlavy
 - Nabídky: 5+ neočekávaných služeb. MCP princip: mám přístup → používám

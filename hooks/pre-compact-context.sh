@@ -3,7 +3,7 @@
 # Enhanced 7-section output inspired by Claude Code internal compact prompt
 # Outputs key info that must survive context compression
 
-MEMORY_DIR="$HOME/.claude/projects/$(whoami)/memory"
+MEMORY_DIR="$HOME/.claude/projects/-Users-<username>/memory"
 HOMUNCULUS="$HOME/.claude/homunculus"
 PLANS_DIR="$HOME/.claude/plans"
 
@@ -88,11 +88,11 @@ import json, os, datetime
 snapshot = {
     'ts': datetime.datetime.utcnow().isoformat(),
     'cwd': os.getcwd(),
-    'memory_dir': os.path.expanduser('~/.claude/projects/$(whoami)/memory'),
+    'memory_dir': os.path.expanduser('~/.claude/projects/-Users-<username>/memory'),
     'note': 'Pre-compact context recovery snapshot'
 }
 # Grab last 5 session handoff lines
-handoff = os.path.expanduser('~/.claude/projects/$(whoami)/memory/session_handoff.md')
+handoff = os.path.expanduser('~/.claude/projects/-Users-<username>/memory/session_handoff.md')
 if os.path.exists(handoff):
     with open(handoff) as f:
         snapshot['handoff_excerpt'] = f.read(2000)

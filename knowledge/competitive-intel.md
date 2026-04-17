@@ -1,7 +1,7 @@
 # Competitive Intelligence — CZ Investment Market
 
-## OneFlow positioning
-OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční advisory (J&T, WOOD). USP:
+## [YOUR_COMPANY] positioning
+[YOUR_COMPANY] operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční advisory (J&T, WOOD). USP:
 - **Premium brand** v casual trhu (dark/gold vs friendly/pastel)
 - **Fundraising + investice** na jedné platformě (nikdo jiný to nedělá)
 - **Dluhopisy + equity + poradenství** jako komplex
@@ -10,7 +10,7 @@ OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční
 
 ## Hlavní konkurenti (quick reference)
 
-| Konkurent | Co dělá | Slabina | Jak OneFlow vyhrává |
+| Konkurent | Co dělá | Slabina | Jak [YOUR_COMPANY] vyhrává |
 |-----------|---------|---------|---------------------|
 | Portu | Robo-advisory ETF, 300K klientů, 60 mld AUM | Masový retail, žádný fundraising | Premium segment, aktivní poradenství |
 | Fondee | ETF pro začátečníky, 23K klientů, 2.3 mld | Malé, zakladatelé odešli | Komplexní nabídka, stabilita |
@@ -25,7 +25,7 @@ OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční
 
 ## Cenový benchmark
 
-| Segment | Rozsah poplatků | OneFlow příležitost |
+| Segment | Rozsah poplatků | [YOUR_COMPANY] příležitost |
 |---------|----------------|---------------------|
 | Robo-advisory | 0.47-1.2% p.a. | Není cílový segment |
 | P2P/P2B investice | 0% investorovi | Poplatky od emitenta/dlužníka |
@@ -35,7 +35,7 @@ OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční
 
 ## Messaging diferenciace
 
-### Co říkat (OneFlow odlišení)
+### Co říkat ([YOUR_COMPANY] odlišení)
 - "Investice i fundraising pod jednou střechou"
 - "Pro zkušené investory, kteří chtějí víc než ETF"
 - "Transparentní track record, žádné skryté poplatky"
@@ -73,4 +73,4 @@ OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční
 | Ronda Invest | N/A (není veřejné) |
 | Dluhopisy.cz | Inzertní portál (neregulovaný) |
 
-**Klíčové:** ECSP regulace EU je game-changer. Platformy bez ČNB licence budou ztrácet důvěru. OneFlow by měl mít plnou licenci jako konkurenční výhodu.
+**Klíčové:** ECSP regulace EU je game-changer. Platformy bez ČNB licence budou ztrácet důvěru. [YOUR_COMPANY] by měl mít plnou licenci jako konkurenční výhodu.

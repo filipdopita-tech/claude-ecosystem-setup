@@ -44,13 +44,13 @@ výkonnost není zárukou budoucích výsledků.
 
 Composite: A (90+), B (75-89), C (60-74), D (45-59), F (<45) → F = doporučuji odmítnout.
 
-## Framování pro Filipův styl
+## Framování pro [YOUR_NAME]ův styl
 
 Při prezentaci DD výsledků:
 - Čísla první, závěr druhý (ne naopak)
 - Rizika explicitně, ne zahrabána v textu
 - "Odmítl jsem emise s lepším výnosem" > "zvažte alternativy"
-- OneFlow reputace = nad výnosem. Jeden špatný emitent = reputační katastrofa.
+- [YOUR_COMPANY] reputace = nad výnosem. Jeden špatný emitent = reputační katastrofa.
 
 ## Reference
 

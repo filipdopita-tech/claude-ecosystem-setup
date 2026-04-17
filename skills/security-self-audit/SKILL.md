@@ -2,15 +2,15 @@
 name: security-self-audit
 description: "Defensivní bezpečnostní audit vlastní VPS infrastruktury. Port scan, SSL, SSH hardening, UFW, fail2ban, bind adresy, file permissions, SUID binaries, zombie procesy. Výstup: strukturovaný PASS/WARN/FAIL report s remediací. Trigger: '/cso', 'bezpečnostní audit', 'security audit VPS', 'zkontroluj bezpečnost serveru'."
 version: 1.0.0
-author: Filip Dopita
+author: [YOUR_NAME]
 tags: [security, audit, vps, defensive, hardening]
-compatibility: Requires SSH root access to Flash and Alfa VPS via WireGuard. Nmap must be installed locally.
+compatibility: Requires SSH root access to VPS-PRIMARY and VPS-SECONDARY VPS via WireGuard. Nmap must be installed locally.
 metadata:
   requires-env: SSH_KEY
   allowed-hosts:
     - YOUR_VPS_IP
-    - YOUR_VPS2_PUBLIC_IP
-    - YOUR_VPS_PUBLIC_IP
+    - 89.221.212.203
+    - 173.212.220.67
   version: "1.1"
 ---
 
@@ -26,8 +26,8 @@ metadata:
 ## Scope
 
 Audit se spouští na **obou VPS**:
-- **Flash** (Contabo): `ssh root@YOUR_VPS_IP`
-- **Alfa** (Wedos): `ssh root@YOUR_VPS2_PUBLIC_IP`
+- **Flash** (VPS-PROVIDER): `ssh root@YOUR_VPS_IP`
+- **Alfa** (VPS-PROVIDER-2): `ssh root@89.221.212.203`
 
 Pokud uživatel specifikuje jen jeden server, audituj jen ten. Default = oba.
 
@@ -46,8 +46,8 @@ nmap -sV --open -T4 -p 1-65535 --min-rate 2000 [TARGET_IP] 2>/dev/null | grep -E
 ```
 
 Očekávané porty:
-- Flash: 22 (SSH), 80 (Caddy), 443 (Caddy), 51820 (WireGuard)
-- Alfa: 22 (SSH), 25 (SMTP), 80, 143 (IMAP), 443, 993 (IMAPS), 2586 (ntfy), 45876 (Beszel), 18810 (wa-bridge)
+- VPS-PRIMARY: 22 (SSH), 80 (Caddy), 443 (Caddy), 51820 (WireGuard)
+- VPS-SECONDARY: 22 (SSH), 25 (SMTP), 80, 143 (IMAP), 443, 993 (IMAPS), 2586 (ntfy), 45876 (Beszel), 18810 (wa-bridge)
 
 Jakýkoli NEČEKANÝ otevřený port = FAIL.
 
@@ -59,7 +59,7 @@ echo | openssl s_client -connect [domain]:443 -servername [domain] 2>/dev/null |
 curl -vI https://[domain] 2>&1 | grep -E "expire|SSL|TLS|issuer|subject"
 ```
 
-Domény k prověření: `oneflow.cz`, `mail.oneflow-team.cz`, plus hlavní Caddy endpointy.
+Domény k prověření: `[your-company].com`, `mail.[your-service].cz`, plus hlavní Caddy endpointy.
 
 Kontroluj:
 - Expiry < 30 dní = WARN
@@ -108,7 +108,7 @@ Kontroluj:
 
 ### 1.6 Bind adresy (service exposure)
 ```bash
-ssh [TARGET] "ss -tlnp 2>/dev/null | grep -v '127.0.0.1\|::1\|10.YOUR_WG.0'"
+ssh [TARGET] "ss -tlnp 2>/dev/null | grep -v '127.0.0.1\|::1\|10.77.0'"
 ```
 
 Jakákoli interní služba bindnutá na `0.0.0.0` místo `127.0.0.1` = FAIL.
@@ -116,10 +116,10 @@ Jakákoli interní služba bindnutá na `0.0.0.0` místo `127.0.0.1` = FAIL.
 Výjimky (smí být na 0.0.0.0):
 - Port 22 (SSH)
 - Port 80, 443 (web)
-- Port 25 (SMTP - jen Alfa)
+- Port 25 (SMTP - jen VPS-SECONDARY)
 - Port 51820 (WireGuard)
-- Port 2586 (ntfy - jen Alfa)
-- Port 45876 (Beszel - jen Alfa)
+- Port 2586 (ntfy - jen VPS-SECONDARY)
+- Port 45876 (Beszel - jen VPS-SECONDARY)
 
 ### 1.7 File permissions — citlivé adresáře
 ```bash
@@ -321,8 +321,8 @@ Po dokončení obou auditů vytvoř:
 
 | Server | Score | FAILs | WARNs | PASSes |
 |---|---|---|---|---|
-| Flash (YOUR_VPS_IP) | XX% | N | N | N |
-| Alfa (YOUR_VPS2_PUBLIC_IP) | XX% | N | N | N |
+| VPS-PRIMARY (YOUR_VPS_IP) | XX% | N | N | N |
+| VPS-SECONDARY (89.221.212.203) | XX% | N | N | N |
 | **CELKEM** | **XX%** | **N** | **N** | **N** |
 
 ## Top Priority Actions
@@ -345,7 +345,7 @@ ssh [TARGET] "chmod 700 /root/.credentials /root/.ssh && chmod 600 /root/.creden
 ssh [TARGET] "systemctl start fail2ban && systemctl enable fail2ban"
 ```
 
-### Vyžaduje Filipovo schválení (NEPTEJ SE — UPOZORNI a čekej na potvrzení):
+### Vyžaduje [YOUR_NAME]ovo schválení (NEPTEJ SE — UPOZORNI a čekej na potvrzení):
 - Změna UFW pravidel
 - Změna SSH konfigurace
 - Zabití procesů
@@ -359,23 +359,23 @@ curl -s \
   -H "Title: Security Audit: N FAILs nalezeno" \
   -H "Priority: high" \
   -H "Tags: warning,shield" \
-  -d "Flash: XX% | Alfa: XX% | FAILs: N | Report: ~/Documents/security-audits/" \
-  https://ntfy.sh/oneflow-security 2>/dev/null
+  -d "VPS-PRIMARY: XX% | VPS-SECONDARY: XX% | FAILs: N | Report: ~/Documents/security-audits/" \
+  https://ntfy.sh/[your-service] 2>/dev/null
 
 # Pokud vše OK
 curl -s \
   -H "Title: Security Audit: OK" \
   -H "Priority: default" \
   -H "Tags: white_check_mark,shield" \
-  -d "Flash: XX% | Alfa: XX% | Vše v pořádku" \
-  https://ntfy.sh/oneflow-security 2>/dev/null
+  -d "VPS-PRIMARY: XX% | VPS-SECONDARY: XX% | Vše v pořádku" \
+  https://ntfy.sh/[your-service] 2>/dev/null
 ```
 
 ### Aktualizace memory
-Po auditu přidej do `~/.claude/projects/-Users-YOUR_USERNAME/memory/security_hardening_2026_04_09.md`:
+Po auditu přidej do `~/.claude/projects/-Users-<username>/memory/security_hardening_2026_04_09.md`:
 ```
 ## Audit [YYYY-MM-DD]
-Score: Flash XX%, Alfa XX%
+Score: VPS-PRIMARY XX%, VPS-SECONDARY XX%
 FAILs: [seznam]
 Opraveno: [seznam]
 Next: [YYYY-MM-DD]
@@ -417,8 +417,8 @@ Pořadí závažnosti:
 ╔══════════════════════════════════════════════════════════╗
 ║              SECURITY AUDIT — YYYY-MM-DD                 ║
 ╠══════════════════════════════════════════════════════════╣
-║ Flash  YOUR_VPS_PUBLIC_IP │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
-║ Alfa   YOUR_VPS2_PUBLIC_IP │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
+║ VPS-PRIMARY  173.212.220.67 │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
+║ VPS-SECONDARY   89.221.212.203 │ Score: XX%  │ FAIL:N WARN:N PASS:N ║
 ╠══════════════════════════════════════════════════════════╣
 ║ URGENTNÍ: [pokud jsou FAILy — stručný seznam]           ║
 ╠══════════════════════════════════════════════════════════╣

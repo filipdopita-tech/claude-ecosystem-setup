@@ -14,7 +14,7 @@ GSD-2 je kompletní přepis GSD jako standalone CLI postavený na **Pi SDK** (Ty
 - **Automatic context clearing** mezi tasky
 - **Token tracking + cost monitoring**
 - **Stuck loop detection + crash recovery**
-- **RTK integration** (Filip má RTK)
+- **RTK integration** ([YOUR_NAME] má RTK)
 - **MCP secure_env_collect** — bezpečný sběr credentials
 
 ## Proč NEINSTALOVAT teď

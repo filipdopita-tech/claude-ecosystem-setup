@@ -16,6 +16,12 @@ metadata:
 
 **Scripts:** Located at the plugin root `scripts/` directory.
 
+**First-run setup (Python venv):** If `.venv/` is missing, run:
+```bash
+bash ~/.claude/skills/seo/scripts/setup_venv.sh
+```
+This regenerates ~400MB Python venv from `requirements.txt`. Safe to delete `.venv/` when skill not in use.
+
 Comprehensive SEO analysis across all industries (SaaS, local services,
 e-commerce, publishers, agencies). Orchestrates 16 specialized sub-skills and 11 subagents
 (+ 3 optional extension sub-skills: seo-dataforseo, seo-firecrawl, and seo-image-gen).

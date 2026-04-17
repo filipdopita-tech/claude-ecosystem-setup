@@ -55,13 +55,13 @@ import requests
 def sec_edgar_search(company_name: str) -> dict:
     """Hledá firmu v SEC EDGAR. Vrátí CIK a seznam filingů."""
     url = f"https://efts.sec.gov/LATEST/search-index?q=%22{company_name}%22&dateRange=custom&startdt=2022-01-01&forms=10-K,10-Q"
-    r = requests.get(url, headers={"User-Agent": "OneFlow DD filip@oneflow.cz"})
+    r = requests.get(url, headers={"User-Agent": "[YOUR_COMPANY] DD [YOUR_NAME]@[your-company].com"})
     return r.json() if r.status_code == 200 else {}
 
 def sec_company_facts(cik: str) -> dict:
     """Finanční data (revenue, assets, liabilities) z XBRL filingů."""
     url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik.zfill(10)}.json"
-    r = requests.get(url, headers={"User-Agent": "OneFlow DD filip@oneflow.cz"})
+    r = requests.get(url, headers={"User-Agent": "[YOUR_COMPANY] DD [YOUR_NAME]@[your-company].com"})
     return r.json() if r.status_code == 200 else {}
 
 # CoinGecko — krypto tržní data (pro emitenty s crypto expozicí)
@@ -78,7 +78,7 @@ def coingecko_price(coin_id: str) -> dict:
 ```python
 # FRED (Federal Reserve Economic Data) — makro: inflace, sazby, GDP, CPI
 # Registrace: https://fred.stlouisfed.org/docs/api/api_key.html (instantní, zdarma)
-# Přidat do Flash: echo "FRED_API_KEY=xxx" >> /root/.credentials/master.env
+# Přidat do VPS-PRIMARY: echo "FRED_API_KEY=xxx" >> /root/.credentials/master.env
 FRED_KEY = os.getenv("FRED_API_KEY")
 
 def fred_series(series_id: str) -> list:
@@ -95,7 +95,7 @@ def fred_series(series_id: str) -> list:
 
 # Finnhub — akcie, earnings, company profile, insider trading
 # Registrace: https://finnhub.io/register (instantní, free 60 req/min)
-# Přidat do Flash: echo "FINNHUB_API_KEY=xxx" >> /root/.credentials/master.env
+# Přidat do VPS-PRIMARY: echo "FINNHUB_API_KEY=xxx" >> /root/.credentials/master.env
 FINNHUB_KEY = os.getenv("FINNHUB_API_KEY")
 
 def finnhub_company_profile(ticker: str) -> dict:
@@ -183,7 +183,7 @@ CELKOVÝ SCORE: průměr * 10 = /100
 ```markdown
 # DD Report: [Název emitenta]
 **Datum:** [YYYY-MM-DD]
-**Analyst:** Filip Dopita / OneFlow
+**Analyst:** [YOUR_NAME] / [YOUR_COMPANY]
 
 ## Executive Summary
 [3-5 vět: co to je, hlavní rizika, verdikt]
@@ -218,7 +218,7 @@ Po dokončení reportu se VŽDY zeptej sám sebe:
 Uprav report na základě těchto odpovědí.
 
 ### RED FLAGS — OKAMŽITĚ ZASTAV
-Pokud najdeš cokoli z tohoto, OKAMŽITĚ upozorni Filipa:
+Pokud najdeš cokoli z tohoto, OKAMŽITĚ upozorni [YOUR_NAME]:
 - Emise nad limit bez prospektu (>1M EUR bez výjimky)
 - >149 retail investorů bez prospektu
 - Garantovaný výnos v marketingových materiálech

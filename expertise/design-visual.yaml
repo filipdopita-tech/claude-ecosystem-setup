@@ -6,7 +6,7 @@ description: Moderní HTML/CSS/visual design — trendy 2025-2026, premium patte
 # KRITICKÝ INSIGHT: DVĚ VERZE
 # Zdroj: reálné nabídky (nabidka-patricny-2026.html, nabidka-asr-2026-v4-web.html)
 # =========================
-oneflow_two_modes:
+[your-service]_modes:
   documents:
     description: "PDF nabídky, brand manuály, reporty — black & white + béžová paleta. BEZ gold."
     dark_bg: "#0A0A0C (blíže černé než web)"
@@ -302,7 +302,7 @@ css_techniques:
 # =========================
 premium_details:
   inset_top_glow:
-    description: "Subtle shimmer na horní hraně karty — signature OneFlow detail."
+    description: "Subtle shimmer na horní hraně karty — signature [YOUR_COMPANY] detail."
     code: "box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);"
 
   gradient_text:
@@ -606,14 +606,14 @@ anti_patterns:
   - "Gold (#cdb186) nebo orange (#795b38) kdekoliv — brand je MONOCHROME"
   - "Čistá černá #000000 jako bg — použij #0A0A0C nebo gradient"
   - "Uniformní stránky bez alternace dark/light rytmu"
-  - "Tag border-radius >6px — OneFlow tagy jsou ostré (4px)"
+  - "Tag border-radius >6px — [YOUR_COMPANY] tagy jsou ostré (4px)"
   - "Straight solid divider místo gradient fade-in/out"
   - "Footer v normal flow — musí být position: absolute"
   - "Moc gradientů — každý element soutěží o pozornost"
   - "HSL barvy místo OKLCH (nekonzistentní jas) — na webu"
   - "Malý text na tmavém pozadí (<11px, <rgba(255,255,255,0.4))"
-  - "Jakákoliv saturovaná barva — OneFlow je striktně monochrome"
-  - "Em dash v textu — zakázaný v OneFlow voice"
+  - "Jakákoliv saturovaná barva — [YOUR_COMPANY] je striktně monochrome"
+  - "Em dash v textu — zakázaný v [YOUR_COMPANY] voice"
   - "Uniform font sizes — žádná hierarchie"
   - "Letter-spacing 0 na headings >20px — vždy negativní"
 
@@ -658,10 +658,10 @@ brand_manual:
 # CROSS-REFERENCES
 # =========================
 related_files:
-  research: "/Users/YOUR_USERNAME/docs/design-research.md"
-  stitch_systems: "/Users/YOUR_USERNAME/docs/design-stitch-systems.md"
-  brand_dna: "/Users/YOUR_USERNAME/docs/DESIGN.md"
-  oneflow_brand: "~/.claude/expertise/oneflow-brand.yaml"
+  research: "$HOME/docs/design-research-2025.md"
+  stitch_systems: "$HOME/docs/design-stitch-systems-2025.md"
+  brand_dna: "$HOME/docs/DESIGN.md"
+  [your-service]: "~/.claude/expertise/[your-service].yaml"
 
 related_knowledge:
   - "knowledge_design_2026.md (memory)"

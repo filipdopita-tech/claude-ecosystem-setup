@@ -19,8 +19,9 @@ Jinak → /gsd-plan-phase lokálně
 
 ## Ultraplan — Max 20x optimalizace
 - Subscription: Claude Max 20x → plný Opus 4.6, žádné rate limity na cloud sessions
+- Repos připraveny: nemakej-solar-outbound, scraper-upgrades, openclaw-secure-deploy, mythos-skill
 - Bridge CLAUDE.md: každý repo má .claude/CLAUDE.md s pravidly pro cloud session
-- Setup nového repo: `~/scripts/automation/ultraplan-repo-setup.sh [path]`
+- Setup nového repo: ~/scripts/automation/ultraplan-repo-setup.sh [path]
 
 GSD volá Superpowers uvnitř fází (debugging, TDD, code review, planning).
 
@@ -28,15 +29,15 @@ GSD volá Superpowers uvnitř fází (debugging, TDD, code review, planning).
 
 | Skill | Trigger |
 |---|---|
-| `/deset` | Po dokončení výstupu — quality loop na 10/10 |
+| `/deset` | Po dokončení výstupu -- quality loop na 10/10 |
 | `/challenge` | Max kritická analýza |
-| `/flip` | Stuck — zakáže default, vynutí alternativy |
+| `/flip` | Stuck -- zakáže default, vynutí alternativy |
 | `/redteam` | Rozcupovat nápad |
 | `/overthink` | Hluboká analýza se stakes |
 | `/status` | System health check |
 | `/cso` | Bezpečnostní audit VPS |
 | `/postmortem` | Po selhání/incidentu |
-| `/sop` | Runbook / playbook / troubleshooting guide |
+| `/sop` | Runbook / playbook / troubleshooting guide pro [YOUR_COMPANY] služby |
 | `/handoff` | Před koncem session |
 | `/mythos` | Mythos emulace — výjimečně, složité tasky, vždy Opus, security-first agentic |
 | `continuous-learning-v2` | Vždy aktivní (hooks) |
@@ -46,7 +47,6 @@ GSD volá Superpowers uvnitř fází (debugging, TDD, code review, planning).
 
 PRAVIDLO: Před odpovědí na task VŽDY zkontroluj auto-trigger pattern. Pokud match, NEJDŘÍV Skill tool, POTOM odpovídej.
 
-# CUSTOMIZE: Uprav trigger slova a skills podle svého use case
 | Trigger slova | Skill |
 |---|---|
 | carousel, reel script, IG post, napiš post, content pro IG | `ig-content-creator` |
@@ -55,9 +55,9 @@ PRAVIDLO: Před odpovědí na task VŽDY zkontroluj auto-trigger pattern. Pokud 
 | repurpose, rozmnož, víc formátů, adaptuj pro LinkedIn | `content-repurpose` |
 | instagram.com URL, analyzuj IG | `instagram-analyzer` |
 | /cso, bezpečnostní audit, security check VPS | `security-self-audit` |
-| napiš runbook, zdokumentuj postup, playbook pro, co dělat když X spadne | `sop` |
-| analyzuj konkurenci, scrape IG profil, hook patterny | `competitor-intel` |
-| SEO audit, AEO audit, AI citace, viditelnost v Perplexity | `seo-audit` |
+| napiš runbook, zdokumentuj postup, playbook pro, co dělat když X spadne, troubleshooting guide | `sop` |
+| analyzuj konkurenci, scrape IG profil, hook patterny, co dělá X na IG, inspirace od konkurence | `competitor-intel` |
+| SEO audit, AEO audit, AI citace, viditelnost v Perplexity, schema markup, E-E-A-T, [your-company].com audit | `seo-audit` |
 
 ## Řetězení (automatické)
 - `instagram-analyzer` -> nabídni `content-repurpose`
@@ -66,7 +66,7 @@ PRAVIDLO: Před odpovědí na task VŽDY zkontroluj auto-trigger pattern. Pokud 
 - `ig-content-creator` -> nabídni `content-repurpose`
 - `security-self-audit` -> aktualizuj security memory + ntfy
 - `sop` -> po incidentu nabídni `/postmortem`
-- `competitor-intel` -> nabídni `ig-content-creator`
+- `competitor-intel` -> nabídni `ig-content-creator` (přímá adaptace)
 - `seo-audit` -> nabídni AEO content brief pro blog
 
 ## Fresh Context per Phase (Ralph pattern)
@@ -88,9 +88,9 @@ Před každým NOVÝM projektem, skillem nebo infrastrukturním taskem (ne hotfi
 - Výstup: krátký PLANNING brief (pár vět nebo odrážek) před prvním řádkem kódu
 - Priorita: architektura > features. Loadbearing walls před pokoji.
 
-Přeskoč pro: triviální ops (grep, ls, mv), hotfix, jednokrokové tasky, pokud uživatel explicitně řekne "rovnou do toho"
+Přeskoč pro: triviální ops (grep, ls, mv), hotfix, jednokrokové tasky, pokud [YOUR_NAME] explicitně řekne "rovnou do toho"
 
 ## NESPOUŠTĚJ když:
-- Uživatel řekne "nespouštěj skill" / "bez playbooku"
+- [YOUR_NAME] řekne "nespouštěj skill" / "bez playbooku"
 - Task je triviální (grep, ls, mv)
 - Skill už spuštěn manuálně v kontextu

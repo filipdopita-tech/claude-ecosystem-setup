@@ -14,7 +14,7 @@ Zachovej kontext konverzace mezi sessions.
 
 ## Co uložit
 
-Zapiš do `~/.claude/projects/-Users-YOUR_USERNAME/memory/session_handoff.md`:
+Zapiš do `~/.claude/projects/-Users-<username>/memory/session_handoff.md`:
 
 ```markdown
 ---
@@ -38,7 +38,7 @@ type: project
 - [co by mělo být dál, prioritizováno]
 
 ## Otevřené otázky
-- [co potřebuje Filipův input]
+- [co potřebuje [YOUR_NAME]ův input]
 
 ## Změněné soubory
 - [seznam s krátkým popisem]

@@ -19,7 +19,7 @@ description: Brutální cloud planning skill. Mythos epistemologie aplikovaná n
 | Bias check | Žádný | Každé 3 iterace — gold-plating, anchoring, sunk cost |
 | Output | Plán k provádění | Plán který přežil adversarial review |
 
-**Vždy claude-opus-4-6. 3 paralelní agenti + 1 critic. Max 30 min cloud session.**
+**Vždy claude-opus-4-7. 3 paralelní agenti + 1 critic. Max 30 min cloud session.**
 
 ---
 

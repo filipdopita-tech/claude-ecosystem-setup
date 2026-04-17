@@ -1,5 +1,5 @@
 # Marketing & Growth Expertise
-# OneFlow kontext: investice, dluhopisy, fundraising, CZ trh
+# [YOUR_COMPANY] kontext: investice, dluhopisy, fundraising, CZ trh
 # Zdroje: HubSpot, Sprout Social, Buffer, Mosseri, StoryBrand, Dataslayer
 # Aktualizováno: 2026-04-03
 
@@ -8,7 +8,7 @@
 ## 1. Instagram Algorithm 2026
 
 ### Tři hlavní signály
-| Signál | Váha | OneFlow taktika |
+| Signál | Váha | [YOUR_COMPANY] taktika |
 |--------|------|-----------------|
 | Watch Time | #1 | Silný hook, keep the pace |
 | Sends Per Reach | #2 | Tvoř "pošlu kamarádovi" obsah |
@@ -51,7 +51,7 @@ PILÍŘ (60-90 min video nebo 2000+ slov)
 - 300% více engagement, 60% méně času
 - Batch repurposing: 1x týdně vše z 1 pilíře najednou
 
-### OneFlow Šablona
+### [YOUR_COMPANY] Šablona
 ```
 Zdroj: Rozhovor s investorem / tržní analýza
 1. Blog (SEO): "Dluhopisy vs. spoření 2026"
@@ -77,7 +77,7 @@ Zdroj: Rozhovor s investorem / tržní analýza
  protože [psychologický důvod]."
 ```
 
-### Co testovat pro OneFlow
+### Co testovat pro [YOUR_COMPANY]
 | Prvek | Baseline | Test |
 |-------|----------|------|
 | CTA | "Kontaktujte nás" | "Spočítat výnos" |
@@ -96,7 +96,7 @@ Zdroj: Rozhovor s investorem / tržní analýza
 ### Welcome Sekvence (6 emailů)
 | # | Den | Obsah | CTA |
 |---|-----|-------|-----|
-| 1 | Ihned | Uvítání + kdo je Filip | "Číst Příběh" |
+| 1 | Ihned | Uvítání + kdo je [YOUR_NAME] | "Číst Příběh" |
 | 2 | D+3 | Vzdělání: jak fungují dluhopisy | "Stáhnout Průvodce" |
 | 3 | D+7 | Sociální důkaz: výnosy, příběhy | "Zobrazit Výsledky" |
 | 4 | D+10 | Námitky: riziko, likvidita | "FAQ" |
@@ -112,10 +112,10 @@ Zdroj: Rozhovor s investorem / tržní analýza
 ```
 Subject: [číslo nebo otázka]
 P1 (40 slov): problém nebo překvapivý fakt
-P2 (80 slov): kontext, OneFlow pohled
+P2 (80 slov): kontext, [YOUR_COMPANY] pohled
 P3 (40 slov): přechod k řešení
 CTA: akční sloveso + jasný benefit
-Podpis: Dopita
+Podpis: [YOUR_NAME]
 ```
 
 ---
@@ -136,7 +136,7 @@ Osobní: BTS, názory, příběhy
 Engagement: Průzkumy, Q&A, reakce
 ```
 
-### Distribution Stack OneFlow
+### Distribution Stack [YOUR_COMPANY]
 1. Instagram (discovery + community)
 2. Email newsletter (retence + konverze)
 3. Blog/SEO (long-tail organic)
@@ -174,7 +174,7 @@ Engagement: Průzkumy, Q&A, reakce
 
 ## 7. Growth Loops
 
-### AARRR pro OneFlow
+### AARRR pro [YOUR_COMPANY]
 | Fáze | Taktika | Metrika |
 |------|---------|---------|
 | Acquisition | IG Reels → bio → lead magnet | CPL |
@@ -248,11 +248,11 @@ Long-tail: "dluhopisy fyzicke osoby CZ 2025 vynosy"
 
 ## 11. StoryBrand Framework
 
-### OneFlow Role
+### [YOUR_COMPANY] Role
 ```
 Hrdina:    Investor (zhodnotit majetek bezpečně)
 Problém:   Inflace, 0.5% úrok, složité možnosti
-Průvodce:  OneFlow (empatie + odbornost)
+Průvodce:  [YOUR_COMPANY] (empatie + odbornost)
 Plán:      Konzultace → výběr → investice
 CTA:       "Zarezervuj konzultaci"
 Failure:   Inflace sníží hodnotu

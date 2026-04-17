@@ -6,11 +6,11 @@ description: CZ data pipeline — ARES, Apollo, Hunter, ISIR, SMTP verify, email
 # PIPELINE OVERVIEW
 # =========================
 pipeline:
-  name: OneFlow Scraping Engine v4.0
-  location: "/root/scraper/engine/ (Alfa VPS — PAUSED, migrate to Flash)"
+  name: [YOUR_COMPANY] Scraping Engine v4.0
+  location: "/root/scraper/engine/ (VPS-SECONDARY VPS — PAUSED, migrate to VPS-PRIMARY)"
   total_records: 10067
   sheets_id: "12LBNKEFQfOwdE2FAo4aAp-QCP6QZImARGjKgS5sBGjE"
-  orchestrator: "python3 oneflow_engine.py {command}"
+  orchestrator: "python3 [your-service].py {command}"
 
   commands:
     daily: "daily (ARES incremental + crowdfunding + enrichment)"
@@ -156,8 +156,8 @@ smtp_verifier:
 
   logic:
     1: "Connect to MX server firmy"
-    2: "EHLO oneflow-team.cz"
-    3: "MAIL FROM: <verify@oneflow-team.cz>"
+    2: "EHLO [your-service].cz"
+    3: "MAIL FROM: <verify@[your-service].cz>"
     4: "RCPT TO: <testovany@firma.cz>"
     5: "Interpret response (250=exists, 550=nexists, 421=greylisted)"
 
@@ -272,7 +272,7 @@ emitent_scoring:
 sheets_export:
   script: "/root/scraper/engine/sheets_export.py"
   sheets_id: "12LBNKEFQfOwdE2FAo4aAp-QCP6QZImARGjKgS5sBGjE"
-  service_account: "oneflow-scraper-16c5ffa7b35b.json"
+  service_account: "[your-service]-16c5ffa7b35b.json"
   tabs: 51
   deduplication: "ICO — primarni klic"
   batch_write: true
@@ -282,7 +282,7 @@ sheets_export:
 # =========================
 facts:
   - date: 2026-04-09
-    fact: "Engine v4.0 nasazen na Alfa — nyni PAUSED (Alfa down). Potrebuje migraci na Flash."
+    fact: "Engine v4.0 nasazen na VPS-SECONDARY — nyni PAUSED (VPS-SECONDARY down). Potrebuje migraci na VPS-PRIMARY."
     confidence: HIGH
   - date: 2026-04-13
     fact: "10067 firem v databazi, 414 S/A/B kontaktu v cold email pipeline"

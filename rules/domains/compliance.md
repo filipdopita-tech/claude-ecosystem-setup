@@ -11,7 +11,7 @@
 - ECSP (Regulation EU 2020/1503) → platí od 10.11.2023
 
 ### AML (Zákon č. 253/2008 Sb.)
-- OneFlow jako povinná osoba: KYC pro investory
+- [YOUR_COMPANY] jako povinná osoba: KYC pro investory
 - Limity hotovostních transakcí: >10 000 EUR → obligatorní hlášení
 - PEP (Politically Exposed Person) screening: VŽDY
 - Uchovávání záznamů: 10 let (append-only, viz security-hardening.md)
@@ -34,7 +34,7 @@ regulačním právníkem (ECSP/AML specialist) nebo přímo ČNB.
 
 Nikdy neprezentuj jako finální právní radu — pouze jako orientaci.
 
-## Red Lines (HALT + eskaluj Filipovi)
+## Red Lines (HALT + eskaluj [YOUR_NAME])
 
 - Transakce přes neregistrovaný subjekt >200 000 Kč
 - Investor s PEP statusem bez enhanced due diligence

@@ -1,22 +1,22 @@
 domain: outbound-sales-science
 last_updated: 2026-04-13
-description: Cold email + LinkedIn outreach věda — A/B testing, reply psychology, sekvence, CZ-specifika pro OneFlow
+description: Cold email + LinkedIn outreach věda — A/B testing, reply psychology, sekvence, CZ-specifika pro [YOUR_COMPANY]
 
 # =========================
 # ONEFLOW OUTREACH STACK
 # =========================
 stack:
   cold_email:
-    domains: [oneflow-team.cz, oneflowteam.cz, helponeflow.cz, help-oneflow.cz, joinoneflow.cz]
+    domains: [[your-service].cz, [your-service].cz, help[your-company].com, help-[your-company].com, join[your-company].com]
     volume_per_day: 50  # při aktivním sendu, PAUSED (Proofpoint block)
     sequence_length: 5
     intervals_days: [0, 3, 7, 14, 21]
-    ip_primary: "YOUR_VPS_PUBLIC_IP"  # Flash — BLOCKED Proofpoint
-    ip_backup: "YOUR_ALFA_VPS_PUBLIC_IP"   # Alfa — CZ IP, neblokovaný
-    campaign: "OneFlow Podcast Outreach (campaign_id=2)"
+    ip_primary: "173.212.220.67"  # VPS-PRIMARY — BLOCKED Proofpoint
+    ip_backup: "89.221.212.203"   # VPS-SECONDARY — CZ IP, neblokovaný
+    campaign: "[YOUR_COMPANY] Podcast Outreach (campaign_id=2)"
 
   linkedin:
-    status: PAUSED  # Alfa VPS down 2026-04-12
+    status: PAUSED  # VPS-SECONDARY VPS down 2026-04-12
     volume_per_day: 50  # 2 runs Po-Pa: 10:00 + 15:00 UTC
     daily_limit_connects: 50
     daily_limit_messages: 10  # follow-up DMs
@@ -67,7 +67,7 @@ cold_email_sequence:
     notes: "Break-up email — highest reply rate ze všech. Nechej dveře otevřené."
 
   current_templates:
-    email_1: "Exkluzivní nabídka podcastu OneFlow Cast (day 0)"
+    email_1: "Exkluzivní nabídka podcastu [YOUR_COMPANY] Cast (day 0)"
     email_2: "Ze 67 000 Kč jsme klientovi vyraisovali 10 000 000 Kč (day 3, Re: threading)"
 
 # =========================
@@ -93,7 +93,7 @@ ab_testing:
     trigger: "acceptance rate < 15%"
     action: "MAX_PER_DAY = 20 (místo 50)"
     reset: "acceptance rate >= 20%"
-    mechanism: ".throttle flag file (Alfa)"
+    mechanism: ".throttle flag file (VPS-SECONDARY)"
     check_time: "08:00 UTC denně"
 
 # =========================
@@ -144,7 +144,7 @@ cialdini_oneflow:
     example: "200M+ zprostředkováno, 5 let DD zkušeností"
 
   liking:
-    pattern: "Filip story + relatable pain + nefalšovaná expertise"
+    pattern: "[YOUR_NAME] story + relatable pain + nefalšovaná expertise"
 
   scarcity:
     pattern: "Real limits only (allocation, deadline, ECSP limits)"
@@ -190,7 +190,7 @@ schwartz:
 
   level_4_product_aware:
     style: "Feature comparison, social proof"
-    message: "Proč OneFlow místo Portu nebo Upvest..."
+    message: "Proč [YOUR_COMPANY] místo Portu nebo Upvest..."
 
   level_5_most_aware:
     style: "Direct offer, scarcity, specific deal"
@@ -259,7 +259,7 @@ linkedin_sequence:
   step_1_connect: "Personalized note — 1 věta proč se chci propojit"
   step_2_thanks: "Thanks after accept — bez pitche (3-5 dní)"
   step_3_value: "Sdílení hodnoty — insight, report (7 dní)"
-  step_4_value_2: "Druhý insight + soft mention OneFlow (14 dní)"
+  step_4_value_2: "Druhý insight + soft mention [YOUR_COMPANY] (14 dní)"
   step_5_meeting_ask: "Přímá žádost o call (21 dní)"
 
 # =========================
@@ -267,10 +267,10 @@ linkedin_sequence:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "Cold email send PAUSED — Proofpoint block na Flash IP (YOUR_VPS_PUBLIC_IP)"
+    fact: "Cold email send PAUSED — Proofpoint block na VPS-PRIMARY IP (173.212.220.67)"
     confidence: HIGH
   - date: 2026-04-13
-    fact: "LinkedIn bridge DOWN — Alfa VPS unreachable od 2026-04-12"
+    fact: "LinkedIn bridge DOWN — VPS-SECONDARY VPS unreachable od 2026-04-12"
     confidence: HIGH
   - date: 2026-04-12
     fact: "Break-up email (email_5) má nejvyšší reply rate ze sekvence — specifické pro CZ B2B"

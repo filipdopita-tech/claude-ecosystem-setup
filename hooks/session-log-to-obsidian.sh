@@ -2,7 +2,7 @@
 # Log Claude Code session summary to Obsidian daily note
 # Triggered by Stop event
 
-VAULT="$HOME/Documents/Obsidian_Filip_Dopita/Filip Dopita"
+VAULT="$HOME/Documents/Obsidian_Filip_Dopita/[YOUR_NAME]"
 TODAY=$(date +%Y-%m-%d)
 DAILY_NOTE="$VAULT/08-Daily-Notes/$TODAY.md"
 TIMESTAMP=$(date +%H:%M)

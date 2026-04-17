@@ -33,9 +33,9 @@ Z pilíře vytáhni:
 ```
 
 ### Krok 3: Načti brand kontext
-- `~/Documents/oneflow-claude-project/PROJECT_INSTRUCTIONS.md`
+- `~/Documents/[your-brand-assets]/PROJECT_INSTRUCTIONS.md`
 - `~/.claude/rules/filip-style-clone.md`
-- `~/.claude/rules/oneflow-all.md`
+- `~/.claude/rules/[your-service].md`
 
 ### Krok 4: Generuj formáty
 Generuj postupně, každý formát jako samostatný blok:
@@ -121,7 +121,7 @@ Outro CTA
 
 ### Krok 5: Quality check
 Pro KAŽDÝ formát:
-- [ ] Zní jako Filip?
+- [ ] Zní jako [YOUR_NAME]?
 - [ ] Banned words?
 - [ ] Min 1 číslo?
 - [ ] Končí akcí?

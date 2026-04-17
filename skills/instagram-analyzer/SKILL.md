@@ -1,7 +1,7 @@
 ---
 name: instagram-analyzer
 description: "Analyzuj Instagram profil, post/reel, nebo bulk kreátory. Stáhne metadata, videa, transkribuje audio, extrahuje frames a poskytne obsahovou analýzu. Trigger: 'analyzuj IG', 'rozeber mi ig post', 'instagram analýza', 'bulk IG', URL s instagram.com."
-compatibility: Requires yt-dlp on Mac (residential IP), Whisper on Flash VPS, Google Sheets service account for bulk mode.
+compatibility: Requires yt-dlp on Mac (residential IP), Whisper on VPS-PRIMARY VPS, Google Sheets service account for bulk mode.
 metadata:
   requires-env: GOOGLE_SHEETS_SERVICE_ACCOUNT
   allowed-hosts:
@@ -39,9 +39,9 @@ Analyzuj všechny kreátory z Google Sheets tab "IG Creators".
 
 ### Krok 2A: Single Post Analysis
 
-**POZOR: Transkripce (Whisper) běží na VPS Flash, ne na Macu.** Mac má 8 GB RAM a OOMuje při paralelním Whisperu. Flash má 12 GB + semafor max 2 paralelních whisper instancí. Viz memory `project_ig_analyzer_flash_migration.md`.
+**POZOR: Transkripce (Whisper) běží na VPS VPS-PRIMARY, ne na Macu.** Mac má 8 GB RAM a OOMuje při paralelním Whisperu. VPS-PRIMARY má 12 GB + semafor max 2 paralelních whisper instancí. Viz memory `project_ig_analyzer_flash_migration.md`.
 
-Použij orchestrator wrapper (yt-dlp na Macu → scp mp4 → Flash worker → rsync výsledky):
+Použij orchestrator wrapper (yt-dlp na Macu → scp mp4 → VPS-PRIMARY worker → rsync výsledky):
 
 ```bash
 $HOME/scripts/social/ig_transcribe_remote.sh "URL"
@@ -56,9 +56,9 @@ Výstup: `~/Desktop/ig_analysis/<shortcode>/{video.mp4, audio.mp3, transcript.tx
 
 Pipeline krokuje:
 1. Mac: yt-dlp stáhne mp4 (residential IP obchází IG rate-limit)
-2. scp mp4 → Flash `/home/claude/ig_transcribe/input/<shortcode>.mp4`
-3. ssh Flash `systemctl start ig-transcribe-worker.service` (oneshot, blokující)
-4. Flash: ffmpeg audio+frames, openai-whisper medium (thread-local, max 2 parallel)
+2. scp mp4 → VPS-PRIMARY `/home/claude/ig_transcribe/input/<shortcode>.mp4`
+3. ssh VPS-PRIMARY `systemctl start ig-transcribe-worker.service` (oneshot, blokující)
+4. VPS-PRIMARY: ffmpeg audio+frames, openai-whisper medium (thread-local, max 2 parallel)
 5. rsync `/home/claude/ig_transcribe/output/` → `~/Desktop/ig_analysis/`
 
 Pak **Přečti transkript** a **prohlédni frames** (Read tool na `.txt` a `.jpg` v `~/Desktop/ig_analysis/<shortcode>/`)
@@ -87,7 +87,7 @@ Pak **Přečti transkript** a **prohlédni frames** (Read tool na `.txt` a `.jpg
 - **CTA:** [jaké CTA používá]
 - **Retention prvky:** [co drží pozornost]
 
-### Aplikovatelnost pro OneFlow
+### Aplikovatelnost pro [YOUR_COMPANY]
 - **Použitelné prvky:** [co by šlo adaptovat]
 - **Adaptace pro CZ:** [jak by to vypadalo v češtině]
 - **Doporučení:** [konkrétní akční kroky]
@@ -132,7 +132,7 @@ cat /mac/tmp/ig_analysis/USERNAME/stats.json
 - **Tone of voice:** [popis stylu]
 - **CTA vzorce:** [jaké CTA používají]
 
-### Co se dá použít pro OneFlow
+### Co se dá použít pro [YOUR_COMPANY]
 - [konkrétní doporučení 1]
 - [konkrétní doporučení 2]
 - [konkrétní doporučení 3]
@@ -178,7 +178,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 |---------|-----------|-----------|--------------|-----------|-----|
 | @x      | X         | X         | X            | X         | X%  |
 
-### Ranking (relevance pro OneFlow)
+### Ranking (relevance pro [YOUR_COMPANY])
 1. @creator1 (score 9/10) — [proč]
 2. @creator2 (score 7/10) — [proč]
 
@@ -195,7 +195,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 4. **Google Sheets** — výsledky se automaticky zapisují zpět do tab "IG Creators"
    - Sheet ID: `12LBNKEFQfOwdE2FAo4aAp-QCP6QZImARGjKgS5sBGjE`
    - Tab: `IG Creators`
-   - Service account: `/tmp/sa.json` (Mac) nebo `~/.credentials/oneflow-scraper-service-account.json`
+   - Service account: `/tmp/sa.json` (Mac) nebo `~/.credentials/[your-service]-service-account.json`
 
 ### Krok 3: Nabídni follow-up
 - "Chceš stáhnout a transkribovat top videa?"
@@ -205,11 +205,11 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 
 ## Důležité poznámky
 - Instagram mobile API funguje JEN z Macu (residential IP). VPS dostává 429.
-- yt-dlp pro Instagram reely MUSÍ běžet z Macu (residential IP), Flash dostává rate-limit.
+- yt-dlp pro Instagram reely MUSÍ běžet z Macu (residential IP), VPS-PRIMARY dostává rate-limit.
 - Pro profile scraping VŽDY spouštěj přes `ssh mac` (nebo přímo na Macu).
 - **Whisper transkripce běží VÝHRADNĚ na Flash** přes `ig_transcribe_remote.sh`. Medium model, thread-local per task, semafor max 2 parallel. Mac NIKDY nespouští Whisper (OOM riziko, 8 GB RAM).
-- Single post output: `~/Desktop/ig_analysis/<shortcode>/` (rsynced z Flash).
-- Při analýze pro OneFlow vždy zohledni brand voice z ~/Documents/oneflow-claude-project/
+- Single post output: `~/Desktop/ig_analysis/<shortcode>/` (rsynced z VPS-PRIMARY).
+- Při analýze pro [YOUR_COMPANY] vždy zohledni brand voice z ~/Documents/[your-brand-assets]/
 
 ## Error Handling
 
@@ -217,7 +217,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 |---|---|
 | yt-dlp 429 (rate limit) | STOP. Instagram blokuje IP. Čekej 30 min, nebo zkus jinou session cookie |
 | yt-dlp login required | Obnov cookies: `yt-dlp --cookies-from-browser chrome` na Macu |
-| Whisper OOM na Flash | Zkontroluj `free -h`, sniž model na `small`, ověř semafor (max 2 parallel) |
+| Whisper OOM na VPS-PRIMARY | Zkontroluj `free -h`, sniž model na `small`, ověř semafor (max 2 parallel) |
 | scp/rsync timeout | Ověř WireGuard: `wg show`, ping YOUR_VPS_IP |
 | Empty transcript | Zkontroluj audio: `ffprobe audio.mp3`. Pokud tiché/hudba, přeskoč transkripci |
 | Google Sheets 403 | Service account nemá přístup ke sheetu. Sdílej sheet s SA emailem |
@@ -225,7 +225,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 ## Common Mistakes
 
 1. **Nespouštěj yt-dlp z VPS.** Datacenter IP = instant ban. VŽDY z Macu (residential IP).
-2. **Nespouštěj Whisper na Macu.** 8 GB RAM = OOM. VŽDY na Flash přes ig_transcribe_remote.sh.
+2. **Nespouštěj Whisper na Macu.** 8 GB RAM = OOM. VŽDY na VPS-PRIMARY přes ig_transcribe_remote.sh.
 3. **Nekombinuj bulk + single.** Bulk jde přes Sheets pipeline, single přes přímou URL.
 4. **Neparsuj IG HTML.** Používej yt-dlp pro metadata, ne scraping HTML stránky.
 5. **Neukládej cookies do memory.** Session cookies patří do `~/.credentials/`, ne do SKILL.md.

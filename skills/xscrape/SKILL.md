@@ -6,7 +6,7 @@ user_invocable: true
 
 # X/Twitter Scraper
 
-Extract tweets, profiles, threads, and media from X.com using Filip's authenticated session.
+Extract tweets, profiles, threads, and media from X.com using [YOUR_NAME]'s authenticated session.
 
 ## Tools
 
@@ -17,7 +17,7 @@ Extract tweets, profiles, threads, and media from X.com using Filip's authentica
 
 ## Authentication
 
-Cookies (AUTH_TOKEN, CT0) are stored in `/root/social_poster/.env`, extracted from Filip's Safari on Mac.
+Cookies (AUTH_TOKEN, CT0) are stored in `/root/social_poster/.env`, extracted from [YOUR_NAME]'s Safari on Mac.
 
 If cookies expire, re-extract:
 ```bash
@@ -60,5 +60,5 @@ node /root/social_poster/xscrape.mjs search "saas founders" --count 20 --json
 node /root/social_poster/xscrape.mjs tweets @levelsio --count 10 --json
 
 # Quick profile check
-node /root/social_poster/xscrape.mjs profile @YOUR_TWITTER_USERNAME --json
+node /root/social_poster/xscrape.mjs profile @<username> --json
 ```

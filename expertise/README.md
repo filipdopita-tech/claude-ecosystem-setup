@@ -61,8 +61,8 @@ related_expertise:
 
 | Soubor | Doména | Kdy načíst |
 |--------|--------|-----------|
-| `oneflow-brand.yaml` | OneFlow brand, voice, visual, content pillars | Content creation, IG, LinkedIn, investor comms |
-| `vps-infra.yaml` | VPS Flash/Alfa, services, crons, deployments | Deployment, debugging, monitoring, infra changes |
+| `[your-service].yaml` | [YOUR_COMPANY] brand, voice, visual, content pillars | Content creation, IG, LinkedIn, investor comms |
+| `vps-infra.yaml` | VPS Flash/VPS-SECONDARY, services, crons, deployments | Deployment, debugging, monitoring, infra changes |
 | `content-creation.yaml` | IG algorithm, carousel/reel structure, hooks | Social media content tasks |
 | `investor-outreach.yaml` | ICP, cold outreach, sales psychology, sequences | Outbound, investor meetings, email campaigns |
 | `code-patterns.yaml` | Code style, testing, security, architecture | Any coding task |
@@ -107,4 +107,4 @@ Součást Jaymin West 3-priority rollout:
 - **P1B: Domain expertise YAML (toto)**
 - P1C: Forced delegation orchestrator agent
 
-Full kontext: `/mac/Documents/OneFlow-Vault/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md`
+Full kontext: `/mac/Documents/[YOUR_VAULT]/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md`

@@ -2,7 +2,7 @@
 # Session Length Guard
 # Pocita zpravy v aktualni session a varuje kdyz se session prodluzuje
 # Rationale: Zprava #N cte cely kontext od #1 -> exponencialni token cost
-# Source: Claude Code Optimization Blueprint (Filip Dopita, 04/2026)
+# Source: Claude Code Optimization Blueprint ([YOUR_NAME], 04/2026)
 
 COUNTER_FILE="/tmp/claude-session-msg-count-$(id -u)"
 

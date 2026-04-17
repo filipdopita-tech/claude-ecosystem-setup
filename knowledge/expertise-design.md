@@ -3,7 +3,7 @@
 Praktický rules soubor pro Claude Code. Aplikuj při každém designovém rozhodnutí.
 Aktualizováno: 2026-04-03 (Laws of UX, Practical Typography, Material Design 3, WCAG 2.1)
 
-## OneFlow Kontext
+## [YOUR_COMPANY] Kontext
 - Bg: `#0f1113` | Surface: `#1c1c1c` | Gold: `#cdb186` | Orange: `#795b38` | Text: `#f0f0f0`
 - Dark, moody, minimalistický — finanční produkt = důvěryhodnost přes estetiku
 - Font: Inter Tight (display/IG), Inter (web/UI)
@@ -94,7 +94,7 @@ Mono:      13-14px / tabular-nums (tabulky, čísla)
 
 ## 3. Color — Dark Financial UI
 
-### OneFlow paleta
+### [YOUR_COMPANY] paleta
 ```
 Background:     #0f1113  (base — nikdy pure black)
 Surface L1:     #1c1c1c  (karty, sidebary)
@@ -271,7 +271,7 @@ Vždy násobky 4 nebo 8. Nikdy random hodnoty (13px, 27px).
 2. Druhé: menší, méně kontrastní
 3. Třetí+: muted text, collapsible sekce
 - Pokud vše chce být primární, nic není primární
-- Více prostoru = více luxusu (OneFlow kontext)
+- Více prostoru = více luxusu ([YOUR_COMPANY] kontext)
 
 ### Grid System
 - Desktop: 12 col, 24px gutter | Tablet: 8 col, 16px gutter | Mobile: 4 col, 16px gutter
@@ -290,7 +290,7 @@ Vždy násobky 4 nebo 8. Nikdy random hodnoty (13px, 27px).
 
 ---
 
-## 10. Brand Consistency — OneFlow
+## 10. Brand Consistency — [YOUR_COMPANY]
 
 ### Visual pravidla
 - Vždy dark bg #0f1113 jako základ

@@ -1,7 +1,7 @@
 # Security Hard Rules
 
 - Credentials NIKDY hardcoded -> `~/.credentials/` (chmod 600) nebo `/root/.credentials/master.env`
-- Services bind: localhost > WG (10.X.0.x) > public. I s UFW deny, bind localhost
+- Services bind: localhost > WG (10.77.0.x) > public. I s UFW deny, bind localhost
 - SSH: prohibit-password, no PasswordAuth, MaxAuthTries 3, fail2ban, ed25519
 - systemd: EnvironmentFile pro secrets, Restart=always, NoNewPrivileges=true
 - MCP: pinovat verze, klíče z env, audit před přidáním
