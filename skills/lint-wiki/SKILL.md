@@ -9,8 +9,8 @@ Quality check celé wiki knowledge base v Obsidian vaultu.
 
 ## Workflow
 
-1. **Načti schema** — `/mac/Documents/[YOUR_VAULT]/AGENTS.md`
-2. **Přečti všechny wiki stránky** — `/mac/Documents/[YOUR_VAULT]/wiki/*.md`
+1. **Načti schema** — `$VPS_MOUNT/Documents/[YOUR_VAULT]/AGENTS.md`
+2. **Přečti všechny wiki stránky** — `$VPS_MOUNT/Documents/[YOUR_VAULT]/wiki/*.md`
 3. **Zkontroluj:**
 
 ### Inconsistence

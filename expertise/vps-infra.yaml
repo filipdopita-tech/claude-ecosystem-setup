@@ -1,45 +1,45 @@
 domain: vps-infra
 last_updated: 2026-04-09
-description: VPS VPS-PRIMARY + VPS-SECONDARY infrastruktura — specs, SSH, WG, sluzby, routing, deployment
+description: VPS Flash + Alfa infrastruktura — specs, SSH, WG, sluzby, routing, deployment
 
 # =========================
 # TOPOLOGIE
 # =========================
 topology:
   vps_flash:
-    provider: VPS-PROVIDER
-    ip_public: YOUR_VPS_PUBLIC_IP_2
-    ip_wg: YOUR_VPS_IP
+    provider: Contabo
+    ip_public: 173.212.220.67
+    ip_wg: REDACTED_VPN_IP
     specs:
       ram_gb: 12
       vcpu: 6
       ssd_gb: 200
     role: compute_engine_claude_code_orchestration
-    ssh: "ssh root@YOUR_VPS_IP  # VPN only"
+    ssh: "ssh root@REDACTED_VPN_IP  # VPN only"
 
   vps_alfa:
-    provider: VPS-PROVIDER-2
-    ip_public: YOUR_SECONDARY_VPS_PUBLIC_IP
-    ip_wg: YOUR_SECONDARY_VPS_IP
+    provider: Wedos
+    ip_public: 89.221.212.203
+    ip_wg: REDACTED_VPN_IP
     specs:
       ram_gb: 5.8
       vcpu: 2
       ssd_gb: 40
     role: email_cz_ip_legacy_services
-    ssh: "ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP"
+    ssh: "ssh root@89.221.212.203"
 
   mac:
     role: source_of_truth_mount_point
-    ip_wg: YOUR_MAC_WG_IP
+    ip_wg: REDACTED_VPN_IP
     mount: "/mac = $HOME (SSHFS auto-reconnect)"
     access_from_flash: direct_fs
 
 wireguard:
-  subnet: YOUR_WG_SUBNET
+  subnet: REDACTED_VPN_IP/24
   peers:
-    flash: YOUR_VPS_IP
-    mac: YOUR_MAC_WG_IP
-    alfa: YOUR_SECONDARY_VPS_IP
+    flash: REDACTED_VPN_IP
+    mac: REDACTED_VPN_IP
+    alfa: REDACTED_VPN_IP
   notes:
     - "2026-04-03 migrace z 10.0.0.0/24 kvuli LAN kolizi na Macu"
 
@@ -57,7 +57,7 @@ services_flash:
     port_public: 18900
     purpose: "Emergency kill switch"
 
-  [your-service]:
+  [your_company]_affiliate:
     port_public: 18800
     purpose: "Partner dashboard"
 
@@ -84,7 +84,7 @@ services_flash:
     purpose: "Claude Code task orchestration, free API workers"
     pidfile: true
 
-  [your-service]:
+  [your_company]_bot:
     type: telegram_bot
     purpose: "[YOUR_NAME]'s TG assistant"
 
@@ -99,7 +99,7 @@ services_flash:
     purpose: "Reverse proxy, aktivni od 2026-04-08"
 
   mutagen:
-    purpose: "Bidirectional sync .claude/ mezi Mac a VPS-PRIMARY"
+    purpose: "Bidirectional sync .claude/ mezi Mac a Flash"
 
   autohealing_stack:
     layers:
@@ -114,14 +114,14 @@ services_flash:
 services_alfa:
   postfix_dovecot:
     ports: [25, 143, 993]
-    domain: mail.[your-service].cz
+    domain: mail.[your_company]-team.cz
     tls: "Lets Encrypt cert (2026-04-08, expiry 2026-07-07)"
     dmarc: "p=quarantine"
     spf: "-all"
 
   nginx:
     ports: [80, 443]
-    purpose: "Reverse proxy *.[your-company].com"
+    purpose: "Reverse proxy *.example.com"
 
   ntfy:
     port: 2586
@@ -135,7 +135,7 @@ services_alfa:
     port: 8085
     purpose: "WA Baileys fallback"
 
-  [your-service]:
+  [your_company]_dashboard:
     port: 3000
     stack: "Next.js via PM2"
 
@@ -169,17 +169,17 @@ crons_flash:
 # =========================
 routing_decision_tree:
   question_1: "Je to email nebo vyzaduje CZ IP?"
-  yes_1: "VPS-SECONDARY (VPS-PROVIDER-2)"
+  yes_1: "Alfa (Wedos)"
   no_1: "VPS-PRIMARY"
 
   question_2: "Je to Claude Code session / orchestration?"
-  yes_2: "VZDY VPS-PRIMARY"
+  yes_2: "VZDY Flash"
 
   question_3: "Je to scheduled task (cron)?"
-  yes_3: "VPS-PRIMARY (vsechny crony centralizovat)"
+  yes_3: "Flash (vsechny crony centralizovat)"
 
   question_4: "Vyzaduje to persistent storage > 40GB?"
-  yes_4: "VPS-PRIMARY (200GB SSD)"
+  yes_4: "Flash (200GB SSD)"
 
 # =========================
 # DEPLOYMENT PATTERN
@@ -207,8 +207,8 @@ known_issues_resolved:
   - "config-backup cron"
   - "SSHFS /mac healthcheck"
   - "li-ghl-sync CPU leak disabled"
-  - "WG subnet YOUR_WG_SUBNET"
-  - "VPS-SECONDARY disk 53%"
+  - "WG subnet REDACTED_VPN_IP/24"
+  - "Alfa disk 53%"
   - "Postfix TLS Lets Encrypt"
   - "DMARC p=quarantine, SPF -all"
 
@@ -236,12 +236,12 @@ facts:
 # COMMANDS
 # =========================
 commands:
-  ssh_flash: "ssh root@YOUR_VPS_IP"
-  ssh_alfa: "ssh root@YOUR_SECONDARY_VPS_PUBLIC_IP"
-  ssh_mac_from_flash: "ssh mac  # = YOUR_MAC_WG_IP"
+  ssh_flash: "ssh root@REDACTED_VPN_IP"
+  ssh_alfa: "ssh root@89.221.212.203"
+  ssh_mac_from_flash: "ssh $YOUR_HOST  # = REDACTED_VPN_IP"
   mount_mac: "/mac  # automounted via SSHFS"
-  systemctl_restart: "ssh root@YOUR_VPS_IP 'systemctl restart {service}'"
-  monit_reload: "ssh root@YOUR_VPS_IP 'monit reload'"
+  systemctl_restart: "ssh root@REDACTED_VPN_IP 'systemctl restart {service}'"
+  monit_reload: "ssh root@REDACTED_VPN_IP 'monit reload'"
 
 # =========================
 # CROSS-REFERENCES

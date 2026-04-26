@@ -41,13 +41,13 @@ Port, server a účel pro zmíněnou službu jsou tam. Nekombinuj z paměti.
 
 Pokud jde o specifický skript, přečti ho:
 ```bash
-ls /mac/scripts/
-cat /mac/scripts/{relevant}.py
+ls $VPS_MOUNT/scripts/
+cat $VPS_MOUNT/scripts/{relevant}.py
 ```
 
 Pro systemd unit:
 ```bash
-ssh mac 'cat /etc/systemd/system/{service}.service 2>/dev/null || systemctl cat {service}'
+ssh $YOUR_HOST 'cat /etc/systemd/system/{service}.service 2>/dev/null || systemctl cat {service}'
 ```
 
 ### 3. Načti příslušný template
@@ -77,7 +77,7 @@ cat > ~/.claude/knowledge/sops/{slug}.md << 'EOF'
 EOF
 
 # Kritické recovery docs — ulož na obě místa
-cp ~/.claude/knowledge/sops/{slug}.md /mac/Documents/[YOUR_VAULT]/SOPs/{slug}.md
+cp ~/.claude/knowledge/sops/{slug}.md $VPS_MOUNT/Documents/[YOUR_VAULT]/SOPs/{slug}.md
 ```
 
 Při uložení: echo "Saved to ~/.claude/knowledge/sops/{slug}.md" + nabídni otevření.

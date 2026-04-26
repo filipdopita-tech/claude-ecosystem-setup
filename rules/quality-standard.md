@@ -30,7 +30,7 @@ Standard není "splněno" — je "tohle je evidentně done."
 | Complete solution = workaround + 10 min navíc | ANO — udělej complete |
 | Scope creep — nesouvisející "vylepšení" | NE |
 | Architektura mimo task | NE |
-| Věci mimo [YOUR_NAME]ův explicitní záměr | NE |
+| Věci mimo [YOUR_NAME] explicitní záměr | NE |
 
 Disambiguator: "Je tohle součást trvalého řešení, nebo jen přidávám věci?"
 Pokud součást → udělej. Pokud přidávám → zastav.

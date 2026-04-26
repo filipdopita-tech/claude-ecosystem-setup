@@ -25,7 +25,7 @@ Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
 - Memory soubory max 200 řádků, starší archivuj do *-archive.md
 
 ## UI & Design
-- UI → DESIGN.md z /mac/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
+- UI → DESIGN.md z $VPS_MOUNT/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
 - Linear=admin, Stripe=fintech, Vercel=dev, Notion=content, Cal=forms
 - 55 designů: github.com/VoltAgent/awesome-design-md
 

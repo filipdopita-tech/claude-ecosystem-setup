@@ -97,14 +97,14 @@ Pak **Přečti transkript** a **prohlédni frames** (Read tool na `.txt` a `.jpg
 
 1. **Spusť ig_analyzer.py z Macu** (VPS dostává 429):
 ```bash
-ssh mac "python3 $HOME/scripts/social/ig_analyzer.py USERNAME --metadata-only --output-dir /tmp/ig_analysis"
+ssh $YOUR_HOST "python3 $HOME/scripts/social/ig_analyzer.py USERNAME --metadata-only --output-dir /tmp/ig_analysis"
 ```
 
 2. **Přečti výstupy**:
 ```bash
-cat /mac/tmp/ig_analysis/USERNAME/profile.json
-cat /mac/tmp/ig_analysis/USERNAME/posts.json
-cat /mac/tmp/ig_analysis/USERNAME/stats.json
+cat $VPS_MOUNT/tmp/ig_analysis/USERNAME/profile.json
+cat $VPS_MOUNT/tmp/ig_analysis/USERNAME/posts.json
+cat $VPS_MOUNT/tmp/ig_analysis/USERNAME/stats.json
 ```
 
 3. **Analyzuj a prezentuj**:
@@ -142,29 +142,29 @@ cat /mac/tmp/ig_analysis/USERNAME/stats.json
 
 1. **Spusť bulk analyzer z Macu** (VPS nemá přístup ke Google API ani k IG):
 ```bash
-ssh mac "python3 $HOME/scripts/social/ig_bulk_analyzer.py --max 10 --delay 5"
+ssh $YOUR_HOST "python3 $HOME/scripts/social/ig_bulk_analyzer.py --max 10 --delay 5"
 ```
 
 Pro všechny PENDING kreátory (bez limitu):
 ```bash
-ssh mac "python3 $HOME/scripts/social/ig_bulk_analyzer.py"
+ssh $YOUR_HOST "python3 $HOME/scripts/social/ig_bulk_analyzer.py"
 ```
 
 Pro re-analýzu všech:
 ```bash
-ssh mac "python3 $HOME/scripts/social/ig_bulk_analyzer.py --force"
+ssh $YOUR_HOST "python3 $HOME/scripts/social/ig_bulk_analyzer.py --force"
 ```
 
 2. **Přečti výsledky**:
 ```bash
-ssh mac "cat /tmp/ig_analysis/bulk_report.json"
+ssh $YOUR_HOST "cat /tmp/ig_analysis/bulk_report.json"
 ```
 
 A pro detaily jednotlivých kreátorů:
 ```bash
-ssh mac "cat /tmp/ig_analysis/USERNAME/profile.json"
-ssh mac "cat /tmp/ig_analysis/USERNAME/posts.json"
-ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
+ssh $YOUR_HOST "cat /tmp/ig_analysis/USERNAME/profile.json"
+ssh $YOUR_HOST "cat /tmp/ig_analysis/USERNAME/posts.json"
+ssh $YOUR_HOST "cat /tmp/ig_analysis/USERNAME/stats.json"
 ```
 
 3. **Prezentuj souhrnný report**:
@@ -206,7 +206,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 ## Důležité poznámky
 - Instagram mobile API funguje JEN z Macu (residential IP). VPS dostává 429.
 - yt-dlp pro Instagram reely MUSÍ běžet z Macu (residential IP), VPS-PRIMARY dostává rate-limit.
-- Pro profile scraping VŽDY spouštěj přes `ssh mac` (nebo přímo na Macu).
+- Pro profile scraping VŽDY spouštěj přes `ssh $YOUR_HOST` (nebo přímo na Macu).
 - **Whisper transkripce běží VÝHRADNĚ na Flash** přes `ig_transcribe_remote.sh`. Medium model, thread-local per task, semafor max 2 parallel. Mac NIKDY nespouští Whisper (OOM riziko, 8 GB RAM).
 - Single post output: `~/Desktop/ig_analysis/<shortcode>/` (rsynced z VPS-PRIMARY).
 - Při analýze pro [YOUR_COMPANY] vždy zohledni brand voice z ~/Documents/[your-brand-assets]/

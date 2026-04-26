@@ -4,9 +4,9 @@ description: CZ regulatorní rámec pro [YOUR_COMPANY] — dluhopisy, AML, ČNB,
 confidence_notes: "Sections marked [ASSUMED] require legal verification. Core laws HIGH confidence."
 
 # =========================
-# ONEFLOW REGULATORY STATUS
+# USER_COMPANY REGULATORY STATUS
 # =========================
-[your-service]:
+[your_company]_status:
   entity_type: zprostredkovatel_investic  # NOT regulated financial institution
   cnb_license: false  # [YOUR_COMPANY] nema licenci CNB
   aml_obligated: true  # povinnost AML zakon 253/2008
@@ -62,7 +62,7 @@ laws:
 
   zisif:
     zakon: "240/2013 Sb. o investicnich spolecnostech a investicnich fondech"
-    relevance_pro_oneflow: "Nizka — [YOUR_COMPANY] neni AIF ani UCITS"
+    relevance_pro_[your_company]: "Nizka — [YOUR_COMPANY] neni AIF ani UCITS"
     kdyz_relevantni:
       - "Pokud by [YOUR_COMPANY] spravoval kolektivni investicni fond"
       - "Pokud by meli Assets Under Management > 100M EUR"
@@ -70,7 +70,7 @@ laws:
 
   zpkt:
     zakon: "256/2004 Sb. o podnikani na kapitalovem trhu (MiFID II implementace)"
-    relevance_pro_oneflow: "Stredni — pokud zprostredkovava investicni sluzby"
+    relevance_pro_[your_company]: "Stredni — pokud zprostredkovava investicni sluzby"
     klicove_body:
       - "Investicni zprostredkovatel vyzaduje registraci u CNB"
       - "Povinnost best execution"
@@ -192,7 +192,7 @@ facts:
 # =========================
 related_expertise:
   - investor-outreach.yaml
-  - [your-service].yaml
+  - [your_company]-brand.yaml
 
 related_knowledge:
   - "~/.claude/knowledge/legal-compliance.md"

@@ -196,7 +196,7 @@ agent_patterns:
 facts:
   - date: 2026-04-09
     fact: Jaymin West 5 komponent agenta = model, prompt, context, tools, harness
-    source: "/mac/Documents/[YOUR_VAULT]/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md"
+    source: "$VPS_MOUNT/Documents/[YOUR_COMPANY]-Vault/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md"
 
   - date: 2026-04-09
     fact: Forced delegation pro orchestratory implementovano v ~/.claude/agents/orchestrator.md

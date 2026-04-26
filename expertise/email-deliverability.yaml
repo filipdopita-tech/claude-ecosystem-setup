@@ -6,10 +6,10 @@ description: Technicka deliverability — DMARC/DKIM/SPF, warming, Proofpoint, G
 # CURRENT STATUS (2026-04-13)
 # =========================
 current_status:
-  flash_ip: "YOUR_VPS_PUBLIC_IP_2"
+  flash_ip: "173.212.220.67"
   proofpoint_block: ACTIVE  # 554 Blocked
   send_daemon: PAUSED
-  alfa_ip: "YOUR_SECONDARY_VPS_PUBLIC_IP"  # CZ IP, neblokovan
+  alfa_ip: "89.221.212.203"  # CZ IP, neblokovan
   delisting_url: "https://support.proofpoint.com/dnsbl-lookup.cfm"
   action_required: "Submit delisting request + warm-up plan"
 
@@ -18,15 +18,15 @@ current_status:
 # =========================
 dns_config:
   domeny_cold_email:
-    - [your-service].cz
-    - [your-service].cz
-    - help[your-company].com
-    - help-[your-company].com
-    - join[your-company].com
+    - [your_company]-team.cz
+    - [your_company]team.cz
+    - helpexample.com
+    - help-example.com
+    - joinexample.com
 
   spf:
     format: "v=spf1 ip4:{ip_primary} ip4:{ip_backup} -all"
-    current: "v=spf1 ip4:YOUR_SECONDARY_VPS_PUBLIC_IP ip4:YOUR_VPS_PUBLIC_IP_2 -all"
+    current: "v=spf1 ip4:89.221.212.203 ip4:173.212.220.67 -all"
     rule: "-all je mandatory (hard fail). ~all je slabe."
 
   dkim:

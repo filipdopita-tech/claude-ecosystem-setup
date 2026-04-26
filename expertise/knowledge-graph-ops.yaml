@@ -8,15 +8,15 @@ description: Graphiti temporal KG — query patterns, graphiti_search/graphiti_a
 stack:
   library: "getzep/graphiti 0.28.2"
   db: "KuzuDB 0.11.3 (embedded, no server)"
-  db_path: "/root/graphiti_oneflow (na VPS-PRIMARY)"
+  db_path: "/root/graphiti_[your_company] (na Flash)"
   llm: "claude-haiku-4-5 via OpenRouter (free tier)"
   embeddings: "openai/text-embedding-3-small via OpenRouter"
   mcp_server: "/root/graphiti_mcp_server.py (FastMCP stdio)"
   cost: "$0/měsíc (free tiers)"
 
   mcp_config:
-    name: "[YOUR_GRAPHITI_SERVER]"
-    transport: "SSH stdio na VPS-PRIMARY"
+    name: "graphiti-[your_company]"
+    transport: "SSH stdio na Flash"
     tools:
       - name: "graphiti_search"
         signature: "graphiti_search(query: str, limit: int = 5)"
@@ -64,12 +64,12 @@ query_patterns:
     tip: "Přidej rok nebo měsíc pro lepší temporal relevance"
 
   cross_entity:
-    example: "graphiti_search('VPS-PRIMARY VPS Conductor tasks', limit=5)"
+    example: "graphiti_search('VPS-PRIMARY Conductor tasks', limit=5)"
     use_case: "Relace mezi dvěma entitami"
     tip: "Kombinuj dvě entity jménem v jednom query"
 
   decision_recall:
-    example: "graphiti_search('VPS-SECONDARY VPS shutdown decision', limit=3)"
+    example: "graphiti_search('VPS-SECONDARY shutdown decision', limit=3)"
     use_case: "Proč bylo rozhodnutí učiněno"
     tip: "Přidej 'decision' nebo 'rozhodnutí' do query"
 
@@ -92,11 +92,11 @@ add_patterns:
   episode_types:
     decision:
       pattern: "graphiti_add('Rozhodnutí: {co}, Důvod: {proč}, Datum: {date}', source='decision', name='{topic}')"
-      example: "graphiti_add('Rozhodnutí: VPS-SECONDARY VPS zrušit u VPS-PROVIDER-2. Důvod: 500 Kč/měs, nepoužívaná. Datum: 2026-04-13', source='decision', name='VPS-SECONDARY VPS shutdown')"
+      example: "graphiti_add('Rozhodnutí: VPS-SECONDARY zrušit u Wedos. Důvod: 500 Kč/měs, nepoužívaná. Datum: 2026-04-13', source='decision', name='VPS-SECONDARY shutdown')"
 
     fact:
       pattern: "graphiti_add('{fakt s kontextem}', source='fact', name='{entity}')"
-      example: "graphiti_add('[YOUR_COMPANY] cold email pipeline: 414 kontaktů, send PAUSED (Proofpoint), IP YOUR_VPS_PUBLIC_IP_2', source='fact', name='cold email status 2026-04')"
+      example: "graphiti_add('[YOUR_COMPANY] cold email pipeline: 414 kontaktů, send PAUSED (Proofpoint), IP 173.212.220.67', source='fact', name='cold email status 2026-04')"
 
     task_result:
       pattern: "graphiti_add('Task {name}: {co bylo uděláno}, výsledek: {result}', source='conductor', name='{task_name}')"
@@ -142,14 +142,14 @@ scripts:
 entity_design:
   what_graphiti_extracts:
     - "Osoby ([YOUR_NAME], Martin Šimek, Adam Bernat)"
-    - "Firmy ([YOUR_COMPANY], VPS-PROVIDER-2, VPS-PROVIDER)"
+    - "Firmy ([YOUR_COMPANY], Wedos, Contabo)"
     - "Projekty (Dubai outreach, Cold email, Conductor)"
-    - "Systémy (VPS-PRIMARY VPS, VPS-SECONDARY VPS, Graphiti)"
+    - "Systémy (VPS-PRIMARY, VPS-SECONDARY, Graphiti)"
     - "Rozhodnutí a fakta s timestamps"
 
   temporal_advantage:
     description: "Každý fact má valid_at timestamp — graphiti ví co bylo pravda kdy"
-    example: "Query 'VPS-SECONDARY VPS status' vrátí historii: active → paused → shutdown"
+    example: "Query 'VPS-SECONDARY status' vrátí historii: active → paused → shutdown"
     use_case: "Audit trail + rozhodovací kontext"
 
   retrieval_modes:
@@ -170,7 +170,7 @@ startup_hook:
     4. Pokračuj bez oznámení (silent background)
 
   example_trigger_words:
-    ["Dubai", "GHL", "cold email", "Conductor", "VPS-SECONDARY", "VPS-PRIMARY", "investice", "scraper", "pipeline"]
+    ["Dubai", "GHL", "cold email", "Conductor", "Alfa", "Flash", "investice", "scraper", "pipeline"]
 
   skip_when:
     - "Triviální ops (grep, ls, mv, read)"
@@ -182,7 +182,7 @@ startup_hook:
 # =========================
 import_state:
   memory_files_imported: 95
-  source: "/mac/.claude/projects/-Users-<username>/memory/"
+  source: "$VPS_MOUNT/.claude/projects/-Users-YOUR_USERNAME/memory/"
   import_date: "2026-04 (přesné datum neznámo)"
   note: "Import byl jednorázový — pro nové memory soubory použij graphiti_add manuálně nebo přidej do import skriptu"
 
@@ -191,7 +191,7 @@ import_state:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "Graphiti nasazen na VPS-PRIMARY, MCP aktivní, 95 memory souborů importováno, conductor sync cron běží"
+    fact: "Graphiti nasazen na Flash, MCP aktivní, 95 memory souborů importováno, conductor sync cron běží"
     confidence: HIGH
   - date: 2026-04-13
     fact: "Graphiti NEPOUŽÍVANÝ v session startup — F-001 z Mythos auditu, nejvyšší EVOI-NC (30.6)"

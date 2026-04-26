@@ -1,6 +1,6 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 245 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 292 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
 
 ---
 
@@ -25,11 +25,11 @@ claude
 
 | Component | Count | What it does |
 |---|---|---|
-| Skills | 200 | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, and 196 more |
+| Skills | 292 | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, and 196 more |
 | Hooks | 40 | Auto-run on Claude Code events: format on save, security guard, session state, desktop notifications |
-| Expertise YAMLs | 14 | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, and more |
+| Expertise YAMLs | 15 | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, and more |
 | Knowledge MDs | 29 | Reference documents: coding standards, sales psychology, design patterns, compliance, finance |
-| Rules | 16 | Behavioral configuration: autopilot mode, reasoning depth, quality standards, security hardening |
+| Rules | 18 | Behavioral configuration: autopilot mode, reasoning depth, quality standards, security hardening |
 | Memory system | — | Auto-populated persistent memory across sessions (user profile, feedback, project context) |
 
 ---
@@ -191,7 +191,7 @@ Run any skill with `/skill-name` in Claude Code:
 /ultraplan       → Cloud planning with assume-failure-first
 ```
 
-Browse all 245 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
+Browse all 292 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
 
 ---
 

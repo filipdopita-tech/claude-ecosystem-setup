@@ -6,7 +6,7 @@ description: Moderní HTML/CSS/visual design — trendy 2025-2026, premium patte
 # KRITICKÝ INSIGHT: DVĚ VERZE
 # Zdroj: reálné nabídky (nabidka-patricny-2026.html, nabidka-asr-2026-v4-web.html)
 # =========================
-[your-service]_modes:
+[your_company]_two_modes:
   documents:
     description: "PDF nabídky, brand manuály, reporty — black & white + béžová paleta. BEZ gold."
     dark_bg: "#0A0A0C (blíže černé než web)"
@@ -40,7 +40,7 @@ philosophy:
     font_family: "Inter Tight všude — NE Playfair Display"
 
 # =========================
-# ONEFLOW CSS TOKENS (single source of truth)
+# USER_COMPANY CSS TOKENS (single source of truth)
 # =========================
 tokens:
   document_colors:
@@ -655,13 +655,113 @@ brand_manual:
     </div>
 
 # =========================
+# AI SLOP BLACKLIST (2026-04-17, adapted from gstack/plan-design-review v0.17)
+# Zdroj: OpenAI "Designing Delightful Frontends with GPT-5.4" (Mar 2026) + gstack methodology
+# Použij VŽDY při review LP, nabídky, brand materiálu. Každá match = instant flag.
+# =========================
+ai_slop_blacklist:
+  description: "10 konkrétních patternů, které okamžitě prozradí AI-generated design. Vyhýbej se všem."
+  patterns:
+    - id: 1
+      name: "Purple/violet gradient backgrounds"
+      detail: "Purple/violet/indigo gradienty nebo blue-to-purple schémata jako hero pozadí"
+      fix: "[YOUR_COMPANY] = monochrome only. Dark #0A0A0C + gradient 165deg na pure black."
+
+    - id: 2
+      name: "The 3-column feature grid"
+      detail: "Icon-in-colored-circle + bold title + 2-line description, opakované 3x symetricky. NEJrozpoznatelnější AI layout."
+      fix: "Místo grid: jeden dominantní visual anchor + asymetrické breakouty. Pokud features, pak typograficky (velké číslice 01/02/03 bez icons)."
+
+    - id: 3
+      name: "Icons in colored circles"
+      detail: "Section decoration s iconami uvnitř saturovaných kroužků (SaaS starter template look)"
+      fix: "[YOUR_COMPANY] nepoužívá decorative icons vůbec. Pokud glyf, tak mono, ne v kroužku."
+
+    - id: 4
+      name: "Centered everything"
+      detail: "text-align: center na všech headings, descriptions a kartách"
+      fix: "Asymetrie = premium. Left-align body text. Center jen pro velké hero statements."
+
+    - id: 5
+      name: "Uniform bubbly border-radius"
+      detail: "Stejný velký radius na každém elementu (buttons, cards, inputs — všechno 12px+)"
+      fix: "[YOUR_COMPANY]: buttons radius 8px (pill pro CTA OK), cards 4-8px max. Inputs squared nebo 4px. Nekonzistence je taste, uniformita je AI."
+
+    - id: 6
+      name: "Decorative blobs a floating circles"
+      detail: "Wavy SVG dividers, floating abstract blobs, dekorativní kroužky. Pokud section vypadá prázdně, potřebuje lepší obsah, ne dekoraci."
+      fix: "Prázdno = prestiž. Use whitespace. Žádné decorative overlays kromě subtle radial orbs ve velmi nízké opacitě (<4%)."
+
+    - id: 7
+      name: "Emoji jako design elementy"
+      detail: "🚀 v nadpisech, ✨ jako odrážky, emoji v CTA"
+      fix: "[YOUR_COMPANY] voice: max 1-2 emoji per zprávu v comms. V produktovém UI/LP: NULA emoji."
+
+    - id: 8
+      name: "Colored left-border cards"
+      detail: "border-left: 3px solid accent — hallmark AI template"
+      fix: "Cards bez ornamentu. Pokud zvýraznit, pak typograficky nebo přes background opacity shift."
+
+    - id: 9
+      name: "Generic hero copy"
+      detail: "'Welcome to [X]', 'Unlock the power of...', 'Your all-in-one solution for...', 'Empower your [X]'"
+      fix: "[YOUR_COMPANY] hero = konkrétní fakt nebo otázka. 'Dluhopisové investice od 50k Kč' beats 'Unlock financial freedom'."
+
+    - id: 10
+      name: "Cookie-cutter section rhythm"
+      detail: "Hero → 3 features → testimonials → pricing → CTA, každá section stejné výšky, stejné padding"
+      fix: "Break rhythm. Některé sections full-height, jiné krátké (přímo pod headerem). Asymetrie výšek = narrative."
+
+hard_rejection_criteria:
+  description: "Pokud platí JAKÝKOLI z těchto — design INSTANT-FAIL, nelze refinovat, přepsat od nuly."
+  rules:
+    - "Generic SaaS card grid jako first impression"
+    - "Krásný hero image bez jasného brandu"
+    - "Strong headline bez jasné akce (CTA)"
+    - "Busy imagery pod textem (čitelnost < AA)"
+    - "Sections opakující stejný mood statement (různě přeformulované)"
+    - "Carousel bez narrative purpose (jen 'aby se to hýbalo')"
+    - "App UI postavená ze stackovaných karet místo layoutu"
+
+litmus_checks:
+  description: "7 YES/NO otázek. Každá NO = refactor required."
+  questions:
+    - "Je brand/produkt okamžitě rozpoznatelný v prvním viewportu?"
+    - "Je přítomen jeden dominantní visual anchor?"
+    - "Dá se stránka pochopit pouhým skenováním headlines?"
+    - "Má každá section jednu jasnou práci?"
+    - "Jsou cards skutečně potřeba? (nebo by stačil layout?)"
+    - "Zlepšuje motion hierarchii nebo atmosféru? (ne jen 'hýbe se')"
+    - "Zůstal by design premium po odstranění všech decorative shadows?"
+
+universal_hard_rules:
+  description: "Aplikuj vždy, bez ohledu na typ (LP vs app UI vs brand doc)."
+  rules:
+    - "Body text < 16px = NEVER (mobile 16px, desktop 16-18px min)"
+    - "Contrast ratio na body text < 4.5:1 = NEVER"
+    - "Placeholder-as-label pattern = NEVER (labels musí být visible když field má content)"
+    - "Visited vs unvisited link distinction = ALWAYS preserved (různé barvy)"
+    - "Heading musí být vizuálně BLÍŽ k sekci, kterou uvozuje, než k předcházející"
+    - "Default font stacky (Inter, Roboto, Arial, system-ui) = NEVER. [YOUR_COMPANY] = Inter Tight only."
+    - "'Pokud smazání 30% copy zlepší stránku, mazej dál.'"
+
+audit_workflow:
+  description: "Při reviewu LP/nabídky postupuj v tomto pořadí (3-min audit)."
+  steps:
+    - "1. Scan pro 10 slop patterns. Každý match = log."
+    - "2. Projdi 7 hard_rejection_criteria. ANY match = přepsat."
+    - "3. Zodpovez 7 litmus YES/NO. Count NOs."
+    - "4. Rate overall 0-10. Pod 7 = 'Show me what 10/10 looks like' (generate mockup variant)."
+    - "5. Konkrétní fix list s file:line references (ne 'hero je slabý', ale 'line 42: copy je generic, replace with...')."
+
+# =========================
 # CROSS-REFERENCES
 # =========================
 related_files:
   research: "$HOME/docs/design-research-2025.md"
   stitch_systems: "$HOME/docs/design-stitch-systems-2025.md"
   brand_dna: "$HOME/docs/DESIGN.md"
-  [your-service]: "~/.claude/expertise/[your-service].yaml"
+  [your_company]_brand: "~/.claude/expertise/[your_company]-brand.yaml"
 
 related_knowledge:
   - "knowledge_design_2026.md (memory)"

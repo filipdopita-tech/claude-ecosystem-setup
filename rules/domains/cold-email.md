@@ -6,7 +6,7 @@
 PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 
 ```
-□ Proofpoint PDR status? (viz ecosystem-map.md → VPS-PRIMARY IP)
+□ Proofpoint PDR status? (viz ecosystem-map.md → Flash IP)
 □ SPF/DKIM/DMARC všech domén platné? (mxtoolbox.com)
 □ Denní limit nepřekročen? (max 50 emailů/doménu/den v warmup fázi)
 □ Bounce rate < 2%? (nad tím = STOP, čekej na analýzu)
@@ -57,11 +57,11 @@ Max sekvencí najednou: 50 kontaktů/doménu
 
 ## Proofpoint Situace (jako 2026-04-15)
 
-VPS-PRIMARY IP je na Proofpoint PDR blocklist. Čeká na delisting (odesláno 2026-04-14).
-→ Do clearance: ŽÁDNÉ cold emaily z VPS-PRIMARY IP.
-→ Alternativa: posílej přes VPS-SECONDARY VPS (CZ IP) nebo SMTP relay (Mailgun/Brevo).
+Flash IP je na Proofpoint PDR blocklist. Čeká na delisting (odesláno 2026-04-14).
+→ Do clearance: ŽÁDNÉ cold emaily z Flash IP.
+→ Alternativa: posílej přes VPS-SECONDARY (CZ IP) nebo SMTP relay (Mailgun/Brevo).
 
-Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-<username>/memory/cold_email_setup.md`
+Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-YOUR_USERNAME/memory/cold_email_setup.md`
 
 ## Content Rules
 

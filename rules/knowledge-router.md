@@ -5,12 +5,12 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 ## Expertise YAML (preferovaný, structured)
 | Task obsahuje | Načti |
 |---|---|
-| IG/social content | expertise/content-creation.yaml + [your-service].yaml |
-| Investor/outreach/DD | expertise/investor-outreach.yaml + [your-service].yaml |
+| IG/social content | expertise/content-creation.yaml + [your_company]-brand.yaml |
+| Investor/outreach/DD | expertise/investor-outreach.yaml + [your_company]-brand.yaml |
 | Deploy/VPS/systemd | expertise/vps-infra.yaml |
 | Kód/refactor/testing | expertise/code-patterns.yaml |
-| [YOUR_COMPANY] brand/voice | expertise/[your-service].yaml |
-| HTML, CSS, design, brand manuál, vizuál, web, landing page, nabídka, UI | expertise/design-visual.yaml + expertise/[your-service].yaml |
+| [YOUR_COMPANY] brand/voice | expertise/[your_company]-brand.yaml |
+| HTML, CSS, design, brand manuál, vizuál, web, landing page, nabídka, UI | expertise/design-visual.yaml + expertise/[your_company]-brand.yaml + rules/design-workflow.md |
 | React, Next.js, shadcn, Tailwind, mapcn, component library, web app, frontend | expertise/frontend-ui.yaml |
 | GitHub repo hodnocení, je to good library, podívej se na repo, GitHub URL | expertise/frontend-ui.yaml + knowledge/code/github-recon.md |
 | CNB, ECSP, dluhopisy, AML, emise, regulace, zákon, compliance, GDPR | expertise/czech-regulatory.yaml |
@@ -22,6 +22,30 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 | Graphiti, KG, knowledge graph, graphiti_search, graphiti_add, KuzuDB, temporal | expertise/knowledge-graph-ops.yaml |
 | Konkurence, competitor, scrape IG profil, hook pattern, co dělá X, inspirace pro hook | skill: competitor-intel |
 | SEO, AEO, GEO, AI citace, Perplexity, ChatGPT visibility, schema markup, E-E-A-T, structured data | skill: seo-audit |
+| obsidian, [YOUR_COMPANY]-Vault, vault, search note, create note, find tag, .canvas, .base | skill: obsidian-cli + obsidian-markdown + obsidian-bases + json-canvas |
+| shadcn, shadcn/ui, component, registry, button, card, dialog, theming | skill: shadcn |
+| Next.js, Vercel, React, server components, app router, performance, RSC | skill: vercel-react-best-practices + nextjs-app-router-patterns + vercel-composition-patterns |
+| Google Sheets, gws-sheets, append row, read spreadsheet, VPS Dashboard | skill: gws-sheets-read + gws-sheets-append + sheets-automation |
+| Google Calendar, scheduling, meeting prep, agenda, attendees | skill: gws-workflow-meeting-prep + calendar-automation |
+| email-to-task, gmail to tasks, convert email | skill: gws-workflow-email-to-task |
+| Playwright, flaky test, page object model, browser test | skill: playwright-best-practices + e2e-testing-patterns |
+| pytest, fixtures, mocking, Python testing | skill: python-testing-patterns |
+| TypeScript types, generics, conditional types, mapped types, template literal | skill: typescript-advanced-types |
+| Temporal, workflow orchestration, saga pattern, distributed system | skill: workflow-orchestration-patterns |
+| web scraping, anti-bot, undocumented API, scraping pipeline | skill: web-scraping |
+| investment memo, VC memo, PE memo, investment thesis, DD memorandum | skill: investment-memo (chain s dd-emitent) |
+| pdf table extraction, pdfplumber, prospekt parsing | skill: pdf-extraction |
+| data analysis, Excel insights, CSV visualization, spreadsheet report | skill: data-analysis |
+| Remotion, video v Reactu, programmatic video | skill: remotion-best-practices |
+| design audit, motion design, interaction polish, Emil Kowalski | skill: design-motion-principles + impeccable |
+| defuddle, web clipper, clean markdown z webu | skill: defuddle |
+
+## Coding Rules (behavioral, načti při editu/tvorbě kódu)
+| Task obsahuje | Načti |
+|---|---|
+| Kód refactor, optimization, compaction, cleanup, token efficiency v kódu | rules/lean-engine.md |
+| JS/TS/Python/Bash patterns, arrow fn, list comprehension, walrus, destructuring | rules/lean-engine.md |
+| Subagent prompt tuning, compact agent output, agent report format | rules/lean-engine.md §3-4 |
 
 ## CARL Domain Rules (behavioral constraints, načti SPOLU s YAML)
 | Task obsahuje | Načti |
@@ -33,7 +57,7 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 CARL = behaviorální pravidla (mandatory checks, red lines). YAML = znalostní obsah. Používej oboje.
 
 ## Knowledge MD (fallback)
-sales-psychology, programming, design, frontier-tech, pitch-deck-factory, ai-ml, marketing, finance, filip-style-clone, legal-compliance, competitive-intel, cz-market-data, dopita-standards
+sales-psychology, programming, design, frontier-tech, pitch-deck-factory, ai-ml, marketing, finance, [your_name]-style-clone, legal-compliance, competitive-intel, cz-market-data, [your_name]-standards
 
 ## Code Standards (knowledge/code/)
 agents, code-review, coding-style, development-workflow, git-workflow, github-recon, hooks, patterns, performance, python-rules, security, testing

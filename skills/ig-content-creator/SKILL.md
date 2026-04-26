@@ -19,7 +19,7 @@ metadata:
 ### Krok 1: Načti brand kontext
 Před jakýmkoli výstupem VŽDY přečti:
 1. `~/Documents/[your-brand-assets]/PROJECT_INSTRUCTIONS.md` — Brand DNA, hooks, anti-robotic, CTA
-2. `~/.claude/rules/filip-style-clone.md` — [YOUR_NAME] styl, banned words
+2. `~/.claude/rules/[your_name]-style-clone.md` — [YOUR_NAME] styl, banned words
 3. `~/.claude/rules/[your-service].md` — [YOUR_COMPANY] voice, visual, content rules
 
 ### Krok 2: Identifikuj formát

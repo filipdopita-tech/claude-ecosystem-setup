@@ -203,7 +203,7 @@ messaging:
     - "Mam pro vas exkluzivni nabidku"
 
 # =========================
-# FILIP_SIGNATURE
+# USER_SIGNATURE
 # =========================
 signature_template:
   short: "[YOUR_NAME]"
@@ -211,7 +211,7 @@ signature_template:
     [YOUR_NAME]
     [YOUR_COMPANY] | Investice, ktere daj smysl
     +420 {phone}
-    [your-company].com
+    example.com
 
 # =========================
 # FACTS
@@ -221,19 +221,19 @@ facts:
     fact: LinkedIn SN trial expires 2026-04-12, no auto-renew
     source: linkedin_sales_navigator.md memory
   - date: 2026-04-09
-    fact: Primary outreach channel po expire = cold email (VPS-SECONDARY VPS CZ IP)
+    fact: Primary outreach channel po expire = cold email (VPS-SECONDARY CZ IP)
     source: cold_email_setup.md
 
 # =========================
 # CROSS-REFERENCES
 # =========================
 related_expertise:
-  - [your-service].yaml
+  - [your_company]-brand.yaml
   - content-creation.yaml
 
 related_rules:
   - ~/.claude/rules/expertise-sales-psychology.md
-  - ~/.claude/rules/filip-style-clone.md
+  - ~/.claude/rules/[your_name]-style-clone.md
   - ~/.claude/rules/competitive-intel.md
 
 related_memory:

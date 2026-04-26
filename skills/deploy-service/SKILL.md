@@ -182,5 +182,5 @@ ssh [target] "ss -tlnp | grep [port]"
 1. **Neházkuj porty.** Vždy zkontroluj ecosystem-map.md jestli port není obsazený.
 2. **Nekopíruj secrets přes scp.** Credentials patří do master.env na cílovém VPS, ne do zdrojového kódu.
 3. **Nespouštěj službu bez Monit watcheru.** Každý service MUSÍ mít monit config.
-4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = 10.77.0.x, veřejné = 0.0.0.0.
+4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = REDACTED_VPN_IP/x, veřejné = 0.0.0.0.
 5. **Netestuj jen start.** Ověř i restart (`systemctl restart`) a recovery po kill (`kill -9`).

@@ -1,120 +1,206 @@
-domain: brand
-last_updated: 2026-01-01
-description: Company brand DNA — voice, visual, content pillars, positioning, banned words
-# CUSTOMIZE: Nahraď celý obsah svým brand manuálem
+domain: [your_company]-brand
+last_updated: 2026-04-13
+description: [YOUR_COMPANY] brand DNA — voice, visual, content pillars, positioning, banned words
 
 # =========================
-# VOICE & TONE
+# VOICE
 # =========================
 voice:
-  style: direct       # direct | conversational | formal | casual
-  confidence: high    # high | medium | low
-  language: cs        # cs | en | both
-  signature: "[YOUR_NAME]"
-  emoji_limit: 2
+  language: cs-CZ
+  style: direct, sebevedomy, bez omluv
+  sentence_max: 2_vety_na_myslenku
+  signature: [YOUR_NAME]
+  formal_address: vykani_novym_kontaktum
+  emoji_max: 2
 
-  forbidden_openers:
-    - "Dobrý den,"
-    - "S pozdravem,"
-    - "Přeji hezký den"
-
-  banned_phrases:
-    # CUSTOMIZE: Přidej své zakázané fráze
-    - inovativní           # → nový
-    - revoluční
-    - komplexní řešení
-    - win-win
-    - synergie
-    - paradigma
-    - disruptivní
-    - v dnešní době        # → teď
-
-  ai_patterns_to_remove:
-    - "Seznamy s přesně 5/10 položkami"
-    - "Furthermore/Moreover"
-    - "uniform sentence length"
-    - "em dash abuse"
+tone_rules:
+  - Cisla misto adjektiv (49 215 Kc, ne "slusna mzda")
+  - Aktivni slovesa (nasadil, ne "byl nasazen")
+  - Zadne hedging (mozna, potencialne, urcite...)
+  - Zadne vykricniky
+  - Konci akci (CTA, ne tecka)
 
 # =========================
-# VISUAL IDENTITY
+# VISUAL — MONOCHROME ONLY
+# Zdroj: ~/docs/[your_company]-brand-manual-2026.md (single source of truth)
 # =========================
 visual:
-  philosophy: monochrome  # CUSTOMIZE: monochrome | colorful | minimal
+  philosophy: "Apple applied to private capital. No saturated colors. EVER."
 
-  # CUSTOMIZE: Nahraď svými barvami
-  dark_palette:
-    background: "#0A0A0C"
-    fills: "#1A1A1A"
-    gray: "#555555"
-    black: "#000000"
+  colors:
+    # Primary
+    black: "#000000"          # strongest headings, CTA text
+    near_black: "#1A1A1A"     # primary brand, fills, icons
+    gray: "#555555"           # secondary text, tags on dark
 
-  light_palette:
-    background: "#F2F0ED"
-    borders: "#E5E3E0"
-    accent: "#C8C4BF"
+    # Light surfaces
+    bg_light: "#F2F0ED"       # warm off-white, premium paper feel
+    border_light: "#E5E3E0"   # dividers on light surfaces
+    accent_warm: "#C8C4BF"    # subtle highlights, watermarks
+
+    # Dark surfaces
+    bg_dark: "#0A0A0C"        # deep near-black, dark backgrounds
+
+    # NO gold. NO orange. NO saturated hues. NEVER.
+
+  gradients:
+    dark_bg: "linear-gradient(165deg, #000000, #0A0A0C, #111115)"
+    cta: "linear-gradient(165deg, #0F0F0F, #1A1A1A, #2A2A2A)"
+    divider_dark: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)"
+    divider_light: "linear-gradient(90deg, transparent, rgba(0,0,0,0.15), transparent)"
+    radial_glow: "radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.04), transparent)"
 
   typography:
-    primary_font: "Inter Tight"  # CUSTOMIZE: Tvůj font
+    font: "Inter Tight"       # single typeface, no exceptions
+    weights:
+      light: 300              # step numbers, supporting elements
+      regular: 400            # body text
+      medium: 500             # small labels, handles
+      semibold: 600           # tags, category labels
+      bold: 700               # headings, hero numbers
+    spacing:
+      hero_numbers: "-1px to -2px"
+      headings: "-0.3px"
+      tags: "+2px uppercase 10px"
+    hero_glow: "text-shadow: 0 0 60px rgba(255,255,255,0.08)"
 
-  formats:
-    instagram: "1080x1350"
-    linkedin: "1200x627"
-    og_image: "1200x630"
+  surfaces:
+    light:
+      bg: "#F2F0ED"
+      feel: "premium paper, high-end magazine"
+      border: "#E5E3E0"
+      glass_card: "rgba(255,255,255,0.65) + blur(20px)"
+    dark:
+      bg: "#0A0A0C"
+      feel: "premium device screen, depth"
+      glass_card: "rgba(255,255,255,0.05) + blur(20px)"
+      noise_texture: "opacity 0.03-0.04, only on hero/CTA surfaces"
 
-  principles:
-    - "Alternating dark/light surfaces"
-    - "No saturated colors in premium B2B context"
-    - "Typography-first design"
+  components:
+    button_primary_per_view_max: 1
+    button_min_height: 48px
+    button_radius: "6-8px"
+    button_style: "dark near-black fill #1A1A1A, white text"
+    card_bg_light: "rgba(255,255,255,0.65)"
+    card_bg_dark: "rgba(255,255,255,0.05)"
+    card_border: "rgba(255,255,255,0.08) on dark / #E5E3E0 on light"
+    card_radius: "12-16px"
+    alternating_rhythm: "dark cover → light content → repeat"
+
+  css_vars: |
+    :root {
+      --of-black: #000000;
+      --of-near-black: #1A1A1A;
+      --of-gray: #555555;
+      --of-bg-light: #F2F0ED;
+      --of-border-light: #E5E3E0;
+      --of-accent-warm: #C8C4BF;
+      --of-bg-dark: #0A0A0C;
+      --of-gradient-dark: linear-gradient(165deg, #000000, #0A0A0C, #111115);
+      --of-gradient-cta: linear-gradient(165deg, #0F0F0F, #1A1A1A, #2A2A2A);
+    }
+
+  post_formats:
+    ig_carousel: 1080x1350
+    ig_static: 1080x1350
+    ig_reel: 1080x1920
+    ig_story: 1080x1920
+    linkedin_post: 1200x628
 
 # =========================
-# CONTENT STRATEGY
+# CONTENT PILLARS
 # =========================
-content:
-  # CUSTOMIZE: Definuj svých 4-5 pilierů
-  pillars:
-    - name: "[YOUR_PILLAR_1]"
-      percentage: 30
-      description: "Core business content"
-    - name: "[YOUR_PILLAR_2]"
-      percentage: 25
-      description: "Behind the scenes / BTS"
-    - name: "[YOUR_PILLAR_3]"
-      percentage: 20
-      description: "Market / industry insights"
-    - name: "Personal"
-      percentage: 15
-      description: "Founder story"
-    - name: "AI/Tech"
-      percentage: 10
-      description: "Tools and innovation"
+content_pillars:
+  investment:
+    percent: 30
+    topics: [dluhopisy, fondy, realne_aktiva, portfolio_strategie]
+  fundraising_bts:
+    percent: 25
+    topics: [jak_fungujou_emise, DD_proces, term_sheet, legal]
+  market_cz:
+    percent: 20
+    topics: [makro, stats, srovnani_asset_classes, cnb]
+  personal:
+    percent: 15
+    topics: [[YOUR_NAME]_founder_story, lessons, rozhodnuti]
+  ai_tech:
+    percent: 10
+    topics: [AI_v_investicich, ml_due_diligence, automatizace]
 
-  metrics_priority:
-    - saves
-    - shares
-    - comments
-    - profile_visits
-    - reach
+content_metrics_priority:
+  - saves
+  - shares
+  - comments
+  - profile_visits
+  - reach
 
 # =========================
 # POSITIONING
 # =========================
 positioning:
-  # CUSTOMIZE: Nahraď svým brand positioning
-  tagline: "[YOUR_TAGLINE]"
-  target_audience: "[YOUR_TARGET_AUDIENCE]"
-  unique_value: "[YOUR_UNIQUE_VALUE_PROPOSITION]"
-  proof_points:
-    - "[METRIC_1]"
-    - "[METRIC_2]"
-    - "[METRIC_3]"
+  usp:
+    - Premium brand
+    - Investice i fundraising pod jednou strechou
+    - AI-powered due diligence
+    - Pro sofistikovane investory
+  target_audience:
+    primary: HNWI_Cechy_10M_portfolio
+    secondary: sophisticated_retail_500k_plus
+    tertiary: founders_seeking_fundraising
 
 # =========================
-# CONTENT WORKFLOW
+# BANNED WORDS (CZ)
+# =========================
+banned_words:
+  - inovativni
+  - revolucni
+  - komplexni reseni
+  - win-win
+  - synergie
+  - paradigma
+  - disruptivni
+  - v dnesni dobe
+  - zaverem lze konstatovat
+  - dovoluji si
+  - s pozdravem
+  - Furthermore
+  - Moreover
+  - em dash
+
+banned_replacements:
+  inovativni: novy
+  v_dnesni_dobe: ted
+  dovoluji_si: (smazat, rovnou akce)
+  s_pozdravem: [YOUR_NAME]
+  komplexni_reseni: konkretni_reseni
+
+# =========================
+# WORKFLOW
 # =========================
 workflow:
-  steps:
-    - "Načti brand assets z ~/Documents/[YOUR_BRAND_ASSETS_DIR]/"
-    - "Skeptic audit — zpochybni každé tvrzení"
-    - "Red-team audit — najdi slabé místo"
-    - "Check banned words"
-  cta_pattern: "Comment [KEYWORD] + Save CTA"
+  before_post:
+    - Cti ~/Documents/[your_company]-claude-project/PROJECT_INSTRUCTIONS
+    - Skeptic audit ([YOUR_NAME] by to podepsal?)
+    - Red-team audit (co by konkurent pouzil proti nam?)
+    - Check banned words
+    - Overit cisla (zero hallucinace)
+
+  cta_pattern:
+    - "Comment [KEYWORD]"
+    - Save CTA
+    - Link v bio (pro IG)
+
+# =========================
+# CROSS-REFERENCES
+# =========================
+related_expertise:
+  - content-creation.yaml
+  - investor-outreach.yaml
+
+related_rules:
+  - ~/.claude/rules/[your_company]-all.md
+
+related_memory:
+  - copywriting_persona.md
+  - pinterest_style_bible.md
+  - user_profile.md

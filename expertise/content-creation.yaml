@@ -185,11 +185,11 @@ facts:
 # CROSS-REFERENCES
 # =========================
 related_expertise:
-  - [your-service].yaml
+  - [your_company]-brand.yaml
 
 related_rules:
   - ~/.claude/rules/expertise-marketing.md
-  - ~/.claude/rules/filip-style-clone.md
+  - ~/.claude/rules/[your_name]-style-clone.md
 
 related_skills:
   - ig-content-creator

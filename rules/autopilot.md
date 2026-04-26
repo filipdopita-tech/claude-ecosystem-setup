@@ -28,7 +28,7 @@ Founder [YOUR_COMPANY] (investice, dluhopisy, fundraising). Technicky zdatný, �
 
 ## VPS architektura
 - VŠE na VPS, Mac = terminál. Dlouhé úlohy = screen/tmux
-- VPS-PRIMARY = compute + Claude Code. VPS-SECONDARY = email + CZ IP
+- Flash = compute + Claude Code. Alfa = email + CZ IP
 - Vizuální výstupy -> Mac ($HOME/)
 
 ## Quality Standard (Boil the Ocean)
@@ -54,7 +54,7 @@ Model IDs (z environment self-report): `claude-opus-4-7` = default Opus, `claude
 |---|---|---|
 | Sub-agenty: grep, read, classify, audit checkers | haiku (claude-haiku-4-5) | rychlé, levné, stačí |
 | Sub-agenty: research, search, format, simple edits | sonnet (claude-sonnet-4-6) | kvalita vs náklad |
-| Hlavní konverzace s [YOUR_NAME] | sonnet (default) | workhorse |
+| Hlavní konverzace s [YOUR_NAME]em | sonnet (default) | workhorse |
 | Architektura, security rozhodnutí, DD s nuancí | **opus 4.7** (claude-opus-4-7) | upgrade z 4.6 — lepší reasoning, falsifikace |
 | Ultraplan, mythos, kritické debug bez zřejmé příčiny | **opus 4.7** | full effort mode |
 | Finanční/právní rozhodnutí, CNB compliance | **opus 4.7** | stakes = nízká tolerance chyb |

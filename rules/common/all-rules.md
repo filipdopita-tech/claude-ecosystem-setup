@@ -91,6 +91,42 @@ Před označením jakékoli GSD fáze nebo multi-step tasku jako hotové:
 
 Přeskočení UNIFY = fáze NENÍ hotová. Platí i pro ad-hoc multi-step tasky mimo GSD.
 
+## Debug Iron Law (adapted from gstack/investigate v0.17, 2026-04-17)
+
+**NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST.**
+
+Fixing symptoms = whack-a-mole debugging. Každý fix bez root cause dělá další bug těžší najít.
+
+Pravidla (NO EXCEPTIONS pro bugs, incidenty, scraper/daemon selhání, deliverability issues):
+
+1. **Reprodukuj bug DETERMINISTICKY** před formováním hypotézy. Pokud nemůžeš reprodukovat, sbírej evidence, netipuj.
+
+2. **3-strike rule:** Pokud 3 hypotézy za sebou selhaly → STOP. Neformuj čtvrtou. Zeptej se:
+   - "Není to špatná architektura místo špatné hypotézy?"
+   - "Netestuju symptom místo root cause?"
+   - "Potřebuju víc observability před dalším pokusem?"
+
+3. **Fresh verification před shipnutím:** Reprodukuj původní bug scenario a dokažu, že je opraveno. Ne "should fix it" — VERIFY.
+
+4. **Blast radius >5 souborů → eskaluj [YOUR_NAME]:** Fix na >5 souborů = pravděpodobně špatný layer. Nabídni split nebo rethink.
+
+5. **Red flags (zpomal):**
+   - "Quick fix for now" — není žádné "for now". Oprav správně nebo eskaluj.
+   - Návrh fixu PŘED trace data flow = tipuješ.
+   - Každý fix odhalí nový problém jinde = wrong layer, ne wrong code.
+
+6. **Debug Report format po dokončení:**
+   ```
+   Symptom:    [co [YOUR_NAME] viděl]
+   Root cause: [co bylo skutečně špatně]
+   Fix:        [co bylo změněno, s file:line]
+   Evidence:   [test/reproduction output]
+   Related:    [TODOS.md, prior bugs ve stejné oblasti, architektonické poznámky]
+   Status:     DONE | DONE_WITH_CONCERNS | BLOCKED
+   ```
+
+**Escalation bez ostudy:** Bad work is worse than no work. "Tohle je na mě moc" nebo "nejsem si jistý" je OK odpověď. 3x neúspěch → eskaluj, ne další pokus.
+
 ## Hooks
 
 - PreToolUse: validation. PostToolUse: auto-format/checks. Stop: final verification

@@ -46,7 +46,7 @@ Nikdy neprezentuj jako finální právní radu — pouze jako orientaci.
 
 - AML záznamy: append-only, timestampované, 10 let retence
 - KYC dokumenty: šifrované úložiště, přístup omezený
-- Emise dokumenty: verze + datum + schválení (FilipSign nebo notář)
+- Emise dokumenty: verze + datum + schválení ([YOUR_NAME]Sign nebo notář)
 
 ## Kontextová reference
 

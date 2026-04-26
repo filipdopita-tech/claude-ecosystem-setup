@@ -34,7 +34,7 @@ Z pilíře vytáhni:
 
 ### Krok 3: Načti brand kontext
 - `~/Documents/[your-brand-assets]/PROJECT_INSTRUCTIONS.md`
-- `~/.claude/rules/filip-style-clone.md`
+- `~/.claude/rules/[your_name]-style-clone.md`
 - `~/.claude/rules/[your-service].md`
 
 ### Krok 4: Generuj formáty

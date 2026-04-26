@@ -21,7 +21,7 @@ Cookies (AUTH_TOKEN, CT0) are stored in `/root/social_poster/.env`, extracted fr
 
 If cookies expire, re-extract:
 ```bash
-ssh mac "cd $HOME/.claude/skills/last30days/scripts/lib/vendor/bird-search && /opt/homebrew/bin/node -e \"
+ssh $YOUR_HOST "cd $HOME/.claude/skills/last30days/scripts/lib/vendor/bird-search && /opt/homebrew/bin/node -e \"
 import { resolveCredentials } from './lib/cookies.js';
 const { cookies } = await resolveCredentials({});
 console.log(JSON.stringify({ auth_token: cookies.authToken, ct0: cookies.ct0 }));
