@@ -1,6 +1,9 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 292 skills, 40 automation hooks, 14 expertise domains, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 292 skills, 40 automation hooks, 15 expertise domains, and a full VPS compute architecture.
+
+> **Cherry-pick mode**: see [COLLABORATION.md](COLLABORATION.md) — copy any single skill, rule, or expertise YAML without a full install. Includes reciprocity protocol for peer ecosystem exchange.
+> **Outreach to peers**: [PEER_PROMPT.md](PEER_PROMPT.md) has a ready-to-send message template for asking other engineers to mirror their `~/.claude/` so you can both cherry-pick.
 
 ---
 
