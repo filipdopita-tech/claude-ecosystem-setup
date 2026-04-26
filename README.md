@@ -1,9 +1,14 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 292 skills, 40 automation hooks, 15 expertise domains, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 298 skills, 51 automation hooks, 23 behavioral rule files, 14 expertise YAMLs, 17 MCP server integrations, 55 custom agents, 188 slash commands, and a full VPS compute architecture.
+
+**Production-grade. Battle-tested.** Drives a real fintech operation (OneFlow.cz) — investor outreach, due diligence, content publishing, deliverability, CZ regulatory compliance.
 
 > **Cherry-pick mode**: see [COLLABORATION.md](COLLABORATION.md) — copy any single skill, rule, or expertise YAML without a full install. Includes reciprocity protocol for peer ecosystem exchange.
 > **Outreach to peers**: [PEER_PROMPT.md](PEER_PROMPT.md) has a ready-to-send message template for asking other engineers to mirror their `~/.claude/` so you can both cherry-pick.
+> **Methodology deep-dive**: see [METHODOLOGY.md](METHODOLOGY.md) — Mythos prompt scaffold, Šenkypl autopilot mode, falsification-first reasoning, Boil-the-Ocean quality standard.
+> **Domain specialization**: see [SPECIALIZATION.md](SPECIALIZATION.md) — Czech fintech vertical (CNB/ECSP regulatory, AML, dluhopisy emitenti DD, deliverability for Czech B2B).
+> **MCP integrations**: see [MCP_INTEGRATIONS.md](MCP_INTEGRATIONS.md) — 17 active server integrations (Figma, Canva, Gmail, Google Workspace, Notion, Webflow, GitHub, code-review-graph, more).
 
 ---
 
@@ -28,12 +33,15 @@ claude
 
 | Component | Count | What it does |
 |---|---|---|
-| Skills | 292 | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, and 196 more |
-| Hooks | 40 | Auto-run on Claude Code events: format on save, security guard, session state, desktop notifications |
-| Expertise YAMLs | 15 | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, and more |
-| Knowledge MDs | 29 | Reference documents: coding standards, sales psychology, design patterns, compliance, finance |
-| Rules | 18 | Behavioral configuration: autopilot mode, reasoning depth, quality standards, security hardening |
-| Memory system | — | Auto-populated persistent memory across sessions (user profile, feedback, project context) |
+| Skills | **298** | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, `/mythos`, `/ultraplan`, and 292 more |
+| Hooks | **51** | Auto-run on Claude Code events: format on save, security guard, anti-deletion, model routing, cost discipline, session state, desktop notifications |
+| Slash commands | **188** | User-facing commands across all skills + meta commands |
+| Custom agents | **55** | Specialized subagents: `gsd-planner`, `gsd-executor`, `gsd-debugger`, `architect`, `security-reviewer`, `seo-*`, `outbound-strategist`, more |
+| Expertise YAMLs | **14** | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, design, frontend, more |
+| Behavioral rules | **23** | 18 root + 5 subdomains (cold-email, compliance, investment, cyber-disclosure, common). Reasoning depth, quality, completeness, autonomy, security, FB safety, knowledge routing |
+| Knowledge MDs | **37** | Reference: coding standards, sales psychology, design patterns, compliance, finance, GitHub recon |
+| MCP integrations | **17** | Figma, Canva, Gmail, Google Calendar, Drive, Notion, Webflow, GitHub, context7, code-review-graph, notebooklm, obsidian-vault, filesystem, openspace, memory-search, claude-flow, stitch-pdf-export |
+| Memory entries | **258** | Auto-populated persistent memory: user profile, feedback rules, active projects, infra references, credentials index |
 
 ---
 
@@ -50,9 +58,11 @@ claude
 │   ├── knowledge-router.md  # Domain → expertise file mapping
 │   └── domains/             # Cold email, compliance, investment rules
 ├── expertise/       # 14 domain YAMLs (loaded on-demand)
-├── knowledge/       # 17 reference MDs + 12 code standards (29 total)
-├── skills/          # 200 slash-command skill directories
-├── hooks/           # 40 automation scripts
+├── knowledge/       # 25 reference MDs + 12 code standards (37 total)
+├── skills/          # 298 slash-command skill directories
+├── hooks/           # 51 automation scripts (anti-deletion, security-guard, cost-guard, model-routing, prompt-completeness, more)
+├── agents/          # 55 specialized subagents
+├── commands/        # 188 slash commands
 ├── settings.json    # Claude Code config + hook wiring
 └── projects/
     └── -Users-<username>/
@@ -194,7 +204,7 @@ Run any skill with `/skill-name` in Claude Code:
 /ultraplan       → Cloud planning with assume-failure-first
 ```
 
-Browse all 292 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions.
+Browse all 298 skills in `skills/` — each has a `SKILL.md` with purpose, trigger, and instructions. See [SPECIALIZATION.md](SPECIALIZATION.md) for the OneFlow vertical skill stack (CZ fintech, dluhopisy, deliverability).
 
 ---
 
@@ -210,7 +220,16 @@ Hooks run automatically on Claude Code events:
 | `auto-formatter.sh` | PostToolUse | Auto-formats edited files |
 | `security-guard.sh` | PreToolUse | Blocks dangerous commands |
 
-All 40 hooks are pre-wired in `settings.json`. Disable any by renaming with `.disabled` suffix.
+All 51 hooks are pre-wired in `settings.json`. Disable any by renaming with `.disabled` suffix.
+
+**Defense-in-depth highlights:**
+- `anti-deletion.sh` — blocks destructive `rm -rf`, `git reset --hard`, force-push to main without explicit override
+- `google-api-guard.sh` — blocks paid Google Cloud API calls (zero-cost discipline, after a real Kč 3000 incident)
+- `security-guard.sh` — blocks `curl|bash`, `chmod 777`, `eval $(external)`, `ufw disable`
+- `prompt-completeness-inject.sh` — injects iron-law rule before every multi-point prompt
+- `model-routing-guard.js` — auto-route Haiku/Sonnet/Opus 4.7 based on task description
+- `velocity-monitor.sh` — alerts on token velocity > 5k/turn for preemptive `/clear`
+- `gsd-prompt-guard.js` — enforces GSD workflow phase boundaries
 
 ---
 
