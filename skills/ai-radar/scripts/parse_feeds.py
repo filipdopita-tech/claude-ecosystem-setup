@@ -178,7 +178,7 @@ def dedupe_by_url(items: list) -> tuple[list, int]:
 # ── health.json ──────────────────────────────────────────────────────────
 
 def build_health(run_id: str, existing_count: int, parsed_sources: dict, deduped: int, removed: int) -> dict:
-    """F-013: per-source status report. Skill přečte a report [YOUR_NAME] ghost failures."""
+    """F-013: per-source status report. Skill přečte a report Filipovi ghost failures."""
     sources = {}
     # jq-combined sources (inferred z combined items)
     jq_sources = ['claude-code-releases', 'github-trending-llm', 'github-trending-agents',

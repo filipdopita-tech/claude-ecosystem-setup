@@ -1,6 +1,10 @@
 ---
 name: gsd-join-discord
 description: "Join the GSD Discord community"
+allowed-tools:
+  - Edit
+  - Read
+  - Write
 ---
 
 

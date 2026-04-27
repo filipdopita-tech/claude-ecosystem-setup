@@ -1,5 +1,5 @@
 # Finance & Investment Expertise
-# [YOUR_COMPANY]: CZ real estate bonds, fundraising, investor relations
+# OneFlow: CZ real estate bonds, fundraising, investor relations
 # Zdroje: Damodaran, Investopedia, YC Library, Brad Feld, CFI
 # Aktualizováno: 2026-04-03
 
@@ -68,7 +68,7 @@ YTC (callable), YTP (puttable), YTW = min(YTM,YTC,YTP) — konzervativní benchm
 | Series A | 20-150M CZK | Rule of 40, NRR >100% | Priced equity |
 | Growth | 150M+ | Scale metrics | Equity/debt mix |
 
-**[YOUR_COMPANY] dluhopisy jako alternativa:** founder neředí, fixed yield, zachovává kontrolu. Smysluplné pokud YTM < ROIC a CF pokryje kupóny.
+**OneFlow dluhopisy jako alternativa:** founder neředí, fixed yield, zachovává kontrolu. Smysluplné pokud YTM < ROIC a CF pokryje kupóny.
 
 ### SAFE vs Convertible vs Equity
 - SAFE: bez úroku, bez maturity — nejjednodušší, early round

@@ -13,6 +13,15 @@ metadata:
   author: AgriciDaniel
   version: "1.7.2"
   category: seo
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+  - WebFetch
+  - WebSearch
 ---
 
 # Firecrawl Extension for Claude SEO

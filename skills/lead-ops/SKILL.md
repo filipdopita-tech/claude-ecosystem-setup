@@ -1,7 +1,19 @@
+---
+name: lead-ops
+description: "OneFlow Lead-Ops pipeline z ~/Documents/lead-ops/. Načte context projektu a přepne do správného modu podle vstupu. Trigger: /lead-ops"
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+---
+
 # Skill: lead-ops
 # Trigger: /lead-ops
 
-Spustí [YOUR_COMPANY] Lead-Ops pipeline z ~/Documents/lead-ops/.
+Spustí OneFlow Lead-Ops pipeline z ~/Documents/lead-ops/.
 
 ## Co dělá
 
@@ -13,7 +25,7 @@ Načte kontext projektu a přepne Claude do správného módu podle vstupu.
 2. Načíst `CLAUDE.md` pro routing table
 3. Načíst `modes/_shared.md` pro scoring framework
 4. Pokud existuje `modes/_profile.md`: načíst. Jinak zkopírovat z `modes/_profile.template.md`.
-5. Načíst `config/profile.yml` pro [YOUR_COMPANY] ICP a proof points
+5. Načíst `config/profile.yml` pro OneFlow ICP a proof points
 
 Pak reagovat na uživatelův vstup dle routing table v CLAUDE.md:
 
@@ -43,7 +55,7 @@ Pak reagovat na uživatelův vstup dle routing table v CLAUDE.md:
 │   ├── tracker.md
 │   ├── deep.md
 │   └── patterns.md
-├── config/profile.yml        ← [YOUR_COMPANY] ICP + proof points
+├── config/profile.yml        ← OneFlow ICP + proof points
 ├── data/
 │   ├── pipeline.md           ← hlavní tracker
 │   └── inbox.md              ← fronta ke zpracování
@@ -61,6 +73,6 @@ Pak reagovat na uživatelův vstup dle routing table v CLAUDE.md:
 ## Klíčová pravidla
 
 - NIKDY neposílej zprávy/e-maily automaticky
-- SKIP pod 3.0/5 bez [YOUR_NAME]ova overridu
+- SKIP pod 3.0/5 bez Filipova overridu
 - Data zůstávají lokálně (data/, reports/ v .gitignore)
 - Odpovídej česky

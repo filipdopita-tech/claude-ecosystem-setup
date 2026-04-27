@@ -8,6 +8,15 @@ metadata:
   author: AgriciDaniel
   version: "1.8.2"
   category: seo
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - WebFetch
+  - WebSearch
 ---
 
 # Full Website SEO Audit

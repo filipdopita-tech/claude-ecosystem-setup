@@ -28,6 +28,6 @@ Pro tasky kde není jasné zadání nebo jsou nutné předpoklady:
 Použij: research, content creation, architektonická rozhodnutí.
 Nepoužívej: ops tasky, jednoduché implementace.
 
-## Effort Framing (viz [your_name]-autopilot.md)
+## Effort Framing (viz filip-autopilot.md)
 
 Prefix `!!` = full effort mode: reasoning před akcí, 2+ alternativy, /deset po dokončení.

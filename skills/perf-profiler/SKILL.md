@@ -3,6 +3,13 @@ name: perf-profiler
 description: "Use when profiling CPU/memory hot paths, generating flame graphs, or capturing JFR/perf evidence."
 version: 5.1.0
 argument-hint: "[tool] [command]"
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
 ---
 
 # perf-profiler

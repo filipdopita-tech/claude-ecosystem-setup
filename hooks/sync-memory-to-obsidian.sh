@@ -2,8 +2,8 @@
 # Auto-sync Claude memory files to Obsidian vault
 # Triggered by PostToolUse on Write tool
 
-MEMORY_DIR="$HOME/.claude/projects/-Users-<username>/memory"
-VAULT="$HOME/Documents/[YOUR_VAULT]/09-Agent-Memory"
+MEMORY_DIR="$HOME/.claude/projects/-Users-filipdopita/memory"
+VAULT="$HOME/Documents/OneFlow-Vault/09-Agent-Memory"
 
 # Read the file path from the tool input (passed as JSON via stdin)
 INPUT=$(cat)

@@ -39,7 +39,7 @@ Extracted from Mythos SKILL.md v1 během v2 refactoru 2026-04-17. Aplikovat pouz
 
 ```
 Finding na self-owned systém?
-  ANO → disclosure framework NEPLATÍ (interní, [YOUR_NAME] rozhodne)
+  ANO → disclosure framework NEPLATÍ (interní, Filip rozhodne)
   NE  ↓
 
 Finding na authorized pentest / bug bounty scope?
@@ -58,7 +58,7 @@ Finding na third-party production bez autorizace?
 ## Mythos scaffold kontext
 
 Tento framework byl součástí Mythos SKILL.md v1 (řádky 780-807). V v2 refactoru extrahován jako doménová rule, aby:
-1. Nezatěžoval každý Mythos invocation (90% [YOUR_COMPANY] use cases = interní systémy)
+1. Nezatěžoval každý Mythos invocation (90% OneFlow use cases = interní systémy)
 2. Byl loadable on-demand pro reálný cyber research
 3. Byl dohledatelný mimo Mythos context (CARL knowledge routing)
 

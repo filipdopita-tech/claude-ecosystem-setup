@@ -2,11 +2,17 @@
 name: xscrape
 description: "Extrahuj tweety, vlákna, profily a media z X.com. Trigger na 'stáhni tweet', 'vytáhni z X', 'xscrape', 'twitter scrape', X.com URL, 'co říká [user] na X'."
 user_invocable: true
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Grep
+  - Glob
 ---
 
 # X/Twitter Scraper
 
-Extract tweets, profiles, threads, and media from X.com using [YOUR_NAME]'s authenticated session.
+Extract tweets, profiles, threads, and media from X.com using Filip's authenticated session.
 
 ## Tools
 
@@ -17,11 +23,11 @@ Extract tweets, profiles, threads, and media from X.com using [YOUR_NAME]'s auth
 
 ## Authentication
 
-Cookies (AUTH_TOKEN, CT0) are stored in `/root/social_poster/.env`, extracted from [YOUR_NAME]'s Safari on Mac.
+Cookies (AUTH_TOKEN, CT0) are stored in `/root/social_poster/.env`, extracted from Filip's Safari on Mac.
 
 If cookies expire, re-extract:
 ```bash
-ssh $YOUR_HOST "cd $HOME/.claude/skills/last30days/scripts/lib/vendor/bird-search && /opt/homebrew/bin/node -e \"
+ssh mac "cd /Users/filipdopita/.claude/skills/last30days/scripts/lib/vendor/bird-search && /opt/homebrew/bin/node -e \"
 import { resolveCredentials } from './lib/cookies.js';
 const { cookies } = await resolveCredentials({});
 console.log(JSON.stringify({ auth_token: cookies.authToken, ct0: cookies.ct0 }));
@@ -60,5 +66,5 @@ node /root/social_poster/xscrape.mjs search "saas founders" --count 20 --json
 node /root/social_poster/xscrape.mjs tweets @levelsio --count 10 --json
 
 # Quick profile check
-node /root/social_poster/xscrape.mjs profile @<username> --json
+node /root/social_poster/xscrape.mjs profile @filipdopita --json
 ```

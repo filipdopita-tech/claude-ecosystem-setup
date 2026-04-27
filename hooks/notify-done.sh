@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # PostToolUse notification hook
 # Sends ntfy push notification after impactful tool completions.
-# NO Mac sounds ([YOUR_NAME] doesn't want popups/sounds on Mac).
+# NO Mac sounds (Filip doesn't want popups/sounds on Mac).
 
-NTFY_URL="https://ntfy.[your-company].com/[YOUR_NAME]"
-NTFY_TOKEN="tk_ahfvizbkyyj78turo1rmevsthimek"
+NTFY_URL="${NTFY_URL:-https://ntfy.example.com/your-topic}"
+NTFY_TOKEN="${NTFY_TOKEN:-}"
 
 # Read JSON from stdin (required so Claude Code doesn't hang)
 INPUT="$(cat)"

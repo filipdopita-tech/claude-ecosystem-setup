@@ -14,7 +14,7 @@ PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 □ Warm-up fáze dodržena? (min 21 dní před full volume)
 ```
 
-Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj [YOUR_NAME].
+Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj Filipovi.
 
 ## Domain Health Thresholds
 
@@ -59,9 +59,9 @@ Max sekvencí najednou: 50 kontaktů/doménu
 
 Flash IP je na Proofpoint PDR blocklist. Čeká na delisting (odesláno 2026-04-14).
 → Do clearance: ŽÁDNÉ cold emaily z Flash IP.
-→ Alternativa: posílej přes VPS-SECONDARY (CZ IP) nebo SMTP relay (Mailgun/Brevo).
+→ Alternativa: posílej přes Alfa VPS (CZ IP) nebo SMTP relay (Mailgun/Brevo).
 
-Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-YOUR_USERNAME/memory/cold_email_setup.md`
+Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-filipdopita/memory/cold_email_setup.md`
 
 ## Content Rules
 

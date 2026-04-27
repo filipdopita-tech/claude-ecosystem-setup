@@ -1,6 +1,11 @@
 ---
 name: lint-wiki
 description: "Health check wiki znalostní báze — najdi inconsistence, stale data, chybějící cross-refs, gaps, duplicity."
+allowed-tools:
+  - Bash
+  - Read
+  - Grep
+  - Glob
 ---
 
 # Lint Wiki
@@ -9,8 +14,8 @@ Quality check celé wiki knowledge base v Obsidian vaultu.
 
 ## Workflow
 
-1. **Načti schema** — `$VPS_MOUNT/Documents/[YOUR_VAULT]/AGENTS.md`
-2. **Přečti všechny wiki stránky** — `$VPS_MOUNT/Documents/[YOUR_VAULT]/wiki/*.md`
+1. **Načti schema** — `/mac/Documents/OneFlow-Vault/AGENTS.md`
+2. **Přečti všechny wiki stránky** — `/mac/Documents/OneFlow-Vault/wiki/*.md`
 3. **Zkontroluj:**
 
 ### Inconsistence

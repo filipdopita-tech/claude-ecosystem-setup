@@ -85,7 +85,7 @@ Completeness disambiguator: pokud "5 min navíc = trvale hotové" → viz qualit
 > "JWT autentizaci implementuju takto: [kod]"
 
 **Správně — alternativy + falsifikace:**
-> "JWT vs sessions: JWT je stateless (výhoda pro mikroservices), ale revokace bez blacklistu je bezpečnostní díra. [YOUR_COMPANY] má jeden monolit → sessions jsou jednodušší a bezpečnější. JWT dává smysl až při multi-service architektuře. Implementuju sessions."
+> "JWT vs sessions: JWT je stateless (výhoda pro mikroservices), ale revokace bez blacklistu je bezpečnostní díra. OneFlow má jeden monolit → sessions jsou jednodušší a bezpečnější. JWT dává smysl až při multi-service architektuře. Implementuju sessions."
 
 ---
 

@@ -10,15 +10,15 @@ echo "[install] ai-radar setup"
 
 # 1. Storage dirs
 mkdir -p "$ROOT/runs" "$ROOT/cache/latest" "$ROOT/archive"
-[ -f "$ROOT/watchlist.md" ] || echo "# AI Radar Watchlist ([YOUR_COMPANY])" > "$ROOT/watchlist.md"
+[ -f "$ROOT/watchlist.md" ] || echo "# AI Radar Watchlist (OneFlow)" > "$ROOT/watchlist.md"
 echo "  ✓ storage: $ROOT"
 
 # 2. Optional Obsidian vault mirror (jen pokud vault existuje)
-if [ -d "$HOME/Documents/[YOUR_COMPANY]-Vault" ]; then
-  mkdir -p "$HOME/Documents/[YOUR_COMPANY]-Vault/02-Reference"
-  [ -f "$HOME/Documents/[YOUR_COMPANY]-Vault/02-Reference/ai-radar-watchlist.md" ] || \
-    echo "# AI Radar Watchlist (Obsidian mirror)" > "$HOME/Documents/[YOUR_COMPANY]-Vault/02-Reference/ai-radar-watchlist.md"
-  echo "  ✓ Obsidian vault mirror: ~/Documents/[YOUR_COMPANY]-Vault/02-Reference/"
+if [ -d "$HOME/Documents/OneFlow-Vault" ]; then
+  mkdir -p "$HOME/Documents/OneFlow-Vault/02-Reference"
+  [ -f "$HOME/Documents/OneFlow-Vault/02-Reference/ai-radar-watchlist.md" ] || \
+    echo "# AI Radar Watchlist (Obsidian mirror)" > "$HOME/Documents/OneFlow-Vault/02-Reference/ai-radar-watchlist.md"
+  echo "  ✓ Obsidian vault mirror: ~/Documents/OneFlow-Vault/02-Reference/"
 else
   echo "  ⏸ Obsidian vault not found — primary watchlist v $ROOT/watchlist.md (OK)"
 fi

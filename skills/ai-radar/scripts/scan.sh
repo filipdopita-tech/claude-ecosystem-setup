@@ -24,7 +24,7 @@ if ! gh auth status -h github.com 2>&1 | grep -q "Logged in"; then
   GH_OK=0
 fi
 
-UA="ai-radar/1.0 ([YOUR_NAME] [YOUR_COMPANY]; contact your.email@example.com)"
+UA="ai-radar/1.0 (Filip Dopita OneFlow; contact filipdopit@gmail.com)"
 CACHE_TTL=3600   # F-011: 1h TTL (rychlý skip redundantních fetches ve stejný den)
 
 # F-011: helper — mtime-based cache. Pokud latest file < CACHE_TTL, cp místo curl.

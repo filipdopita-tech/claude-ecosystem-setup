@@ -1,11 +1,11 @@
 ---
 name: ig-creator-deep-dive
-description: "Deep-dive analyzer pro IG kreátory ve free režimu. Trigger: 'analyzuj kreátora X', 'rozeber profil @user', URL instagram.com/USER + slovo 'rozeber/analyzuj/deep'. Stáhne posty (max 24 free), analyzuje captions přes Gemini Flash free, identifikuje top picks pro [YOUR_COMPANY] ekosystem, instaluje top 3 ADOPT, generuje CZ adaptaci formátu, vrací master report."
+description: "Deep-dive analyzer pro IG kreátory ve free režimu. Trigger: 'analyzuj kreátora X', 'rozeber profil @user', URL instagram.com/USER + slovo 'rozeber/analyzuj/deep'. Stáhne posty (max 24 free), analyzuje captions přes Gemini Flash free, identifikuje top picks pro OneFlow ekosystem, instaluje top 3 ADOPT, generuje CZ adaptaci formátu, vrací master report."
 metadata:
   requires-env: GEMINI_API_KEY
   allowed-hosts:
     - instagram.com
-    - REDACTED_VPN_IP
+    - 10.77.0.1
     - api.github.com
   version: "1.0"
 allowed-tools:
@@ -21,11 +21,11 @@ allowed-tools:
 ## Kdy použít
 - "analyzuj kreátora @marc.kaz", "rozeber profil X", "deep-dive @creator"
 - IG creator URL + signál pro hloubkovou analýzu
-- Hledáš top tipy/skills/tools k implementaci do [YOUR_COMPANY]
+- Hledáš top tipy/skills/tools k implementaci do OneFlow
 
 ## NEPOUŽÍVAT pro
 - Single post/reel → použij `instagram-analyzer` skill
-- [YOUR_COMPANY] vlastní profil → použij `instagram-analyzer` (B režim)
+- OneFlow vlastní profil → použij `instagram-analyzer` (B režim)
 - Konkurence sleduj-jen → použij `competitor-intel` skill
 
 ## Architektura (free)
@@ -51,9 +51,9 @@ Mac (residential IP)              Flash (compute)
 ### Stage 1: Profile metadata fetch (Mac, ~2 min)
 ```bash
 USER="${1:-marc.kaz}"  # default
-WORK_DIR="$HOME/Desktop/${USER}-analysis"
+WORK_DIR="/Users/filipdopita/Desktop/${USER}-analysis"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR"
-python3 $HOME/scripts/social/ig_analyzer.py "$USER" \
+python3 /Users/filipdopita/scripts/social/ig_analyzer.py "$USER" \
   --metadata-only --max-posts 100 --output-dir . > fetch.log 2>&1
 ```
 
@@ -78,12 +78,12 @@ EOF
 
 ### Stage 3: Gemini Flash analysis (Mac → Gemini API free, ~30s)
 
-**Build prompt** s [YOUR_COMPANY] ekosystem fit rubrikou:
+**Build prompt** s OneFlow ekosystem fit rubrikou:
 ```bash
 cat > /tmp/gemini_prompt.txt << 'PROMPT_EOF'
 You are an AI tooling analyst. Below are ${N} Instagram reel captions from @${USER}, an AI/Claude Code creator. Each post promotes a specific tool, skill, or technique.
 
-For [YOUR_NAME]'s "[YOUR_COMPANY]" ecosystem (Czech investment platform; tech stack: Claude Code on macOS + VPS Flash, Python/Node, lots of automation, MCP servers, GitHub-based skills, focus on cost-zero tools), produce a structured JSON analysis.
+For Filip Dopita's "OneFlow" ecosystem (Czech investment platform; tech stack: Claude Code on macOS + VPS Flash, Python/Node, lots of automation, MCP servers, GitHub-based skills, focus on cost-zero tools), produce a structured JSON analysis.
 
 For EACH reel produce one object with EXACTLY these fields:
 - idx: integer
@@ -95,7 +95,7 @@ For EACH reel produce one object with EXACTLY these fields:
 - install_hint: install command if visible, else null
 - key_features: array of 2-5 strings
 - cost: free / freemium / paid / unknown
-- [your_company]_fit_score: integer 1-10 (relevance for [YOUR_COMPANY] ecosystem - investment tooling, automation, content, scraping, ops)
+- oneflow_fit_score: integer 1-10 (relevance for OneFlow ecosystem - investment tooling, automation, content, scraping, ops)
 - adoption: ADOPT (install now) / EVAL (test first) / WATCH (monitor) / SKIP (not relevant)
 - reasoning: 1-2 sentences explaining adoption verdict
 
@@ -122,10 +122,10 @@ import json
 from collections import Counter
 with open('analysis.json') as f:
     data = json.load(f)
-sorted_d = sorted(data, key=lambda x: x.get('[your_company]_fit_score',0), reverse=True)
-print('=== TOP 10 BY USER_COMPANY FIT ===')
+sorted_d = sorted(data, key=lambda x: x.get('oneflow_fit_score',0), reverse=True)
+print('=== TOP 10 BY ONEFLOW FIT ===')
 for i, item in enumerate(sorted_d[:10], 1):
-    print(f"{i}. [{item['[your_company]_fit_score']}/10] {item['title']}")
+    print(f"{i}. [{item['oneflow_fit_score']}/10] {item['title']}")
     print(f"   {item['category']} | {item['adoption']} | {item.get('github_url','N/A')}")
 print()
 print('Adoption:', Counter(x['adoption'] for x in data))
@@ -144,10 +144,10 @@ Captions zachycují 95% signálu. Transcribce je pojistka pro top 3:
 TOP3_URLS=$(python3 -c "
 import json
 with open('analysis.json') as f:
-    d = sorted(json.load(f), key=lambda x: x.get('[your_company]_fit_score',0), reverse=True)
+    d = sorted(json.load(f), key=lambda x: x.get('oneflow_fit_score',0), reverse=True)
 print(' '.join(f'\"https://www.instagram.com/reel/{e[\"shortcode\"]}/\"' for e in d[:3]))
 ")
-nohup $HOME/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
+nohup /Users/filipdopita/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
 ```
 
 ### Stage 7: Implement top picks (varies)
@@ -160,7 +160,7 @@ Pro každý ADOPT verdikt:
 **Vždy verify**: nainstalovaný? Funguje? Reálný test příkaz?
 
 ### Stage 8: CZ content adaptace (volitelně)
-Pokud je creator content-strong (>5k followers, structured posts), generuj 5 [YOUR_COMPANY] IG postů ve formátu:
+Pokud je creator content-strong (>5k followers, structured posts), generuj 5 OneFlow IG postů ve formátu:
 ```
 🚨 [ALL CAPS CLAIM]
 Někdo postavil X.
@@ -168,19 +168,19 @@ Ships with: 3-5 features
 👉 GitHub URL
 [CTA otázka]? Drop 🔥
 ```
-Aplikuj [YOUR_COMPANY] brand (monochrome, Inter Tight, alternující dark/light), check banned words.
+Aplikuj OneFlow brand (monochrome, Inter Tight, alternující dark/light), check banned words.
 
 ### Stage 9: Master report
 Generuj `REPORT.md` v `${WORK_DIR}/`:
 - TL;DR + adoption breakdown
-- Per pick: install verify + GitHub data + [YOUR_COMPANY] use case
+- Per pick: install verify + GitHub data + OneFlow use case
 - Skipped + důvody
 - Pattern analysis (replikovatelný format)
 - Pipeline cost & metrics
 - Next steps offer
 
 ### Stage 10: Memory update
-Vytvoř `~/.claude/projects/-Users-YOUR_USERNAME/memory/project_${USER}_ig_analysis_${DATE}.md`:
+Vytvoř `~/.claude/projects/-Users-filipdopita/memory/project_${USER}_ig_analysis_${DATE}.md`:
 - Implemented this session
 - Skipped + důvody
 - Klíčový insight z transcribce
@@ -207,7 +207,7 @@ Update `MEMORY.md` index s novou položkou.
 
 ## Auto-trigger pravidla pro tento skill
 - IG URL kreátora + slovo "deep" / "rozeber" / "analyzuj kompletně" → tento skill
-- "Analyzuj profil X a vyber co se hodí pro [YOUR_COMPANY]" → tento skill
+- "Analyzuj profil X a vyber co se hodí pro OneFlow" → tento skill
 - Single post URL → `instagram-analyzer` (rychlejší)
 - Konkurence pravidelně → `competitor-intel`
 

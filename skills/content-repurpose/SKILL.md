@@ -1,6 +1,12 @@
 ---
 name: content-repurpose
 description: "1 pilíř obsahu -> 9 formátů: reel, carousel, newsletter, LinkedIn, blog, stories, PDF, podcast notes, X/Twitter. Trigger: 'repurpose', 'rozmnož obsah', 'udělej z toho víc formátů'."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # /content-repurpose — Content Repurposing Engine
@@ -33,9 +39,9 @@ Z pilíře vytáhni:
 ```
 
 ### Krok 3: Načti brand kontext
-- `~/Documents/[your-brand-assets]/PROJECT_INSTRUCTIONS.md`
-- `~/.claude/rules/[your_name]-style-clone.md`
-- `~/.claude/rules/[your-service].md`
+- `~/Documents/oneflow-claude-project/PROJECT_INSTRUCTIONS.md`
+- `~/.claude/rules/filip-style-clone.md`
+- `~/.claude/rules/oneflow-all.md`
 
 ### Krok 4: Generuj formáty
 Generuj postupně, každý formát jako samostatný blok:
@@ -121,7 +127,7 @@ Outro CTA
 
 ### Krok 5: Quality check
 Pro KAŽDÝ formát:
-- [ ] Zní jako [YOUR_NAME]?
+- [ ] Zní jako Filip?
 - [ ] Banned words?
 - [ ] Min 1 číslo?
 - [ ] Končí akcí?

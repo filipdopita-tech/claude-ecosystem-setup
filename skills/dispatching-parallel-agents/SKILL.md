@@ -1,6 +1,9 @@
 ---
 name: dispatching-parallel-agents
 description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+allowed-tools:
+  - Read
+  - Task
 ---
 
 # Dispatching Parallel Agents

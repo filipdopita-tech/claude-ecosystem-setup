@@ -9,6 +9,15 @@ metadata:
   author: AgriciDaniel
   version: "1.8.2"
   category: seo
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+  - WebFetch
+  - WebSearch
 ---
 
 # Backlink Profile Analysis

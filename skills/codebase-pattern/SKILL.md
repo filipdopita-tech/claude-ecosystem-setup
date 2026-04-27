@@ -1,6 +1,13 @@
 ---
 name: codebase-pattern
 description: "Scan the actual project codebase to learn its conventions and enforce them when writing new code. NOT generic standards — learns what THIS specific project does."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
 ---
 
 # Codebase Pattern Skill

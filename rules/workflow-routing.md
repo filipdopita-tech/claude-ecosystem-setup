@@ -37,7 +37,7 @@ GSD volá Superpowers uvnitř fází (debugging, TDD, code review, planning).
 | `/status` | System health check |
 | `/cso` | Bezpečnostní audit VPS |
 | `/postmortem` | Po selhání/incidentu |
-| `/sop` | Runbook / playbook / troubleshooting guide pro [YOUR_COMPANY] služby |
+| `/sop` | Runbook / playbook / troubleshooting guide pro OneFlow služby |
 | `/handoff` | Před koncem session |
 | `/mythos` | Mythos prompt scaffold (falsification-first, ACH, calibrated Bayesian) — složité tasky, vždy Opus 4.7, security-first agentic |
 | `continuous-learning-v2` | Vždy aktivní (hooks) |
@@ -57,30 +57,30 @@ PRAVIDLO: Před odpovědí na task VŽDY zkontroluj auto-trigger pattern. Pokud 
 | /cso, bezpečnostní audit, security check VPS | `security-self-audit` |
 | napiš runbook, zdokumentuj postup, playbook pro, co dělat když X spadne, troubleshooting guide | `sop` |
 | analyzuj konkurenci, scrape IG profil, hook patterny, co dělá X na IG, inspirace od konkurence | `competitor-intel` |
-| SEO audit, AEO audit, AI citace, viditelnost v Perplexity, schema markup, E-E-A-T, example.com audit | `seo-audit` |
-| nová nabídka, nový lead-magnet, má to smysl stavět, před implementací, product diagnostic, nový service/pivot, diagnose | `[your_company]-diagnose` |
+| SEO audit, AEO audit, AI citace, viditelnost v Perplexity, schema markup, E-E-A-T, oneflow.cz audit | `seo-audit` |
+| nová nabídka, nový lead-magnet, má to smysl stavět, před implementací, product diagnostic, nový service/pivot, diagnose | `oneflow-diagnose` |
 | nový landing page, nový design, UI mockup, nová nabídka HTML, dashboard UI, email template, redesign | `design-workflow` (Stitch → Claude pattern, viz rules/design-workflow.md) |
 | DSCR screening, LTV screening, emitent A-F risk, ARES lookup, deliverability check, brand voice check | **OpenSpace skill execute** (viz OpenSpace Routing níže) |
 
 ## OpenSpace Routing (`mcp__openspace__*` po session restart)
 
-Local + cloud registry = 10+ [YOUR_COMPANY]-related skills. Triggers kdy volat `execute_task` nebo `search_skills`:
+Local + cloud registry = 10+ OneFlow-related skills. Triggers kdy volat `execute_task` nebo `search_skills`:
 
-**Auto-search KDYŽ:** před implementací nové logiky, [YOUR_NAME] zmíní workflow co už může být skill, task má deterministic strukturu (ARES lookup, DSCR calc, deliverability probe)
+**Auto-search KDYŽ:** před implementací nové logiky, Filip zmíní workflow co už může být skill, task má deterministic strukturu (ARES lookup, DSCR calc, deliverability probe)
 ```
 mcp__openspace__search_skills(query="<task description>", source="all")
 → hit >= 80% confidence = použij skill, ne reimplement
 ```
 
-**[YOUR_COMPANY] private skills v cloudu (Agent: [YOUR_COMPANY], 6 skills):**
+**OneFlow private skills v cloudu (Agent: OneFlow, 6 skills):**
 | Task trigger | Skill | Use |
 |---|---|---|
-| DSCR, EBITDA / debt service, emitent scoring | `[your_company]-dscr-screener` | first-layer DD, GO/REVIEW/RED |
-| LTV, kolaterál, loan-to-value, zástava | `[your_company]-ltv-screener` | haircut-aware, 50/70/75% thresholds |
-| ARES, IČO lookup, CZ firma enrichment | `[your_company]-ares-enrichment` | status, legal form, risk flag |
-| A-F grade, composite risk, DD verdict | `[your_company]-emitent-risk-score` | 6-dim weighted scoring |
-| SPF, DKIM, DMARC, blacklist, pre-send | `[your_company]-deliverability-check` | SEND/HOLD/FIX verdict |
-| brand voice, banned words, copy check, AI patterns | `[your_company]-brand-voice-check` | PASS/FIX/STOP |
+| DSCR, EBITDA / debt service, emitent scoring | `oneflow-dscr-screener` | first-layer DD, GO/REVIEW/RED |
+| LTV, kolaterál, loan-to-value, zástava | `oneflow-ltv-screener` | haircut-aware, 50/70/75% thresholds |
+| ARES, IČO lookup, CZ firma enrichment | `oneflow-ares-enrichment` | status, legal form, risk flag |
+| A-F grade, composite risk, DD verdict | `oneflow-emitent-risk-score` | 6-dim weighted scoring |
+| SPF, DKIM, DMARC, blacklist, pre-send | `oneflow-deliverability-check` | SEND/HOLD/FIX verdict |
+| brand voice, banned words, copy check, AI patterns | `oneflow-brand-voice-check` | PASS/FIX/STOP |
 
 **Community skills staženo (7+ in `/community/`):**
 - `long-form-writer`: 2000+ slov articles, multi-layer expansion (DD memos)
@@ -104,12 +104,20 @@ mcp__openspace__search_skills(query="<task description>", source="all")
 - `sop` -> po incidentu nabídni `/postmortem`
 - `competitor-intel` -> nabídni `ig-content-creator` (přímá adaptace)
 - `seo-audit` -> nabídni AEO content brief pro blog
-- `[your_company]-diagnose` -> GO verdict => `/brainstorming` → `/brief` → `/concept` → implementation
-- `[your_company]-diagnose` -> PIVOT verdict => `/redteam` [reframed] → znovu diagnose
-- `[your_company]-diagnose` -> NEEDS-EVIDENCE => definuj 72h experiment, nepokračuj
+- `oneflow-diagnose` -> GO verdict => `/brainstorming` → `/brief` → `/concept` → implementation
+- `oneflow-diagnose` -> PIVOT verdict => `/redteam` [reframed] → znovu diagnose
+- `oneflow-diagnose` -> NEEDS-EVIDENCE => definuj 72h experiment, nepokračuj
 - `cold-email` -> **AUTO-RUN `/evalopt`** (deliverability + Cialdini + CZ voice rubric, min 85) → ship draft
 - `closer` / `ad-creative` -> **AUTO-RUN `/evalopt`** (punch + no-clichés + specific CTA rubric)
 - `copywriting` / `copy-editing` (klientský/investor výstup) -> **AUTO-RUN `/evalopt`** před předáním
+
+### Slime-mold REWIRE chains (added 2026-04-27, source: `~/Documents/slime-mold-ecosystem/REWIRE_2026-04-26.md`)
+Páry detekované přes Tero Kirchhoff solver — vysoký flow bez existujícího cross-refu. Memory consolidation pattern: heavy analytický skill → squash do compact summary → optional checkpoint záznam.
+
+- `mythos` -> po dokončení komplexní analýzy nabídni `/compact` (sim flow 0.09 — top REWIRE pár; mythos výstup typicky 5-10k tokenů, compact ho zhustí na 5-7 bullet pointů). Skip pokud Filip explicit "neukončuj session" nebo task pokračuje stejnou linií.
+- `graphify` -> po dokončení nabídni `/compact` (sim flow 0.08; graphify produces nodes/edges = strukturovaný výstup, compact ho lockne do session memory bez ztráty struktury).
+- `mythos` (tier-1 výstupy: ACH, security finding, calibrated Bayesian závěr) -> nabídni `/checkpoint` PŘED `/compact` (compact = lossy konsolidace; checkpoint = full state capture pro pozdější resume).
+- `ultraplan` (cloud session dokončená) -> nabídni `/compact` po sloučení PR + status report do memory (ultraplan výstupy jsou velké plánovací dokumenty).
 
 ## Evalopt Auto-Trigger Rules
 
@@ -130,17 +138,17 @@ Běží automaticky (bez manuálního /evalopt) pro high-stakes výstupy:
 - generator: current Claude session (Opus 4.7 pro stakes, Sonnet jinak)
 
 **Skip auto-trigger KDYŽ:**
-- [YOUR_NAME] explicitně řekne "bez loopu", "rovnou to pošli", "quick draft"
+- Filip explicitně řekne "bez loopu", "rovnou to pošli", "quick draft"
 - Interní memo, rough sketch, brainstorm (ne finální výstup)
 - Tokenově levná operativa (grep, status, list)
 - Triviální revize existujícího schváleného textu
 
 ## Pre-Build Diagnostic Gate (MANDATORY)
 
-Před každým ze seznamu níže POVINNĚ spustit `/[your_company]-diagnose`:
+Před každým ze seznamu níže POVINNĚ spustit `/oneflow-diagnose`:
 - Nová nabídka (ASR, Patricny, custom DD, retainer)
 - Nový lead-magnet (kalkulačka, guide, webinář)
-- Nová [YOUR_COMPANY] služba nebo produkt
+- Nová OneFlow služba nebo produkt
 - Content pilíř (IG série, newsletter sekvence, podcast epizoda)
 - Pivot existující služby
 - Investice do nového scraping/outreach kanálu
@@ -166,9 +174,9 @@ Před každým NOVÝM projektem, skillem nebo infrastrukturním taskem (ne hotfi
 - Výstup: krátký PLANNING brief (pár vět nebo odrážek) před prvním řádkem kódu
 - Priorita: architektura > features. Loadbearing walls před pokoji.
 
-Přeskoč pro: triviální ops (grep, ls, mv), hotfix, jednokrokové tasky, pokud [YOUR_NAME] explicitně řekne "rovnou do toho"
+Přeskoč pro: triviální ops (grep, ls, mv), hotfix, jednokrokové tasky, pokud Filip explicitně řekne "rovnou do toho"
 
 ## NESPOUŠTĚJ když:
-- [YOUR_NAME] řekne "nespouštěj skill" / "bez playbooku"
+- Filip řekne "nespouštěj skill" / "bez playbooku"
 - Task je triviální (grep, ls, mv)
 - Skill už spuštěn manuálně v kontextu

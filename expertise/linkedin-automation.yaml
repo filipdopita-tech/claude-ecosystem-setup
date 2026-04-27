@@ -6,8 +6,8 @@ description: LinkedIn Voyager API, Playwright automation, Dubai pipeline, A/B te
 # CURRENT STATUS
 # =========================
 current_status:
-  bridge_status: DOWN  # VPS-SECONDARY unreachable od 2026-04-12
-  bridge_location: "VPS-SECONDARY /root/linkedin-bridge/ — DEAD"
+  bridge_status: DOWN  # Alfa VPS unreachable od 2026-04-12
+  bridge_location: "Alfa VPS /root/linkedin-bridge/ — DEAD"
   data_status: "110+ leadů v GHL = PLATNÁ DATA"
   migration_options:
     A: "Flash migration — přesunout linkedin-bridge z Alfa na Flash"
@@ -177,7 +177,7 @@ throttle_logic:
 
   session_health:
     monitor: "dubai_monitor.py v1.0"
-    alert: "ntfy topic: [YOUR_NAME] — bridge down, session expired, throttle activated"
+    alert: "ntfy topic: Filip — bridge down, session expired, throttle activated"
     watchdog: "*/5 min — auto-restart + ntfy"
 
 # =========================
@@ -186,7 +186,7 @@ throttle_logic:
 monitoring:
   ntfy:
     url: "https://ntfy.example.com"
-    topic: "[YOUR_NAME]"
+    topic: "Filip"
     bearer: "[read from master.env: ntfy_bearer]"  # NIKDY hardcode
 
   alerts:
@@ -226,7 +226,7 @@ bridge_db:
 # API ENDPOINTS (BRIDGE)
 # =========================
 bridge_api:
-  base: "http://REDACTED_VPN_IP:8200"  # Alfa WG IP — DEAD
+  base: "http://10.77.0.3:8200"  # Alfa WG IP — DEAD
   endpoints:
     connect: "POST /outreach/connect"
     message: "POST /outreach/message"
@@ -252,7 +252,7 @@ migration_to_flash:
 # =========================
 facts:
   - date: 2026-04-13
-    fact: "VPS-SECONDARY unreachable — LinkedIn bridge DOWN. 110+ GHL leadů platná."
+    fact: "Alfa VPS unreachable — LinkedIn bridge DOWN. 110+ GHL leadů platná."
     confidence: HIGH
   - date: 2026-04-08
     fact: "Playwright stability fix: global context pool max 30 uses + GPU disable flags"

@@ -1,6 +1,11 @@
 ---
 name: deset
 description: "/deset — Dotahni to na 10/10. Iterativní quality loop: porovná výsledek vs zadání, identifikuje gapy, opraví je v pořadí podle dopadu, ověřuje každou opravu individuálně, detekuje regrese."
+allowed-tools:
+  - Edit
+  - Read
+  - Task
+  - Write
 ---
 
 # /deset — Dotahni to na 10/10

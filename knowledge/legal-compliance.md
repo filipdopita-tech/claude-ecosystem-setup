@@ -112,7 +112,7 @@ NIKDY nepoužívej v textech o investicích:
 - ODR platforma: odkaz povinný
 - Garanční fond OCP: 90 % max 20 000 EUR, příspěvek 2 % z poplatků
 
-## Red flags — ZASTAV a zeptej se [YOUR_NAME] / právníka
+## Red flags — ZASTAV a zeptej se Filipa / právníka
 
 - Emise nad limit bez prospektu
 - Více než 149 retailových investorů bez prospektu

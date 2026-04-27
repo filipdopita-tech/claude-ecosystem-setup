@@ -1,12 +1,19 @@
 ---
 name: agent-strategy-mode
-description: Adaptive agent behavior via strategy presets + stagnation detection. Prevents repair loops. Tune innovate/harden/repair balance per deployment state. Apply to orchestrator, scheduler, scraper, outbound pipeline, media analyzer.
-origin: reusable pattern — strategy env var + Python/bash reference implementace (~50 řádků)
+description: Adaptive agent behavior via strategy presets + stagnation detection. Prevents repair loops. Tune innovate/harden/repair balance per deployment state. Apply to Conductor, Paseo, scraper, Dubai outreach, IG analyzer.
+origin: pattern extracted from EvoMap/evolver (GEP) — NOT a dependency; source is obfuscated + GPL-3.0
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # Agent Strategy Mode
 
-Reusable pattern pro libovolný autonomní agent. Dvě mechaniky, oboje implementovatelné <50 řádků.
+Reusable pattern pro libovolný autonomní agent v OneFlow ekosystému. Dvě mechaniky, oboje implementovatelné <50 řádků.
 
 ## 1. Strategy Presets — řídí intent balance přes env var
 
@@ -44,16 +51,16 @@ def pick_action():
 **Bash / systemd service pattern:**
 
 ```ini
-# /etc/systemd/system/<agent>.service
+# /etc/systemd/system/conductor.service
 [Service]
 Environment=AGENT_STRATEGY=balanced
-# Override for incident: systemctl edit <agent> → AGENT_STRATEGY=repair-only
-ExecStart=/usr/bin/python3 /opt/<company>/daemon.py
+# Override for incident: systemctl edit conductor → AGENT_STRATEGY=repair-only
+ExecStart=/usr/bin/python3 /opt/conductor/daemon.py
 ```
 
 ## 2. Stagnation Detection — break repair loops
 
-Problem: agent 3x po sobě loguje stejný signal a "opravuje" ho bez progresu. Klasický repair loop (scraper SMTP bounce, email block, OOM retry).
+Problem: agent 3x po sobě loguje stejný signal a "opravuje" ho bez progresu. Klasický repair loop (scraper SMTP bounce, cold email block, Whisper OOM retry).
 
 **Rule:** 3 identické signal hashes za sebou → bail out + escalate.
 
@@ -73,28 +80,28 @@ def should_bail(signal: dict) -> bool:
 ```
 
 **On bail action:**
-1. Push alert (ntfy, PagerDuty, Slack) s posledním signálem
+1. `ntfy.sh` alert Filipovi s posledním signálem
 2. Switch ENV → `AGENT_STRATEGY=repair-only` (systemd-reload + restart)
 3. Halt auto-apply, čekej na human review
-4. Log do event store (`/evolution-event-log` pattern)
+4. Log do Graphiti (`graphiti_add` EvolutionEvent-style node)
 
-## Aplikace na typické agenty
+## OneFlow aplikace
 
 | Agent | Default strategy | Escalation trigger |
 |---|---|---|
-| Orchestrator daemon | `balanced` | Alert fire → `repair-only` |
-| Scheduler/batcher | `balanced` | >2 spawn fails → `harden` |
-| Outbound pipeline | `harden` | Throttle file → `repair-only` |
-| Email warmup | `harden` (během block) | Po clearance → `balanced` |
-| Scraper | `balanced` | SMTP dedup 3x same → bail |
-| Media analyzer | `innovate` (explore) / `repair-only` (rate-limited) | API 429 3x → bail |
+| Conductor | `balanced` | Ntfy fire → `repair-only` |
+| Paseo | `balanced` | >2 agent spawn fails → `harden` |
+| Dubai outreach | `harden` | Throttle file → `repair-only` |
+| Cold email warmup | `harden` (během PP blocku) | Po clearance → `balanced` |
+| Scraper v4 | `balanced` | SMTP dedup 3x same → bail |
+| IG Analyzer | `innovate` (explore) / `repair-only` (rate-limited) | API 429 3x → bail |
 
 ## Pre-deploy checklist
 
 Před integrací do existujícího agentu:
-- [ ] ENV var dokumentován (ecosystem-map nebo README)
+- [ ] ENV var dokumentován v `ecosystem-map.md`
 - [ ] Default = `balanced` (nezhorší current behavior)
-- [ ] Bail-out posílá push alert (ne jen log)
+- [ ] Bail-out posílá ntfy (ne jen log)
 - [ ] Signal hash pokrývá skutečnou unique identitu (ne jen timestamp)
 - [ ] Threshold otestovaný — nefire na první legitimní retry
 
@@ -103,19 +110,23 @@ Před integrací do existujícího agentu:
 Indicators že to funguje:
 - Repair loop MTBF stoupá (méně wake-upů na stejný signál)
 - Deploy-phase failures klesají po `harden` pre-deploy
-- Alert signal-to-noise ratio se zlepšuje (bail nahrazuje spam)
+- Ntfy signal-to-noise ratio se zlepšuje (bail nahrazuje spam)
 
 Indicators že je rozbité:
 - Bail-out fire na první legit retry → zvyš threshold ze 3 na 5
 - Stagnation nikdy nedetekován přes zjevné loopy → signal_hash coverage chybí
 - `repair-only` uvízl → timeout + auto-switch zpět na `balanced` po 2h
 
-## Inspirace
+## Proč ne použít EvoMap/evolver přímo
 
-Pattern je evolutionary-computing idiom (GEP — "Signal De-duplication", "innovate vs repair"). Implementace je vždy malá (< 50 řádků), hlavní hodnota je v disciplíně — nemoci "jen dál zkoušet" bez eskalace.
+- Source obfuskovaný (`javascript-obfuscator` v devDeps, 783KB mangled `src/evolve.js`)
+- GPL-3.0 viral pro komerční integraci
+- Centralizovaný "Hub" vyžaduje node ID, data flow opaque
+- Historie force-pushed (67 releases, 2 commity v main)
+- Vezmi pattern, nech package.
 
-## Related
+## Reference
 
-- Stagnation guard (detekce): `/agent-stagnation-guard`
-- Lifecycle ops (runtime control): `/agent-lifecycle-ops`
-- Event log (audit): `/evolution-event-log`
+- EvoMap/evolver (inspirace): https://github.com/EvoMap/evolver — `EVOLVE_STRATEGY` env var, "Signal De-duplication"
+- Související skill: `continuous-learning-v2` (feedback loop)
+- Memory: `project_conductor.md`, `project_paseo.md`

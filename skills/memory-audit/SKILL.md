@@ -1,6 +1,6 @@
 ---
 name: memory-audit
-description: "Audit staleness memory entries v ~/.claude/projects/-Users-YOUR_USERNAME/memory/. Najde entries bez last_verified, starší 30/60 dní, bez frontmatteru. Nenavrhuje mazat automaticky — [YOUR_NAME] rozhoduje. Aktivuj: /memory-audit nebo 'audit memory', 'stale memory', 'zkontroluj paměť'."
+description: "Audit staleness memory entries v ~/.claude/projects/-Users-filipdopita/memory/. Najde entries bez last_verified, starší 30/60 dní, bez frontmatteru. Nenavrhuje mazat automaticky — Filip rozhoduje. Aktivuj: /memory-audit nebo 'audit memory', 'stale memory', 'zkontroluj paměť'."
 allowed-tools:
   - Bash
   - Read

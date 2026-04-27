@@ -1,9 +1,9 @@
-# Writing Sentence Craft — [YOUR_COMPANY] content/copy rules
+# Writing Sentence Craft — OneFlow content/copy rules
 
 Aktivuj při: content, copy, IG carousel/reel, LinkedIn post, cold email, DD report, nabídka klientovi, investor materiál.
 Neaplikuj na: interní logy, TodoWrite, tool output parsing, kódové komentáře.
 
-Zdroj: Cherry-pick z yzhao062/agent-style (2026-04-21), 6 net-new rules které nejsou v `[your_company]-all.md`. Duplicity (em dash, transitions, factual claims, calibrated confidence) jsou pokryté jinde.
+Zdroj: Cherry-pick z yzhao062/agent-style (2026-04-21), 6 net-new rules které nejsou v `oneflow-all.md`. Duplicity (em dash, transitions, factual claims, calibrated confidence) jsou pokryté jinde.
 
 ---
 
@@ -54,7 +54,7 @@ CZ právnický styl často produkuje 50+ slov věty. Compliance != marketing —
 - ✗ "Klíčový bod: • DSCR 0.87 je nízký."
 - ✓ "Klíčový bod: DSCR 0.87 je nízký."
 
-**Fake "5 důvodů" / "10 kroků" listy = banned** kde položky nejsou paralelní. Overlap s `[your_company]-all.md` AI Patterns to Remove → "Seznamy s přesně 5/10 položkami".
+**Fake "5 důvodů" / "10 kroků" listy = banned** kde položky nejsou paralelní. Overlap s `oneflow-all.md` AI Patterns to Remove → "Seznamy s přesně 5/10 položkami".
 
 Test: pokud každá bullet je samostatná věta s own subject + verb, ale dohromady tvoří argument → použij odstavec s transitions. Ne list.
 
@@ -76,7 +76,7 @@ Kritické v: IG carousels (slide-to-slide opening), LinkedIn posts (paragraph op
 **Stejná zkratka / term po celém dokumentu.** Nemíchej synonymy v jednom výstupu.
 
 Příklady k unifikaci:
-- "DD" / "due diligence" / "předinvestiční analýza" → **DD** (v [YOUR_COMPANY] kontextu, po první introducing větě)
+- "DD" / "due diligence" / "předinvestiční analýza" → **DD** (v OneFlow kontextu, po první introducing větě)
 - "emitent" / "vydavatel" / "issuer" → **emitent** (CZ primary)
 - "dluhopis" / "bond" / "cenný papír" → **dluhopis**
 - "kolaterál" / "zajištění" / "zástava" → **kolaterál** (financial primary)
@@ -88,10 +88,10 @@ Exception: když mixu záměrně pro variatu v copywritingu (short IG caption), 
 
 ---
 
-## Priority při konfliktu s [your_company]-all.md
+## Priority při konfliktu s oneflow-all.md
 
-- **Brand voice** (přímý, sebevědomý, bez omluv) → [your_company]-all.md wins
-- **Banned words** → [your_company]-all.md wins
+- **Brand voice** (přímý, sebevědomý, bez omluv) → oneflow-all.md wins
+- **Banned words** → oneflow-all.md wins
 - **Sentence-level craft** (tyto rules) → writing-sentence-craft.md
 - **Obě platí paralelně** — žádný explicit konflikt
 
@@ -100,4 +100,4 @@ Exception: když mixu záměrně pro variatu v copywritingu (short IG caption), 
 - Interní TodoWrite, plans, tool outputs
 - Code comments
 - VPS deploy logs / monitoring
-- [YOUR_NAME]ovy 1:1 konverzační response (naturally relax)
+- Filipovy 1:1 konverzační response (naturally relax)

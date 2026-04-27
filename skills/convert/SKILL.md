@@ -1,6 +1,13 @@
 ---
 name: convert
 description: "Use this skill for any document/image format conversion: HTML→PDF (pixel-perfect, preferred), HTML→PNG screenshot, SVG→PNG/PDF/WebP, Markdown→PDF, Markdown→DOCX, HTML→DOCX, any→any via Pandoc. Triggers: 'převeď', 'konvertuj', 'exportuj jako PDF', 'HTML do PDF', 'SVG na PNG', 'screenshot stránky', 'render HTML', 'export do PDF'."
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # Konverzní pipeline — decision matrix

@@ -1,6 +1,6 @@
 domain: investor-outreach
 last_updated: 2026-04-09
-description: Cold outreach, ICP, sales psychology, sequence frameworks pro [YOUR_COMPANY] investor acquisition
+description: Cold outreach, ICP, sales psychology, sequence frameworks pro OneFlow investor acquisition
 
 # =========================
 # ICP (Ideal Customer Profile)
@@ -158,8 +158,8 @@ cialdini:
     how: "Track record + third-party validace"
     example: "5 let DD zkusenosti, 200M+ zprostredkovano, audit KPMG"
   liking:
-    how: "[YOUR_NAME] story + relatable pain + nefalkovana expertíza"
-    example: [YOUR_NAME]uv founder story
+    how: "Filip story + relatable pain + nefalkovana expertíza"
+    example: Filipuv founder story
   scarcity:
     how: "Real limits (allocation, deadline, ECSP limits)"
     warning: Nikdy fake urgency. CNB to kontroluje.
@@ -179,7 +179,7 @@ schwartz_matching:
     message: "X mate - ale co Y, ktere je..."
   level_4_product_aware:
     copy_style: Feature comparison, social proof
-    message: "Proc [YOUR_COMPANY] misto Portu nebo Upvest..."
+    message: "Proc OneFlow misto Portu nebo Upvest..."
   level_5_most_aware:
     copy_style: Direct offer, scarcity, specific deal
     message: "Konkretni emise X s {yield} do {deadline}"
@@ -203,15 +203,15 @@ messaging:
     - "Mam pro vas exkluzivni nabidku"
 
 # =========================
-# USER_SIGNATURE
+# FILIP_SIGNATURE
 # =========================
 signature_template:
-  short: "[YOUR_NAME]"
+  short: "Dopita"
   standard: |
-    [YOUR_NAME]
-    [YOUR_COMPANY] | Investice, ktere daj smysl
+    Dopita
+    OneFlow | Investice, ktere daj smysl
     +420 {phone}
-    example.com
+    oneflow.cz
 
 # =========================
 # FACTS
@@ -221,19 +221,19 @@ facts:
     fact: LinkedIn SN trial expires 2026-04-12, no auto-renew
     source: linkedin_sales_navigator.md memory
   - date: 2026-04-09
-    fact: Primary outreach channel po expire = cold email (VPS-SECONDARY CZ IP)
+    fact: Primary outreach channel po expire = cold email (Alfa VPS CZ IP)
     source: cold_email_setup.md
 
 # =========================
 # CROSS-REFERENCES
 # =========================
 related_expertise:
-  - [your_company]-brand.yaml
+  - oneflow-brand.yaml
   - content-creation.yaml
 
 related_rules:
   - ~/.claude/rules/expertise-sales-psychology.md
-  - ~/.claude/rules/[your_name]-style-clone.md
+  - ~/.claude/rules/filip-style-clone.md
   - ~/.claude/rules/competitive-intel.md
 
 related_memory:

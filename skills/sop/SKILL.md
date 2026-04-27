@@ -1,9 +1,16 @@
 ---
 name: sop
-description: "Creates operational documentation for [YOUR_COMPANY] ecosystem: service runbooks, deployment playbooks, troubleshooting guides, recovery procedures. Trigger: /sop, 'napiš runbook', 'zdokumentuj postup', 'playbook pro X', 'co dělat když X spadne', 'jak nasadit X'."
+description: "Creates operational documentation for OneFlow ecosystem: service runbooks, deployment playbooks, troubleshooting guides, recovery procedures. Trigger: /sop, 'napiš runbook', 'zdokumentuj postup', 'playbook pro X', 'co dělat když X spadne', 'jak nasadit X'."
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
-# /sop — SOP Creator ([YOUR_COMPANY])
+# /sop — SOP Creator (OneFlow)
 
 ## Kdy aktivovat
 - Uživatel napíše `/sop`
@@ -30,7 +37,7 @@ description: "Creates operational documentation for [YOUR_COMPANY] ecosystem: se
 Zjisti ze zprávy:
 - Typ dokumentu (pokud neřekl → zeptej se jednou, jednou větou)
 - Název služby / procesu
-- Server: VPS-PRIMARY (YOUR_VPS_IP) nebo VPS-SECONDARY (WG .3 / CZ IP)
+- Server: Flash (10.77.0.1) nebo Alfa (WG .3 / CZ IP)
 
 ### 2. Načti kontext ekosystému
 
@@ -41,13 +48,13 @@ Port, server a účel pro zmíněnou službu jsou tam. Nekombinuj z paměti.
 
 Pokud jde o specifický skript, přečti ho:
 ```bash
-ls $VPS_MOUNT/scripts/
-cat $VPS_MOUNT/scripts/{relevant}.py
+ls /mac/scripts/
+cat /mac/scripts/{relevant}.py
 ```
 
 Pro systemd unit:
 ```bash
-ssh $YOUR_HOST 'cat /etc/systemd/system/{service}.service 2>/dev/null || systemctl cat {service}'
+ssh mac 'cat /etc/systemd/system/{service}.service 2>/dev/null || systemctl cat {service}'
 ```
 
 ### 3. Načti příslušný template
@@ -77,7 +84,7 @@ cat > ~/.claude/knowledge/sops/{slug}.md << 'EOF'
 EOF
 
 # Kritické recovery docs — ulož na obě místa
-cp ~/.claude/knowledge/sops/{slug}.md $VPS_MOUNT/Documents/[YOUR_VAULT]/SOPs/{slug}.md
+cp ~/.claude/knowledge/sops/{slug}.md /mac/Documents/OneFlow-Vault/SOPs/{slug}.md
 ```
 
 Při uložení: echo "Saved to ~/.claude/knowledge/sops/{slug}.md" + nabídni otevření.

@@ -17,6 +17,15 @@ metadata:
   author: AgriciDaniel
   version: "1.6.1"
   category: seo
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+  - WebFetch
+  - WebSearch
 ---
 
 # DataForSEO: Live SEO Data (Extension)

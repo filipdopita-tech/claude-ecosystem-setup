@@ -14,7 +14,7 @@ Anthropic prompt cache = 10% ceny vs full input. Claude Code cache TTL = 5 min. 
 
 ## Co dělá
 
-Parsuje `~/.claude/projects/-Users-YOUR_USERNAME/*.jsonl` session transcripty a spočítá:
+Parsuje `~/.claude/projects/-Users-filipdopita/*.jsonl` session transcripty a spočítá:
 - Overall cache hit rate
 - Cost savings vs hypothetical no-cache
 - Per-session breakdown s verdiktem
@@ -56,7 +56,7 @@ python3 ~/.claude/scripts/cache-hit-rate.py --json
 
 ## Teoretický max
 
-Pro [YOUR_NAME] typický workflow (CLAUDE.md stabilní, long sessions):
+Pro Filipův typický workflow (CLAUDE.md stabilní, long sessions):
 - Očekávaný hit rate: 60-85%
 - Cost savings vs no-cache: 60-75%
 

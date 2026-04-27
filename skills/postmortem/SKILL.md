@@ -1,6 +1,12 @@
 ---
 name: postmortem
 description: "/postmortem — Automatický Post-Mortem + Flywheel. Generuje strukturovaný záznam, extrahuje prevenci, detekuje recurring patterny."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # /postmortem — Automatický Post-Mortem + Flywheel
@@ -23,7 +29,7 @@ Přečti historii konverzace, identifikuj:
 ### 2. Pattern detection (DETECT fáze)
 Před generováním reportu:
 ```bash
-ls ~/.claude/projects/-Users-<username>/memory/pm_*.md 2>/dev/null
+ls ~/.claude/projects/-Users-filipdopita/memory/pm_*.md 2>/dev/null
 ```
 Přečti existující postmortem soubory. Pokud root cause matchuje existující PM:
 - Přidej `[RECURRING]` tag
@@ -31,7 +37,7 @@ Přečti existující postmortem soubory. Pokud root cause matchuje existující
 - Odkázej na předchozí PM
 
 ### 3. Report generation
-Vygeneruj post-mortem v tomto formátu a ulož do `~/.claude/projects/-Users-<username>/memory/pm_{slug}.md`:
+Vygeneruj post-mortem v tomto formátu a ulož do `~/.claude/projects/-Users-filipdopita/memory/pm_{slug}.md`:
 
 ```markdown
 ---
@@ -47,7 +53,7 @@ fix_velocity: 1
 - **Datum**: YYYY-MM-DD
 - **Severity**: low/medium/high/critical
 - **Služba**: {název}
-- **Server**: Flash/VPS-SECONDARY
+- **Server**: Flash/Alfa
 
 ## Symptom
 {co se dělo}
@@ -77,7 +83,7 @@ Z každého PM extrahuj 2-5 konkrétních prevention rules. Pravidla musí být:
 ### 5. Feedback memory creation (PREVENT fáze)
 Ulož prevention rules jako feedback memory:
 ```
-~/.claude/projects/-Users-<username>/memory/feedback_pm_{slug}.md
+~/.claude/projects/-Users-filipdopita/memory/feedback_pm_{slug}.md
 ```
 Updatuj MEMORY.md index.
 

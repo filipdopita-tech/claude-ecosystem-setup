@@ -1,6 +1,10 @@
 ---
 name: seedance-motion-design-ad
-description: Generate motion design advertisement video prompts for software and tech companies using Seedance 2.0 on Higgsfield. Use whenever the user wants to create a software product ad, SaaS promo, app launch video, tech demo, UI showcase, startup video, or motion graphics for a tech company. Triggers on: software ad, SaaS video, product launch, app promo, tech commercial, UI animation, motion design ad, startup video, product demo video, feature showcase.
+description: "Generate motion design advertisement video prompts for software and tech companies using Seedance 2.0 on Higgsfield. Use whenever the user wants to create a software product ad, SaaS promo, app launch video, tech demo, UI showcase, startup video, or motion graphics for a tech company. Triggers on: software ad, SaaS video, product launch, app promo, tech commercial, UI animation, motion design ad, startup video, product demo video, feature showcase."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
 ---
 
 # Seedance 2.0 on Higgsfield Motion Design Ad Generator

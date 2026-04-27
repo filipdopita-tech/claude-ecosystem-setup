@@ -1,6 +1,10 @@
 ---
 name: systematic-debugging
 description: Framework-agnostic root-cause debugging methodology. Use for ad-hoc bugs, test failures, or unexpected behavior when no project-specific debug workflow applies. For gstack projects prefer /investigate (adds telemetry + freeze hooks). For GSD phases prefer /gsd-debug (persistent debug state across context resets). This skill is the pure 4-phase methodology plus supplementary techniques (root-cause-tracing, defense-in-depth, condition-based-waiting).
+allowed-tools:
+  - Bash
+  - Read
+  - Grep
 ---
 
 # Systematic Debugging

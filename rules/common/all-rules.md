@@ -108,7 +108,7 @@ Pravidla (NO EXCEPTIONS pro bugs, incidenty, scraper/daemon selhání, deliverab
 
 3. **Fresh verification před shipnutím:** Reprodukuj původní bug scenario a dokažu, že je opraveno. Ne "should fix it" — VERIFY.
 
-4. **Blast radius >5 souborů → eskaluj [YOUR_NAME]:** Fix na >5 souborů = pravděpodobně špatný layer. Nabídni split nebo rethink.
+4. **Blast radius >5 souborů → eskaluj Filipovi:** Fix na >5 souborů = pravděpodobně špatný layer. Nabídni split nebo rethink.
 
 5. **Red flags (zpomal):**
    - "Quick fix for now" — není žádné "for now". Oprav správně nebo eskaluj.
@@ -117,7 +117,7 @@ Pravidla (NO EXCEPTIONS pro bugs, incidenty, scraper/daemon selhání, deliverab
 
 6. **Debug Report format po dokončení:**
    ```
-   Symptom:    [co [YOUR_NAME] viděl]
+   Symptom:    [co Filip viděl]
    Root cause: [co bylo skutečně špatně]
    Fix:        [co bylo změněno, s file:line]
    Evidence:   [test/reproduction output]

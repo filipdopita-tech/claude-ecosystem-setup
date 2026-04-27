@@ -2,7 +2,7 @@
 
 ## HARDCORE RULE (NO EXCEPTIONS)
 
-**NIKDY negeneruj náklady na Google API, Google Cloud nebo jakékoli placené Google služby bez PŘEDCHOZÍHO explicitního schválení [YOUR_NAME]em.**
+**NIKDY negeneruj náklady na Google API, Google Cloud nebo jakékoli placené Google služby bez PŘEDCHOZÍHO explicitního schválení Filipem.**
 
 Toto pravidlo **PŘEPISUJE** ostatní rules. Zero tolerance.
 
@@ -10,7 +10,7 @@ Toto pravidlo **PŘEPISUJE** ostatní rules. Zero tolerance.
 - 2026-04-17: CZK 1 019,73 overdue, Visa 9591 declined
 - 2026-04-24: CZK 3 000 (~$125) Solar+Maps Platform via `nemakej-solar-outbound` pipeline
 
-**Po 2. incidentu (2026-04-24) jsou aktivní HARD GUARDS na úrovni systému** — viz sekce "System Guards" níže. Pokud guard blokuje legitimní call, eskaluj [YOUR_NAME], nezkoušej obejít.
+**Po 2. incidentu (2026-04-24) jsou aktivní HARD GUARDS na úrovni systému** — viz sekce "System Guards" níže. Pokud guard blokuje legitimní call, eskaluj Filipovi, nezkoušej obejít.
 
 ---
 
@@ -21,7 +21,7 @@ Před jakýmkoli Google API callem:
 □ Je to 100% free tier s jistou kvótou? ANO → OK
 □ Je to paid/pay-as-you-go? ANO → HALT, eskaluj
 □ Vytvářím billable resource (VM, bucket, dataset, Vertex job)? ANO → HALT
-□ Mám písemné [YOUR_NAME] schválení s cenovou hranicí? NE → HALT
+□ Mám písemné Filipovo schválení s cenovou hranicí? NE → HALT
 □ Může překročit free tier a auto-switch na paid? ANO → HALT
 ```
 
@@ -57,7 +57,7 @@ Všechny Google Cloud placené služby:
 2. **Isolate** — identifikuj zdroj (console.cloud.google.com → Billing → Reports → group by service)
 3. **Disable** — pause/disable dotčenou službu (NE mazat bez schválení)
 4. **Preserve** — zachovej logy (transakce, API volání)
-5. **Escalate** — [YOUR_NAME]: co to stojí, odkud to jde, jak to zastavit
+5. **Escalate** — Filipovi: co to stojí, odkud to jde, jak to zastavit
 
 ---
 
@@ -74,7 +74,7 @@ Všechny Google Cloud placené služby:
 ### 2. Daily monitoring
 - Cron na Macu: `0 8 * * * ~/scripts/automation/google-api-status.sh`
 - Kontroluje: paid keys v env (Mac+VPS), nemakej-solar source state, paid API URLs v VPS logách za 24h
-- Alerty: ntfy `https://ntfy.example.com/[YOUR_NAME]` při detekci paid endpoint nebo paid key
+- Alerty: ntfy `https://ntfy.example.com/your-topic` při detekci paid endpoint nebo paid key
 - Log: `~/.claude/logs/google-api-status.log`
 
 ### 3. Source code lockdown
@@ -90,11 +90,11 @@ Všechny Google Cloud placené služby:
 
 ---
 
-## Co potřebuje [YOUR_NAME] udělat manuálně (ACTION REQUIRED)
+## Co potřebuje Filip udělat manuálně (ACTION REQUIRED)
 
 Tyto akce vyžadují perms, které nemám:
 
-1. **Cloud Budget Alert $1** na [YOUR_COMPANY] billing (`01F816-7D5746-4DEB7C`)
+1. **Cloud Budget Alert $1** na OneFlow s.r.o. billing (`01F816-7D5746-4DEB7C`)
    URL: https://console.cloud.google.com/billing/01F816-7D5746-4DEB7C/budgets
    
 2. **Verify v GCP konzoli** že Solar API + 32 Maps Platform APIs jsou stále DISABLED
@@ -104,17 +104,17 @@ Tyto akce vyžadují perms, které nemám:
 3. **Zvážit smazání ClaudeCodeV3 projektu úplně** pokud Gemini key není potřeba
    (Gemini přes AI Studio key je separátní, projekt je ne nutný)
 
-4. **Audit `[your_company]-social-490512`** — jiný GCP projekt, ownership = [YOUR_COMPANY], možná zdroj jiných nákladů
+4. **Audit `oneflow-social-490512`** — jiný GCP projekt, ownership = OneFlow s.r.o., možná zdroj jiných nákladů
    URL: https://console.cloud.google.com/billing/01F816-7D5746-4DEB7C/reports
 
 ---
 
 ## Reference
-- Billing account: **[YOUR_COMPANY] — ID 01F816-7D5746-4DEB7C**
+- Billing account: **OneFlow s.r.o. — ID 01F816-7D5746-4DEB7C**
 - Primary card: Visa ****9591 (expires 03/29) — DECLINED 2026-04-17
 - Incident logy:
   - 2026-04-17: CZK 1 019,73 overdue za období Apr 1–16, 2026
   - 2026-04-24: CZK 3 000 (Solar API + Geocoding via nemakej-solar-outbound)
 - Memory: `incident_gcp_cost_2026_04_24.md`, `gcp_hard_guards_2026_04_25.md`
 
-**Platí retroaktivně: při jakémkoli Google API callu v session si projdi tento checklist. Prohřešek = reportovat [YOUR_NAME].**
+**Platí retroaktivně: při jakémkoli Google API callu v session si projdi tento checklist. Prohřešek = reportovat Filipovi.**

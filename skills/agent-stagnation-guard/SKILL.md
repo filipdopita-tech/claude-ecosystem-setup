@@ -1,38 +1,45 @@
 ---
 name: agent-stagnation-guard
-description: Drop-in stagnation detection for any autonomous agent. Prevents repair loops (SMTP bounce loops, API 429 spirals, dependency timeouts). Bails + escalates after N identical signals. Auto-notifies via push alert.
-origin: reusable pattern — dependency-free Python module (~80 řádků)
+description: Drop-in stagnation detection for any OneFlow agent. Prevents repair loops (SMTP bounce loops, API 429 spirals, dependency timeouts). Bails + escalates after 3 identical signals. Auto-notifies via ntfy.
+origin: pattern extracted from EvoMap/evolver — dependency-free Python module at ~/scripts/evolver-patterns/stagnation_detector.py
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # Agent Stagnation Guard
 
-Když autonomous agent (scraper, email daemon, outbound pipeline, media analyzer) začne opravovat ten samý signál pořád dokola, zastaví se po N identických signálech, alertne, a čeká na human review.
+Když autonomous agent (Conductor, Paseo, Dubai outreach, scraper, cold-email daemon, IG analyzer) začne opravovat ten samý signál pořád dokola, zastaví se po 3 identických signálech, alertne na ntfy, a čeká na human review.
 
 ## Kdy použít
 
 - Scraper dostává 3x po sobě stejný SMTP bounce → bail, ne retry
-- API vrací 3x identický 429 → bail + čekej na throttle clearance
-- Whisper/ML OOM loop na stejném audio souboru → bail, skip souboru
-- Email systém 3x identická rejection od stejného gatewaye → bail, čekej na delisting
-- Orchestrator 3x stejný dependency timeout → bail, eskaluj
+- LinkedIn Voyager API vrací 3x identický 429 → bail + čekej na throttle clearance
+- Whisper OOM loop na stejném audio souboru → bail, skip souboru
+- Cold email systém 3x identická Proofpoint rejection → bail, čekej na delisting
+- Conductor 3x stejný dependency timeout → bail, eskaluj
 
 ## Instalace
 
-Modul: `<YOUR_TOOLS_DIR>/stagnation_detector.py` (dependency-free Python, ~80 řádků)
+Modul už je napsaný: `~/scripts/evolver-patterns/stagnation_detector.py`
 
-Deploy:
+Deploy na Flash:
 
 ```bash
-scp stagnation_detector.py <YOUR_USER>@<YOUR_VPS>:/opt/<company>/lib/
+rtk scp ~/scripts/evolver-patterns/stagnation_detector.py root@10.77.0.1:/opt/oneflow/lib/
 ```
 
 Pak v každém agentu:
 
 ```python
-import sys; sys.path.insert(0, "/opt/<company>/lib")
+import sys; sys.path.insert(0, "/opt/oneflow/lib")
 from stagnation_detector import StagnationDetector
 
-detector = StagnationDetector(agent="<agent-name>", threshold=3)
+detector = StagnationDetector(agent="dubai-outreach", threshold=3)
 
 signal = {"type": "smtp_bounce", "target": email, "error": smtp_code}
 if detector.observe_and_should_bail(signal):
@@ -40,37 +47,22 @@ if detector.observe_and_should_bail(signal):
     sys.exit(1)
 ```
 
-## Reference API
+## Integration examples (ready to drop)
 
-```python
-class StagnationDetector:
-    def __init__(self, agent: str, threshold: int = 3, hash_fn=None, state_dir="/var/lib/<company>/stagnation/"):
-        ...
+- `~/scripts/evolver-patterns/examples/dubai_outreach_integration.py` — full batch wrapper
+- `~/scripts/evolver-patterns/examples/conductor_integration.py` — main loop with strategy picker
 
-    def observe_and_should_bail(self, signal: dict) -> bool:
-        """Observe signal, return True if N identical signals in a row."""
-        ...
-
-    def escalate(self, reason: str, **ctx):
-        """Send push alert + log + mark state."""
-        ...
-
-    def reset(self):
-        """Clear state (after human review)."""
-        ...
-```
+Oba soubory mají smoke testy na konci (`python3 file.py` → pass/fail).
 
 ## Signal hash function — customize pro unusual payloads
 
 Default hashuje `type|target|error`. Pokud tvůj agent má jiné klíče, podej custom fn:
 
 ```python
-import hashlib
-
 def my_hash(sig):
     return hashlib.sha256(f"{sig['campaign_id']}:{sig['step']}".encode()).hexdigest()[:12]
 
-detector = StagnationDetector(agent="<agent>", hash_fn=my_hash)
+detector = StagnationDetector(agent="cold-email", hash_fn=my_hash)
 ```
 
 ## Tuning threshold
@@ -81,7 +73,7 @@ detector = StagnationDetector(agent="<agent>", hash_fn=my_hash)
 
 ## State
 
-Stav je persistentní v `/var/lib/<company>/stagnation/<agent>.json` (override přes `<COMPANY>_STAGNATION_DIR` env var). Přežije restart. Clear: `detector.reset()` nebo `rm` state soubor.
+Stav je persistentní v `/var/lib/oneflow/stagnation/<agent>.json` (override přes `ONEFLOW_STAGNATION_DIR`). Přežije restart. Clear: `detector.reset()` nebo `rm` file.
 
 ## Related
 

@@ -52,7 +52,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, WebFetch, WebSearch, Bash
 **Power question:** "Pokud tohle uspěje a budeš za rok zpátky, co byla nečekaná výhra?"
 
 ### Advisor 4: The Outsider
-**Mandát:** Zero context o tobě, oboru, [YOUR_COMPANY]. Catch curse of knowledge.
+**Mandát:** Zero context o tobě, oboru, OneFlow. Catch curse of knowledge.
 **Output style:** "Wait, why?" otázky. Předpoklady, které insider nevidí.
 **Power question:** "Vysvětli to babičce. Pokud nemůžeš v 2 větách, je nápad ještě vařený?"
 
@@ -64,12 +64,12 @@ allowed-tools: Read, Write, Edit, Grep, Glob, WebFetch, WebSearch, Bash
 ## Workflow
 
 ### Phase 1: Question Framing
-[YOUR_NAME] pošle: `council this: [otázka/rozhodnutí]`
+Filip pošle: `council this: [otázka/rozhodnutí]`
 
 Já transform na:
 ```
 DECISION: [konkrétní volba]
-CONTEXT: [stakes, deadline, alternatives, constraints — z [YOUR_COMPANY] knowledge]
+CONTEXT: [stakes, deadline, alternatives, constraints — z OneFlow knowledge]
 DESIRED OUTPUT: [verdikt? plán? eliminace alternativ?]
 ```
 
@@ -145,7 +145,7 @@ Po fázi 2 každý advisor čte ostatní 4 a odpovídá na 3 questions:
 
 1. **Žádný advisor nesmí hedge** — every position musí být committed (GO/NO-GO/WAIT, žádné "záleží na...")
 2. **Contrarian a Expansionist musí být polarizing** — pokud oba říkají to samé, jeden z nich nehraje roli
-3. **Outsider nesmí znát kontext** — pokud začne citovat [YOUR_COMPANY] specifika, je out of role
+3. **Outsider nesmí znát kontext** — pokud začne citovat OneFlow specifika, je out of role
 4. **Executor neřeší "is it good idea"** — jenom "what's the first action"
 5. **Peer review není politeness** — explicitně označ slabšího respondéra
 6. **Final verdict má dissenting view** — i když 5/5 souhlasí, najdi nejsilnější protiargument
@@ -158,7 +158,7 @@ Po fázi 2 každý advisor čte ostatní 4 a odpovídá na 3 questions:
 - Executor's plan obsahuje "research more" jako first step → není akce
 - Synthesis je průměr 5 odpovědí → není to consensus, je to slabost
 
-## Příklady použití ([YOUR_COMPANY] context)
+## Příklady použití (OneFlow context)
 
 ### Příklad 1: DD borderline B-grade
 ```
@@ -177,9 +177,9 @@ sektor stavebnictví. Klient chce 30M Kč emisi, B-grade. Doporučit nebo odmít
 VERDICT: WAIT-FOR-X (Q1+Q2 projections) — pokud DSCR projection >1.3, GO at adjusted yield.
 ```
 
-### Příklad 2: Pivot [YOUR_COMPANY] podcast → newsletter
+### Příklad 2: Pivot OneFlow podcast → newsletter
 ```
-council this: Vyměnit [YOUR_COMPANY] podcast za daily fundraising newsletter? 
+council this: Vyměnit OneFlow podcast za daily fundraising newsletter? 
 Podcast = 50 hodin/měsíc work. Newsletter = 10 hodin/měsíc, ale neznámý reach.
 
 → Contrarian: Daily je peklo na sustain. Po 3 měsících quit rate 78%. NO-GO.
@@ -200,14 +200,14 @@ VERDICT: PIVOT-TO-Y (weekly newsletter, ne daily) + keep podcast pro Tier 1 emis
 - Verdict bold + colored (GO=green, NO-GO=red, WAIT=yellow)
 - Confidence vždy as %, ne "high/med/low" (calibrated)
 
-## Integration s [YOUR_COMPANY]
+## Integration s OneFlow
 
 - **DD context auto-load:** pokud council řeší DD, načti `~/.claude/expertise/czech-regulatory.yaml` + `rules/domains/investment.md`
 - **Cold email council:** auto-load `expertise/email-deliverability.yaml` + `rules/domains/cold-email.md`
-- **Content council:** auto-load `[your_company]-all.md` brand voice + banned words
+- **Content council:** auto-load `oneflow-all.md` brand voice + banned words
 
 ## Reference
 
 Original framework: tenfoldmarc/llm-council-skill (https://github.com/tenfoldmarc/llm-council-skill)
-Adaptace pro [YOUR_COMPANY]: 2026-04-25 — [YOUR_NAME]
+Adaptace pro OneFlow: 2026-04-25 — Filip Dopita
 Vztah: doplňuje /mythos (epistemic) a /redteam (kritika), unique value = 5 polarized personas s peer review.

@@ -1,5 +1,5 @@
 # Sales & Psychology Expertise
-# Praktické decision frameworks pro [YOUR_COMPANY] (investice, dluhopisy, fundraising, CZ trh)
+# Praktické decision frameworks pro OneFlow (investice, dluhopisy, fundraising, CZ trh)
 
 ---
 
@@ -8,22 +8,22 @@
 ### Reciprocita
 - Dej hodnotu bez podmínek → protistrana cítí závazek vrátit
 - Aplikace: sdílej zdarma market research, investiční insighty, doporučení PŘED žádostí o schůzku
-- [YOUR_COMPANY]: free investor report, exclusive market data, osobní analýza portfolia
+- OneFlow: free investor report, exclusive market data, osobní analýza portfolia
 
 ### Závazek a Konzistence
 - Malý souhlas → větší souhlas (foot-in-the-door)
 - Aplikace: mikrozávazky — souhlas s problémem → souhlas s procesem → souhlas s termínem → alokace
-- [YOUR_COMPANY]: "Souhlasíte, že spořicí účet nestačí?" → "Podívali byste se na teaser?" → "Naplánujeme call?"
+- OneFlow: "Souhlasíte, že spořicí účet nestačí?" → "Podívali byste se na teaser?" → "Naplánujeme call?"
 
 ### Sociální důkaz
 - "Pokud to dělají ostatní, je to správné"
 - Aplikace: čísla investorů, AUM, case studies, veřejné výsledky, reference
-- [YOUR_COMPANY]: "174 investorů, průměrná alokace 850K, 0 defaultů od 2019"
+- OneFlow: "174 investorů, průměrná alokace 850K, 0 defaultů od 2019"
 
 ### Autorita
 - Lidé věří expertům a institucím
 - Aplikace: regulatorní přehled (ČNB), certifikace, mediální zmínky, track record s čísly
-- [YOUR_COMPANY]: ČNB registrace, auditované výsledky, odborný tisk
+- OneFlow: ČNB registrace, auditované výsledky, odborný tisk
 
 ### Oblíbenost (Liking)
 - Kupujeme od lidí, kteří se nám líbí nebo jsou podobní
@@ -43,7 +43,7 @@
 | Komplexní B2B, dlouhý cyklus | SPIN Selling | Hloubkové dotazování, budování urgency |
 | Enterprise, mnoho stakeholderů | Challenger + MEDDPICC | Commercial insight + mapování rozhodování |
 | Kvalifikace leadu | BANT (rychlá) / MEDDPICC (hloubková) | Ověření budget/authority/need/timeline |
-| Investor meeting [YOUR_COMPANY] | SPIN + Cialdini | Situace → Problém → Implikace → Need-Payoff |
+| Investor meeting OneFlow | SPIN + Cialdini | Situace → Problém → Implikace → Need-Payoff |
 | Cold outreach | Challenger (Teach) | Přines insight, ne pitch |
 
 ### SPIN Selling
@@ -141,14 +141,14 @@ Hodnota = (Dream Outcome × Pravděpodobnost) / (Čas × Effort)
 
 ### AIDA (cold email, landing page, reklama)
 - **A**ttention: "8% p.a. fix — garantováno zástavou nemovitosti"
-- **I**nterest: "Dluhopis [YOUR_COMPANY] financuje rezidenční development, LTV 65%"
+- **I**nterest: "Dluhopis OneFlow financuje rezidenční development, LTV 65%"
 - **D**esire: "174 investorů, průměrná alokace 850K, 0 defaultů za 5 let"
 - **A**ction: "Stáhněte teaser nebo naplánujte call"
 
 ### PAS (email sequence, sales page)
 - **P**roblem: "Výnosy na spořáku nestíhají inflaci"
 - **A**gitate: "Reálně ztrácíte 70-100K ročně na 1M"
-- **S**olution: "[YOUR_COMPANY] dluhopisy: 8% fix, zástava 1. pořadí, čtvrtletní kupón"
+- **S**olution: "OneFlow dluhopisy: 8% fix, zástava 1. pořadí, čtvrtletní kupón"
 
 ### BAB (testimonial, case study, social media)
 - **B**efore: "Klient: 3M na spořáku, výnos 3%"
@@ -163,11 +163,11 @@ Hodnota = (Dream Outcome × Pravděpodobnost) / (Čas × Effort)
 
 ## 7. Awareness Levels — Schwartz
 
-| Level | Stav | [YOUR_COMPANY] copy strategie |
+| Level | Stav | OneFlow copy strategie |
 |---|---|---|
 | 1 Unaware | Neví o problému | Storytelling, data, provokace: "Proč CZ investoři vydělají o 40% méně?" |
 | 2 Problem Aware | Ví o problému, ne o řešení | Validuj frustraci: "Inflace, volatilita, nízké úroky" |
-| 3 Solution Aware | Hledá nejlepší řešení | USP, srovnání: "Proč 174 investorů volí [YOUR_COMPANY] místo ETF" |
+| 3 Solution Aware | Hledá nejlepší řešení | USP, srovnání: "Proč 174 investorů volí OneFlow místo ETF" |
 | 4 Product Aware | Zná produkt, není přesvědčen | Důkazy: "100% výplata kupónů, 0 defaultů za 5 let" |
 | 5 Most Aware | Čeká na impulz | Nudge: "Série uzavírá v pátek. Rezervuj za 2 min." |
 
@@ -185,7 +185,7 @@ Hodnota = (Dream Outcome × Pravděpodobnost) / (Čas × Effort)
 | "Nemám teď volné peníze" | "Chápu. Od jaké částky by to dávalo smysl? Min je 200K." |
 | "Musím se poradit" | "Samozřejmě. S kým? Mohu připravit materiál přímo pro ně." |
 | "Je to moc dlouhé" | "24 měsíců s čtvrtletním kupónem. Máte cash flow od 3. měsíce." |
-| "Nevěřím dluhopisům" | "Rozumím. Jaká je vaše zkušenost? [YOUR_COMPANY] je asset-backed, ne corporate." |
+| "Nevěřím dluhopisům" | "Rozumím. Jaká je vaše zkušenost? OneFlow je asset-backed, ne corporate." |
 
 ### Halbert Copywriting Principy
 - Specifičnost = kredibilita: "1.247.384 Kč" bije "přes milion"
@@ -260,7 +260,7 @@ Post-sale? → Reciprocita (bonus content) + konzistence (referral program)
 | "Je to rizikové" | "Jaké konkrétní riziko vás zneklidňuje? Zástava 1. pořadí, LTV 65%, 0 defaultů — to je strukturní ochrana. Co dalšího byste potřeboval vědět?" | Izoluj konkrétní strach |
 | "Musím si to rozmyslet" | "Obvykle to znamená, že jsem neodpověděl na důležitý dotaz. Je něco, co vám leží v hlavě?" | Odhalit skrytou námitku |
 | "Musím se poradit s manželem/kou" | "Jaké otázky vám pravděpodobně položí? Připravím podklady přímo pro ně." | Staň se spojencem v jejich interním prodeji |
-| "Nevěřím dluhopisům" | "Jaká je vaše zkušenost s nimi? [YOUR_COMPANY] je asset-backed — jiná kategorie než corporate dluhopisy bez zástavy." | Odliš kategorii produktu |
+| "Nevěřím dluhopisům" | "Jaká je vaše zkušenost s nimi? OneFlow je asset-backed — jiná kategorie než corporate dluhopisy bez zástavy." | Odliš kategorii produktu |
 | "Výnos je moc nízký" | "Ve srovnání s čím? S akciemi máte volatilitu. S nemovitostmi illikviditu a správu. Zde 8% fix, čtvrtletní kupón, žádná správa." | Kontextualizuj srovnání |
 | "Četl jsem o podvodech" | "To je legitimní obava. Právě proto je ČNB registrace, auditovaná závěrka a zástava 1. pořadí klíčová. Mohu ukázat konkrétní strukturu?" | Autorita + struktura jako důkaz |
 | "Přijdu o likviditu" | "24 měsíců — ale čtvrtletní kupón dává cash flow od 3. měsíce. Co potřebujete mít likvidní a na jakém horizontu?" | Přeformuluj, zjisti skutečnou potřebu |
@@ -361,7 +361,7 @@ Post-sale? → Reciprocita (bonus content) + konzistence (referral program)
 - Investice 200K+ = vysoká loss aversion → 6-12 touchů před alokací je normální
 - Každý touch musí zvýšit důvěru NEBO demonstrovat hodnotu — žádné prázdné "check-in"
 
-### 10-Touch Sekvence ([YOUR_COMPANY] investor journey)
+### 10-Touch Sekvence (OneFlow investor journey)
 
 | Touch | Typ | Obsah | CTA |
 |---|---|---|---|

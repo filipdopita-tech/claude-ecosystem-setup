@@ -5,12 +5,12 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 ## Expertise YAML (preferovaný, structured)
 | Task obsahuje | Načti |
 |---|---|
-| IG/social content | expertise/content-creation.yaml + [your_company]-brand.yaml |
-| Investor/outreach/DD | expertise/investor-outreach.yaml + [your_company]-brand.yaml |
+| IG/social content | expertise/content-creation.yaml + oneflow-brand.yaml |
+| Investor/outreach/DD | expertise/investor-outreach.yaml + oneflow-brand.yaml |
 | Deploy/VPS/systemd | expertise/vps-infra.yaml |
 | Kód/refactor/testing | expertise/code-patterns.yaml |
-| [YOUR_COMPANY] brand/voice | expertise/[your_company]-brand.yaml |
-| HTML, CSS, design, brand manuál, vizuál, web, landing page, nabídka, UI | expertise/design-visual.yaml + expertise/[your_company]-brand.yaml + rules/design-workflow.md |
+| OneFlow brand/voice | expertise/oneflow-brand.yaml |
+| HTML, CSS, design, brand manuál, vizuál, web, landing page, nabídka, UI | expertise/design-visual.yaml + expertise/oneflow-brand.yaml + rules/design-workflow.md |
 | React, Next.js, shadcn, Tailwind, mapcn, component library, web app, frontend | expertise/frontend-ui.yaml |
 | GitHub repo hodnocení, je to good library, podívej se na repo, GitHub URL | expertise/frontend-ui.yaml + knowledge/code/github-recon.md |
 | CNB, ECSP, dluhopisy, AML, emise, regulace, zákon, compliance, GDPR | expertise/czech-regulatory.yaml |
@@ -20,9 +20,10 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 | Cold email, sekvence, reply psychology, Cialdini, A/B test outreach, Schwartz | expertise/outbound-sales-science.yaml |
 | LinkedIn, Voyager API, Playwright, Dubai pipeline, bridge, automation | expertise/linkedin-automation.yaml |
 | Graphiti, KG, knowledge graph, graphiti_search, graphiti_add, KuzuDB, temporal | expertise/knowledge-graph-ops.yaml |
+| prompt engineering, prompt design, cache optimization, eval-driven, falsification, anti-sycophancy, calibrated confidence, Anthropic cache, multi-turn agent | expertise/prompt-engineering.yaml |
 | Konkurence, competitor, scrape IG profil, hook pattern, co dělá X, inspirace pro hook | skill: competitor-intel |
 | SEO, AEO, GEO, AI citace, Perplexity, ChatGPT visibility, schema markup, E-E-A-T, structured data | skill: seo-audit |
-| obsidian, [YOUR_COMPANY]-Vault, vault, search note, create note, find tag, .canvas, .base | skill: obsidian-cli + obsidian-markdown + obsidian-bases + json-canvas |
+| obsidian, OneFlow-Vault, vault, search note, create note, find tag, .canvas, .base | skill: obsidian-cli + obsidian-markdown + obsidian-bases + json-canvas |
 | shadcn, shadcn/ui, component, registry, button, card, dialog, theming | skill: shadcn |
 | Next.js, Vercel, React, server components, app router, performance, RSC | skill: vercel-react-best-practices + nextjs-app-router-patterns + vercel-composition-patterns |
 | Google Sheets, gws-sheets, append row, read spreadsheet, VPS Dashboard | skill: gws-sheets-read + gws-sheets-append + sheets-automation |
@@ -57,7 +58,7 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 CARL = behaviorální pravidla (mandatory checks, red lines). YAML = znalostní obsah. Používej oboje.
 
 ## Knowledge MD (fallback)
-sales-psychology, programming, design, frontier-tech, pitch-deck-factory, ai-ml, marketing, finance, [your_name]-style-clone, legal-compliance, competitive-intel, cz-market-data, [your_name]-standards
+sales-psychology, programming, design, frontier-tech, pitch-deck-factory, ai-ml, marketing, finance, filip-style-clone, legal-compliance, competitive-intel, cz-market-data, dopita-standards
 
 ## Code Standards (knowledge/code/)
 agents, code-review, coding-style, development-workflow, git-workflow, github-recon, hooks, patterns, performance, python-rules, security, testing

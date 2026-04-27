@@ -1,6 +1,12 @@
 ---
 name: deep-post-ideas
-description: "Extrahuje 5 post outlines z libovolného zdrojového materiálu (DD report, prospekt, analýza, článek). Výstup: Core Paradox, Key Quotes, Transformation Arc, Core Problems, Aspirational Statement. Dan Koe framework, [YOUR_COMPANY] brand."
+description: "Extrahuje 5 post outlines z libovolného zdrojového materiálu (DD report, prospekt, analýza, článek). Výstup: Core Paradox, Key Quotes, Transformation Arc, Core Problems, Aspirational Statement. Dan Koe framework, OneFlow brand."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
 ---
 
 # deep-post-ideas
@@ -10,12 +16,12 @@ description: "Extrahuje 5 post outlines z libovolného zdrojového materiálu (D
 - Nebo: libovolný delší text (DD, prospekt, analýza) + žádost o content
 
 ## Co to dělá
-Transformuje jakýkoli zdrojový materiál (DD report, investiční analýza, prospekt, článek, rozhovor) na 5 konkrétních post outlines pro [YOUR_COMPANY] IG/LinkedIn.
+Transformuje jakýkoli zdrojový materiál (DD report, investiční analýza, prospekt, článek, rozhovor) na 5 konkrétních post outlines pro OneFlow IG/LinkedIn.
 
 ---
 
 ## Před začátkem: načti kontext
-- `~/.claude/expertise/[your-service].yaml` — hlas, zakázaná slova
+- `~/.claude/expertise/oneflow-brand.yaml` — hlas, zakázaná slova
 - `~/.claude/expertise/content-creation.yaml` — hook formulas, struktury
 
 ---

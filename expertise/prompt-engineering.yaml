@@ -1,0 +1,245 @@
+domain: prompt-engineering
+description: |
+  Prompt engineering patterns optimized for production LLM workflows.
+  Covers single-turn structure, multi-turn agents, eval-driven iteration,
+  cache optimization, and Anthropic-specific best practices.
+
+key_concepts:
+
+  context_window_engineering:
+    principle: |
+      Token budget is the most important constraint. Every token in context
+      must earn its place. Default to under 60% utilization for complex
+      reasoning, leave headroom for retry/expansion.
+    patterns:
+      - static_at_top:
+          description: |
+            Static content (system prompt, rules, tool defs) at the start of
+            conversation. Dynamic content (user messages, tool results) at end.
+            This maximizes Anthropic prompt cache hit rate (5-min TTL, 81% cost saving).
+          why: |
+            Anthropic cache works on prefix matching. Any change to prefix
+            invalidates cache. Append-only growth = cache hits on each turn.
+      - lazy_loading:
+          description: |
+            Don't preload all knowledge. Route based on keywords in user message.
+            See knowledge-router.md pattern: keyword → load specific YAML.
+          why: |
+            Loading 200KB of expertise upfront wastes 50K tokens that
+            won't be used in 90% of tasks. Per-task routing keeps context lean.
+      - context_decay:
+          description: |
+            After 10+ turns, re-read files before editing. After 15+ turns,
+            consider /clear or /compact. Context past 60% utilization degrades
+            reasoning quality non-linearly.
+
+  prompt_structure:
+    xml_scaffold:
+      description: |
+        Anthropic models respond best to XML-tagged structure for complex prompts.
+        Standard scaffold:
+      template: |
+        <context>
+        [current state, what we know, why we're solving this]
+        </context>
+        <task>
+        [exactly what's needed — unambiguous]
+        </task>
+        <constraints>
+        [what NOT to do, tone, limits, deadline]
+        </constraints>
+        <examples>
+        [reference output or quality bar]
+        </examples>
+    when_to_use: |
+      Complex tasks with multiple constraints. Skip for trivial single-step ops
+      (grep, ls, simple Q&A) — overhead outweighs benefit.
+
+  reasoning_patterns:
+    chain_of_thought:
+      description: |
+        For high-stakes tasks, force explicit reasoning before conclusion.
+        Anthropic models support thinking blocks (extended thinking).
+      activation: |
+        - Set MAX_THINKING_TOKENS=63999 (claude-opus-4-7)
+        - Use "step by step" or "think before answering" in prompt
+        - For Opus 4.7: xhigh effort mode automatically engages
+      anti_pattern: |
+        Forcing thinking on trivial tasks wastes tokens. Reserve for stakes:
+        financial, legal, security, architectural.
+
+    falsification_first:
+      description: |
+        Before accepting any conclusion, formulate the strongest counter-argument.
+        If conclusion survives steelman, ship. If not, revise.
+      pattern: |
+        1. Hypothesis: [your conclusion]
+        2. Strongest opposition: [how could this be wrong?]
+        3. Evidence test: does the data still support hypothesis after seeing opposition?
+        4. Calibrate confidence: ">80% certain because X" or "50/50 — depends on Y"
+      why: |
+        Default LLM behavior is "first plausible answer." Reduces hallucination
+        and surfaces edge cases that "confirm-only" reasoning misses.
+
+    calibrated_confidence:
+      anti_patterns:
+        - vague_hedging: "možná", "asi", "pravděpodobně" without evidence
+        - false_certainty: presenting guess as fact
+        - false_uncertainty: presenting fact as guess
+      good_patterns:
+        - bounded_confidence: ">80% jistotou X"
+        - alternative_framing: "X works because Y, but breaks on Z"
+        - explicit_unknown: "Nejsem si jist — možnosti: A (more support) vs B (less risk)"
+
+  multi_turn_agents:
+    todo_decomposition:
+      principle: |
+        Multi-step tasks ALWAYS get decomposed into TodoWrite items BEFORE
+        first tool call. Each item must have verifiable output.
+      iron_law: |
+        Every discrete prompt point gets a todo. Close-out: re-read original
+        prompt, verify each point completed. Failure mode: "Done X/Y, missing
+        Z because W" — never silent omission.
+
+    parallel_subagents:
+      when: |
+        - Multiple independent search/audit/research operations
+        - Each subagent has clear scope and won't overlap
+        - Time benefit > orchestration overhead (rule of thumb: 3+ parallel tasks)
+      how: |
+        Spawn ALL agents in single message (multiple tool_use blocks).
+        Agents return summaries; main thread synthesizes.
+      anti_patterns:
+        - sequential_when_parallelizable: Don't loop spawning agents
+        - context_explosion: Max 4-5 long-running agents — outputs flood main context
+        - duplicate_work: Don't spawn agent for task you can do in 2 grep calls
+
+    handoff_pattern:
+      description: |
+        Long sessions degrade. Best practice: write progress to file, /clear,
+        resume from file in fresh session.
+      when: |
+        - 10+ turns without progress
+        - Token velocity > 5K/turn for 3+ consecutive turns
+        - Major task completion (compact + clear before next task)
+
+  cache_optimization:
+    anthropic_cache_rules:
+      - five_min_ttl: |
+          Cache entry expires after 5 minutes idle. Sleep <270s = cache warm.
+          Sleep >300s = cache miss. Don't sleep exactly 300s.
+      - prefix_immutability: |
+          Once cache entry created, prefix is locked. Any modification to
+          system prompt, rules, or tool definitions mid-session breaks cache
+          for entire remaining session.
+      - one_hour_cache: |
+          For long sessions, set ENABLE_PROMPT_CACHING_1H=1 (12× cache cost
+          but persists for an hour, useful for marathon planning sessions)
+      - reorder_avoidance: |
+          Don't reorder tool definitions. Don't add system messages mid-session.
+          Both invalidate cache.
+    measurement: |
+      Run /cache-audit (custom skill) to measure hit rate. Target: >70% on
+      sessions >5 turns.
+
+  eval_driven_iteration:
+    pattern: |
+      Generate → evaluate → feedback → regenerate until PASS. Used for
+      high-stakes outputs (DD reports, cold emails, investor pitches).
+    components:
+      - generator: Current Claude session (Opus 4.7 for stakes)
+      - evaluator: Cheap model (Gemini 2.5 Flash, free) with explicit rubric
+      - rubric: Domain-specific (deliverability, brand voice, completeness)
+      - threshold: Minimum score 85/100, max 3 iterations
+    skill: /evalopt — auto-triggered on DD reports, cold emails, IG content,
+           landing page copy, ad creative, investor pitch decks.
+
+  effort_modes:
+    when_to_full_effort:
+      - prefix_marker: "!!" or "fakt důležité" / "kritické" in user prompt
+      - financial_legal_security_impact
+      - architectural_strategic_decisions
+      - debug_with_unclear_cause
+      - stakes_where_wrong_answer_worse_than_no_answer
+    full_effort_protocol:
+      - explicit_reasoning_visible: 3-5 sentence analysis BEFORE first action
+      - alternatives_evaluated: at least 2 paths considered with tradeoffs
+      - falsification_applied: why might this approach fail?
+      - quality_loop_offer: end with /deset or /challenge invitation
+
+  anti_sycophancy:
+    banned_phrases:
+      - "Excellent!"
+      - "Perfect!"
+      - "Great question!"
+      - "Interesting!"
+      - "You're absolutely right!"
+    pattern_corrections:
+      - user_changes_direction_without_evidence: |
+          Don't comply silently. Push back: "You said X earlier — what changed?
+          Without new evidence, X is still better because Y."
+      - disagreement_protocol: |
+          Direct + reason. "This won't work because X" beats "Maybe consider..."
+          Hedging is a dishonesty pattern.
+      - celebration_calibration: |
+          Celebrate only: real ships, hard problems solved, measurable metrics.
+          Never: ideas, drafts, plans, or normal task completion.
+
+  prompt_completeness:
+    iron_law: |
+      Every discrete point in user prompt MUST have verifiable output.
+      No silent skips. No "tabled for later" without explicit user approval.
+    enforcement:
+      - pre_action: TodoWrite ALL points before first tool call
+      - in_action: one in_progress at a time; blockers stay in_progress with explicit note
+      - close_out: re-read original prompt (scroll up, not from memory) before final response
+      - failure_mode: "Done X/Y, missing Z because W" — never silent omission
+
+best_practices:
+  - state_assumptions: Before writing code, state 3 explicit assumptions you're making
+  - surgical_changes: Only touch what's required by the task; don't refactor adjacent code
+  - boil_the_ocean_when_cheap: |
+      If permanent fix is in reach and cost ≈ 0, do it complete (tests, edge cases, docs).
+      Workarounds are dishonest when real fix is achievable.
+  - terse_outputs: |
+      No preamble, no recap, no "here's what I'll do" before doing it.
+      Status updates max 50 words. Answers max 150 words. Analysis max 400.
+  - structured_over_prose: |
+      Tables and JSON beat prose for comparisons, audits, scorings.
+      Bullets beat prose for non-narrative lists.
+
+failure_modes_to_recognize:
+  shallow_first_answer:
+    symptom: First plausible solution accepted without alternatives
+    fix: Force "consider 2+ alternatives + tradeoffs" rule for non-trivial tasks
+  cherry_picking:
+    symptom: Multi-point prompt → only most obvious point handled
+    fix: Iron Law TodoWrite enforcement + close-out re-read
+  workaround_creep:
+    symptom: Permanent fix possible, but workaround chosen
+    fix: Boil-the-Ocean rule explicitly checks "is permanent fix in reach?"
+  context_thrashing:
+    symptom: Same file re-read multiple times in 5 turns
+    fix: After 3 reads of same file, summarize and pin to TodoWrite or memory
+  silent_skip:
+    symptom: Task says "Done" but 1+ prompt points unaddressed
+    fix: Close-out re-read; explicit "X/Y done, missing Z" format
+
+routing_rules:
+  - prompt_engineering_question | when_to_use_<technique>: load this YAML
+  - debugging_llm_output: load this + reasoning-depth.md
+  - building_evaluator_optimizer: load this + see /evalopt skill
+  - cache_optimization: load this + run /cache-audit
+
+reference_implementations:
+  - rules/reasoning-depth.md     # full-effort mode + falsification
+  - rules/prompt-completeness.md # Iron Law for multi-point prompts
+  - rules/filip-autopilot.md     # autonomy + anti-sycophancy
+  - rules/quality-standard.md    # Boil-the-Ocean
+  - skills/mythos/SKILL.md       # epistemological scaffold (Mythos)
+  - skills/evalopt/SKILL.md      # evaluator-optimizer loop
+
+production_metrics:
+  cache_hit_rate_target: ">70% on sessions of 5+ turns"
+  hallucination_reduction_after_falsification: "20-30% (per /verify-claim baseline)"
+  prompt_completeness_violations: "0/multi-point prompt (enforced via close-out)"

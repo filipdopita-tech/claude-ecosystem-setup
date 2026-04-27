@@ -1,6 +1,15 @@
 ---
 name: ultraplan
 description: Brutální cloud planning skill. Mythos epistemologie aplikovaná na architekturní rozhodnutí a implementační plány. Assume-failure-first, calibrated confidence, adversarial plan review. 3× Opus 4.6 paralelně v cloudu. Vždy Opus. Pro komplexní tasky.
+allowed-tools:
+  - Task
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - WebFetch
 ---
 
 # Ultraplan

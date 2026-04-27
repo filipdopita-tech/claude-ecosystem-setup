@@ -1,6 +1,10 @@
 ---
 name: seedance-social-hook
-description: Generate viral social media hook video prompts for TikTok, Instagram Reels, and YouTube Shorts using Seedance 2.0 on Higgsfield. Use whenever the user wants to create scroll-stopping hooks, viral short-form video, attention-grabbing openers, TikTok content, Reels content, Shorts content, or any social-media-optimized video. Triggers on: social media video, TikTok, Instagram Reels, YouTube Shorts, viral video, hook, scroll-stopper, short-form, trending, engagement, views, or any request for social media video content.
+description: "Generate viral social media hook video prompts for TikTok, Instagram Reels, and YouTube Shorts using Seedance 2.0 on Higgsfield. Use whenever the user wants to create scroll-stopping hooks, viral short-form video, attention-grabbing openers, TikTok content, Reels content, Shorts content, or any social-media-optimized video. Triggers on: social media video, TikTok, Instagram Reels, YouTube Shorts, viral video, hook, scroll-stopper, short-form, trending, engagement, views, or any request for social media video content."
+allowed-tools:
+  - Read
+  - Write
+  - Edit
 ---
 
 # The Art of the Viral Hook: Master Guide to Scroll-Stopping Social Media Videos

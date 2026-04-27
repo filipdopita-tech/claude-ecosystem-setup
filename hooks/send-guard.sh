@@ -18,7 +18,7 @@ if [ "$TOOL_NAME" = "Bash" ]; then
             echo "BLOCKED: Template proměnné ({company}, {name}) nenahrazené! Viz pitfalls.md #9"
             exit 1
         fi
-        echo "WARNING: Email send detected. Schválil [YOUR_NAME] odeslání? Viz pitfalls.md #1"
+        echo "WARNING: Email send detected. Schválil Filip odeslání? Viz pitfalls.md #1"
     fi
 
     # Browser/window opening

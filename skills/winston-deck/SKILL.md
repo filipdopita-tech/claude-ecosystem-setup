@@ -1,6 +1,6 @@
 ---
 name: winston-deck
-description: "Patrick Winston MIT presentation framework aplikovaný na [YOUR_COMPANY] prezentace. 6 modes: full-deck (1-6 sekvenčně), opening (1), audit (2), star (3), structure (4), props (5), closing (6). CZ output, [YOUR_COMPANY] brand, integrace s pitch-deck-factory.md. Trigger: '/winston', 'winston framework', 'patrick winston', 'MIT presentation', 'připrav prezentaci', 'pitch deck full', 'audit slidů', 'opening pro pitch', 'closing pro talk'."
+description: "Patrick Winston MIT presentation framework aplikovaný na OneFlow prezentace. 6 modes: full-deck (1-6 sekvenčně), opening (1), audit (2), star (3), structure (4), props (5), closing (6). CZ output, OneFlow brand, integrace s pitch-deck-factory.md. Trigger: '/winston', 'winston framework', 'patrick winston', 'MIT presentation', 'připrav prezentaci', 'pitch deck full', 'audit slidů', 'opening pro pitch', 'closing pro talk'."
 metadata:
   version: "1.0"
   source: "IG @artificialintelligence.co DXjSbsVCSUv (2026-04-25), originál God of Prompt na X"
@@ -16,7 +16,7 @@ allowed-tools:
 
 ## Kdy použít
 
-- **Pitch deck pro investora** ([YOUR_COMPANY] fundraise, Patricny, ASR partneři)
+- **Pitch deck pro investora** (OneFlow fundraise, Patricny, ASR partneři)
 - **DD report prezentace** klientovi (executive summary)
 - **Klientská nabídka** (ASR retainer, custom DD)
 - **Konference talk** (CZ fintech eventy, retailový investor day)
@@ -45,7 +45,7 @@ mode:
   props    — Prompt 5 (props + storytelling pro complex idea)
   closing  — Prompt 6 (contributions slide + 60s ending)
 
-topic:    krátký popis (např. "[YOUR_COMPANY] fundraise 5M EUR")
+topic:    krátký popis (např. "OneFlow fundraise 5M EUR")
 audience: kdo (např. "10M+ HNW investor, finance background")
 ```
 
@@ -75,7 +75,7 @@ Vždy potřebuješ:
 - **Audience** (komu)
 - **Desired outcome** (co má publikum udělat / vědět / rozhodnout)
 
-[YOUR_COMPANY] defaults pokud [YOUR_NAME] neřekne:
+OneFlow defaults pokud Filip neřekne:
 - Audience: "HNW investor, 10M+ Kč alokace, finance/business background, 30–55 let, CZ/SK"
 - Brand: monochrome (#0A0A0C dark / #F2F0ED light), Inter Tight, žádné saturované barvy, žádné zlato
 
@@ -84,9 +84,9 @@ Pro **full** mode: postupuj 1→6 sekvenčně, výstup každého kroku použij j
 
 Pro **single** mode: aplikuj jen ten jeden prompt z knowledge file.
 
-### Krok 4: CZ output + [YOUR_COMPANY] brand
-- Výstup VŽDY česky (i když [YOUR_NAME] napíše prompt anglicky — defaults to CZ)
-- Banned words check (viz [your_company]-all.md): žádné "inovativní", "revoluční", "komplexní řešení", "synergie", "v dnešní době"
+### Krok 4: CZ output + OneFlow brand
+- Výstup VŽDY česky (i když Filip napíše prompt anglicky — defaults to CZ)
+- Banned words check (viz oneflow-all.md): žádné "inovativní", "revoluční", "komplexní řešení", "synergie", "v dnešní době"
 - Brand voice: přímý, sebevědomý, žádné omluvy, max 1-2 emoji
 - Čísla konkrétní (47M Kč, 0 defaultů, 142 investorů — ne "značné objemy")
 
@@ -142,10 +142,10 @@ Pro **single** mode: aplikuj jen ten jeden prompt z knowledge file.
 
 ## Příklady
 
-### Příklad 1: Full deck pro [YOUR_COMPANY] fundraise
+### Příklad 1: Full deck pro OneFlow fundraise
 
 ```
-/winston full "[YOUR_COMPANY] fundraise 5M EUR Series A" "EU VC fintech, 10-30M EUR check, B2B SaaS background"
+/winston full "OneFlow fundraise 5M EUR Series A" "EU VC fintech, 10-30M EUR check, B2B SaaS background"
 ```
 
 Output: kompletní 12-slide deck s opening 60s, Star elements, VSNC structure, contributions close, speaker notes.
@@ -156,7 +156,7 @@ Output: kompletní 12-slide deck s opening 60s, Star elements, VSNC structure, c
 /winston audit "ASR retainer pitch — 12 slidů z minulého týdne"
 ```
 
-[YOUR_NAME] pošle screenshoty / popis slidů → Claude vrátí audit s 10 crimes checklist + per-slide fix.
+Filip pošle screenshoty / popis slidů → Claude vrátí audit s 10 crimes checklist + per-slide fix.
 
 ### Příklad 3: Jen opening pro DD report executive summary
 
@@ -174,7 +174,7 @@ Output: empowerment promise + 60s mluvený script + cuts list.
 
 Output: Symbol + Slogan + Surprise + Salient Idea + Story — connected story k téhle 1 myšlence.
 
-### Příklad 5: Closing rescue ([YOUR_NAME] má hotový deck, jen chce silný konec)
+### Příklad 5: Closing rescue (Filip má hotový deck, jen chce silný konec)
 
 ```
 /winston closing "konference talk: Jak postavit dluhopisovou emisi v ČR za 90 dní"
@@ -207,6 +207,6 @@ Output: contributions slide design + 60s ending script + co eliminovat.
 
 - Knowledge: `~/.claude/knowledge/winston-presentation-framework.md` (6 prompts verbatim)
 - Komplementární: `~/.claude/knowledge/pitch-deck-factory.md` (struktura content, ne speaking)
-- Brand: `~/.claude/rules/[your_company]-all.md` + `~/docs/[your_company]-brand-manual-2026.md`
+- Brand: `~/.claude/rules/oneflow-all.md` + `~/docs/oneflow-brand-manual-2026.md`
 - Source: IG @artificialintelligence.co post DXjSbsVCSUv (2026-04-25)
 - MIT lecture: https://learn.mit.edu/?resource=5343

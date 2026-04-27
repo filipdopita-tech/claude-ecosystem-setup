@@ -1,10 +1,19 @@
 ---
 name: competitor-intel
 description: "Scrape konkurenční IG/YouTube účty, extrahuj hook patterny, best-performing angles — přímý vstup do ig-content-creator."
-compatibility: playwright-mcp (již nainstalován). Reads ~/.claude/rules/[your-service].md.
+compatibility: playwright-mcp (již nainstalován). Reads ~/.claude/rules/oneflow-all.md.
 metadata:
   allowed-hosts: []
   version: "1.0"
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - WebFetch
+  - WebSearch
 ---
 
 # /competitor-intel — Competitor Hook Intelligence
@@ -17,7 +26,7 @@ metadata:
 ## POSTUP
 
 ### Krok 1: Identifikuj target
-Pokud [YOUR_NAME] nedá konkrétní účet, použij default list:
+Pokud Filip nedá konkrétní účet, použij default list:
 ```
 IG (CZ investice/finance):
 - @richnavujeme
@@ -90,13 +99,13 @@ Output tabulka:
 |---|---|---|---|---|
 ```
 
-### Krok 5: [YOUR_COMPANY] Adaptation
-Pro top 3-5 hookech navrhni [YOUR_COMPANY] adaptaci:
+### Krok 5: OneFlow Adaptation
+Pro top 3-5 hookech navrhni OneFlow adaptaci:
 
 **Vzor adaptace:**
 ```
 Originál (@codie_sanchez): "I bought a laundromat for $50k. Here's what happened."
-→ [YOUR_COMPANY] adaptace: "Koupil jsem dluhopis za 2M Kč. Tady je co jsem zjistil."
+→ OneFlow adaptace: "Koupil jsem dluhopis za 2M Kč. Tady je co jsem zjistil."
 
 Angle: Emotional (#1) + Reveal (#8)
 Pilíř: Investment Insights
@@ -113,7 +122,7 @@ graphiti_add("competitor hook pattern", {
   angle: "[č. 1-15]",
   engagement: "high|med|low",
   pillar_fit: "investment|fundraising|market|personal|ai",
-  [your-service]: "[navržená adaptace]",
+  oneflow_adaptation: "[navržená adaptace]",
   date_scraped: "[datum]"
 })
 ```
@@ -132,15 +141,15 @@ Při příštím `/ig-content-creator`: `graphiti_search("competitor hook patter
 
 ### Pattern Summary
 Nejčastější angles: Data (3x), Contrarian (2x), Story (2x)
-Nejméně používané: Urgency, Challenge → PŘÍLEŽITOST pro [YOUR_COMPANY]
+Nejméně používané: Urgency, Challenge → PŘÍLEŽITOST pro OneFlow
 
-### [YOUR_COMPANY] Adaptace (ready-to-use)
+### OneFlow Adaptace (ready-to-use)
 1. "[adaptovaný hook]" → formát: carousel → pilíř: investment
 2. "[adaptovaný hook]" → formát: reel → pilíř: personal
 3. "[adaptovaný hook]" → formát: static → pilíř: market
 
 ### Gaps (co konkurence nedělá)
-- [angle/téma které chybí u konkurence = příležitost pro [YOUR_COMPANY]]
+- [angle/téma které chybí u konkurence = příležitost pro OneFlow]
 ```
 
 ## Automatické řetězení
@@ -149,4 +158,4 @@ Po dokončení: "Chceš rovnou vygenerovat carousel z top adaptace? → `/ig-con
 ## Common Mistakes
 1. **Nepoužívej scraping pro přístup k soukromým účtům** — pouze veřejné profily
 2. **Nerespektuj jen likes** — save rate je důležitější, ale není viditelná; proxy: carousel > static engagement
-3. **Neskopíruj hook doslova** — vždy adaptuj na [YOUR_COMPANY] brand, CZ kontext, investiční niche
+3. **Neskopíruj hook doslova** — vždy adaptuj na OneFlow brand, CZ kontext, investiční niche

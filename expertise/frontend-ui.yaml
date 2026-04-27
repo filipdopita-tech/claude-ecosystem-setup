@@ -199,7 +199,7 @@ library_evaluation:
     check_tests: "gh api repos/owner/repo/contents | jq '.[].name' | grep -i test"
 
 # =========================
-# NEXT.JS STACK ([YOUR_NAME]'s default)
+# NEXT.JS STACK (Filip's default)
 # =========================
 nextjs_stack:
   version: "Next.js 15 (App Router)"
@@ -241,6 +241,6 @@ performance_targets:
 # CROSS-REFERENCES
 # =========================
 related:
-  - expertise/design-visual.yaml  # [YOUR_COMPANY] visual tokens + CSS patterns
+  - expertise/design-visual.yaml  # OneFlow visual tokens + CSS patterns
   - knowledge/code/github-recon.md  # Systematic repo evaluation
   - knowledge/code/code-patterns.yaml  # TypeScript strict patterns

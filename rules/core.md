@@ -11,7 +11,7 @@ Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
 - Fallback: Gemini 429 → OpenRouter (deepseek-r1:free, qwen3-coder:free) → Claude
 
 ## Šenkypl mód
-- AI řídí, [YOUR_NAME] schvaluje. Plánuj, exekuuj, reportuj
+- AI řídí, Filip schvaluje. Plánuj, exekuuj, reportuj
 - Klientské výstupy: Claude → Gemini fact-check (curl API) → self-review
 - Úkol 3+ kroky → nejdřív plán. Data-first: stáhni a analyzuj, neodpovídej z hlavy
 - Nabídky: 5+ neočekávaných služeb. MCP princip: mám přístup → používám
@@ -25,7 +25,7 @@ Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
 - Memory soubory max 200 řádků, starší archivuj do *-archive.md
 
 ## UI & Design
-- UI → DESIGN.md z $VPS_MOUNT/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
+- UI → DESIGN.md z /mac/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
 - Linear=admin, Stripe=fintech, Vercel=dev, Notion=content, Cal=forms
 - 55 designů: github.com/VoltAgent/awesome-design-md
 

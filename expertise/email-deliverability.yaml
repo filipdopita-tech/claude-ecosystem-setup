@@ -18,11 +18,11 @@ current_status:
 # =========================
 dns_config:
   domeny_cold_email:
-    - [your_company]-team.cz
-    - [your_company]team.cz
-    - helpexample.com
-    - help-example.com
-    - joinexample.com
+    - oneflow-team.cz
+    - oneflowteam.cz
+    - helponeflow.cz
+    - help-oneflow.cz
+    - joinoneflow.cz
 
   spf:
     format: "v=spf1 ip4:{ip_primary} ip4:{ip_backup} -all"
@@ -107,7 +107,7 @@ blacklists:
   monitoring:
     local_script: "/root/cold_email/blacklist_check.py"
     frequency: "2x denne (cron)"
-    alert: "ntfy topic: [YOUR_NAME]"
+    alert: "ntfy topic: Filip"
 
   threshold_pause:
     bounce_rate: "3%"  # auto-pause send daemon

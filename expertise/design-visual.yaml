@@ -6,7 +6,7 @@ description: Moderní HTML/CSS/visual design — trendy 2025-2026, premium patte
 # KRITICKÝ INSIGHT: DVĚ VERZE
 # Zdroj: reálné nabídky (nabidka-patricny-2026.html, nabidka-asr-2026-v4-web.html)
 # =========================
-[your_company]_two_modes:
+oneflow_two_modes:
   documents:
     description: "PDF nabídky, brand manuály, reporty — black & white + béžová paleta. BEZ gold."
     dark_bg: "#0A0A0C (blíže černé než web)"
@@ -40,7 +40,7 @@ philosophy:
     font_family: "Inter Tight všude — NE Playfair Display"
 
 # =========================
-# USER_COMPANY CSS TOKENS (single source of truth)
+# ONEFLOW CSS TOKENS (single source of truth)
 # =========================
 tokens:
   document_colors:
@@ -302,7 +302,7 @@ css_techniques:
 # =========================
 premium_details:
   inset_top_glow:
-    description: "Subtle shimmer na horní hraně karty — signature [YOUR_COMPANY] detail."
+    description: "Subtle shimmer na horní hraně karty — signature OneFlow detail."
     code: "box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);"
 
   gradient_text:
@@ -606,14 +606,14 @@ anti_patterns:
   - "Gold (#cdb186) nebo orange (#795b38) kdekoliv — brand je MONOCHROME"
   - "Čistá černá #000000 jako bg — použij #0A0A0C nebo gradient"
   - "Uniformní stránky bez alternace dark/light rytmu"
-  - "Tag border-radius >6px — [YOUR_COMPANY] tagy jsou ostré (4px)"
+  - "Tag border-radius >6px — OneFlow tagy jsou ostré (4px)"
   - "Straight solid divider místo gradient fade-in/out"
   - "Footer v normal flow — musí být position: absolute"
   - "Moc gradientů — každý element soutěží o pozornost"
   - "HSL barvy místo OKLCH (nekonzistentní jas) — na webu"
   - "Malý text na tmavém pozadí (<11px, <rgba(255,255,255,0.4))"
-  - "Jakákoliv saturovaná barva — [YOUR_COMPANY] je striktně monochrome"
-  - "Em dash v textu — zakázaný v [YOUR_COMPANY] voice"
+  - "Jakákoliv saturovaná barva — OneFlow je striktně monochrome"
+  - "Em dash v textu — zakázaný v OneFlow voice"
   - "Uniform font sizes — žádná hierarchie"
   - "Letter-spacing 0 na headings >20px — vždy negativní"
 
@@ -665,7 +665,7 @@ ai_slop_blacklist:
     - id: 1
       name: "Purple/violet gradient backgrounds"
       detail: "Purple/violet/indigo gradienty nebo blue-to-purple schémata jako hero pozadí"
-      fix: "[YOUR_COMPANY] = monochrome only. Dark #0A0A0C + gradient 165deg na pure black."
+      fix: "OneFlow = monochrome only. Dark #0A0A0C + gradient 165deg na pure black."
 
     - id: 2
       name: "The 3-column feature grid"
@@ -675,7 +675,7 @@ ai_slop_blacklist:
     - id: 3
       name: "Icons in colored circles"
       detail: "Section decoration s iconami uvnitř saturovaných kroužků (SaaS starter template look)"
-      fix: "[YOUR_COMPANY] nepoužívá decorative icons vůbec. Pokud glyf, tak mono, ne v kroužku."
+      fix: "OneFlow nepoužívá decorative icons vůbec. Pokud glyf, tak mono, ne v kroužku."
 
     - id: 4
       name: "Centered everything"
@@ -685,7 +685,7 @@ ai_slop_blacklist:
     - id: 5
       name: "Uniform bubbly border-radius"
       detail: "Stejný velký radius na každém elementu (buttons, cards, inputs — všechno 12px+)"
-      fix: "[YOUR_COMPANY]: buttons radius 8px (pill pro CTA OK), cards 4-8px max. Inputs squared nebo 4px. Nekonzistence je taste, uniformita je AI."
+      fix: "OneFlow: buttons radius 8px (pill pro CTA OK), cards 4-8px max. Inputs squared nebo 4px. Nekonzistence je taste, uniformita je AI."
 
     - id: 6
       name: "Decorative blobs a floating circles"
@@ -695,7 +695,7 @@ ai_slop_blacklist:
     - id: 7
       name: "Emoji jako design elementy"
       detail: "🚀 v nadpisech, ✨ jako odrážky, emoji v CTA"
-      fix: "[YOUR_COMPANY] voice: max 1-2 emoji per zprávu v comms. V produktovém UI/LP: NULA emoji."
+      fix: "OneFlow voice: max 1-2 emoji per zprávu v comms. V produktovém UI/LP: NULA emoji."
 
     - id: 8
       name: "Colored left-border cards"
@@ -705,7 +705,7 @@ ai_slop_blacklist:
     - id: 9
       name: "Generic hero copy"
       detail: "'Welcome to [X]', 'Unlock the power of...', 'Your all-in-one solution for...', 'Empower your [X]'"
-      fix: "[YOUR_COMPANY] hero = konkrétní fakt nebo otázka. 'Dluhopisové investice od 50k Kč' beats 'Unlock financial freedom'."
+      fix: "OneFlow hero = konkrétní fakt nebo otázka. 'Dluhopisové investice od 50k Kč' beats 'Unlock financial freedom'."
 
     - id: 10
       name: "Cookie-cutter section rhythm"
@@ -742,7 +742,7 @@ universal_hard_rules:
     - "Placeholder-as-label pattern = NEVER (labels musí být visible když field má content)"
     - "Visited vs unvisited link distinction = ALWAYS preserved (různé barvy)"
     - "Heading musí být vizuálně BLÍŽ k sekci, kterou uvozuje, než k předcházející"
-    - "Default font stacky (Inter, Roboto, Arial, system-ui) = NEVER. [YOUR_COMPANY] = Inter Tight only."
+    - "Default font stacky (Inter, Roboto, Arial, system-ui) = NEVER. OneFlow = Inter Tight only."
     - "'Pokud smazání 30% copy zlepší stránku, mazej dál.'"
 
 audit_workflow:
@@ -758,10 +758,10 @@ audit_workflow:
 # CROSS-REFERENCES
 # =========================
 related_files:
-  research: "$HOME/docs/design-research-2025.md"
-  stitch_systems: "$HOME/docs/design-stitch-systems-2025.md"
-  brand_dna: "$HOME/docs/DESIGN.md"
-  [your_company]_brand: "~/.claude/expertise/[your_company]-brand.yaml"
+  research: "/Users/filipdopita/docs/design-research-2025.md"
+  stitch_systems: "/Users/filipdopita/docs/design-stitch-systems-2025.md"
+  brand_dna: "/Users/filipdopita/docs/DESIGN.md"
+  oneflow_brand: "~/.claude/expertise/oneflow-brand.yaml"
 
 related_knowledge:
   - "knowledge_design_2026.md (memory)"

@@ -1,11 +1,16 @@
 ---
 name: evalopt
-description: "/evalopt — Evaluator-Optimizer quality loop. Generuje výstup, hodnotí proti kritériím, iteruje dokud nedosáhne PASS (min score 85). Default: Claude CLI generator + Gemini 2.5 Flash evaluator (levný). Use case: reporty, nabídky, emaily, brand content — všude kde chceš automatický quality gate bez ruční aktivace."
+description: "/evalopt — Evaluator-Optimizer quality loop. Generuje výstup, hodnotí proti kriteriím, iteruje dokud nedosáhne PASS (min score 85). Běží na Flash VPS přes /opt/conductor/lib/evaluator_optimizer.py. Default: Claude CLI generator + Gemini 2.5 Flash evaluator (levný). Use case: DD reporty, nabídky klientům, cold emaily, brand content — všude kde chceš automatický /deset efekt bez ruční aktivace."
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
 ---
 
 # /evalopt — Evaluator-Optimizer Quality Loop
 
-Multi-iteration generate → evaluate → feedback → regenerate loop. Automatický quality-gate efekt postavený jako reusable modul.
+Multi-iteration generate → evaluate → feedback → regenerate loop. Automatický `/deset` efekt postavený jako reusable modul v Conductor infra.
 
 ## Architektura
 
@@ -24,10 +29,10 @@ Po `max_iterations` (default 3) vrátí best-effort výstup i když nedosáhl PA
 
 ## Kdy použít
 
-- **Strukturované reporty** — kritéria: numerická přesnost, compliance, disclaimery
+- **DD reporty** — kritéria: DSCR/LTV čísla, CNB compliance, risk disclaimer, přesná data
 - **Nabídky klientům** — brand voice, pricing logic, struktura, žádná klišé
-- **Cold emaily** — deliverability rules (<7 slov subject), psychologie, věcnost
-- **Social content** — brand voice, banned words, hook struktura
+- **Cold emaily** — deliverability rules (<7 slov subject), Cialdini aplikace, česká věcnost
+- **IG/LinkedIn content** — OneFlow brand voice, banned words, hook struktura
 - **Technická dokumentace** — kompletnost, konzistence, runnable examples
 
 ## Kdy NEpoužít
@@ -42,19 +47,19 @@ Po `max_iterations` (default 3) vrátí best-effort výstup i když nedosáhl PA
 ### Přes SSH (přímo)
 
 ```bash
-ssh <YOUR_VPS> 'export GEMINI_API_KEY=$(grep "^GEMINI_API_KEY=" <YOUR_CREDS_PATH>/gemini.env | cut -d= -f2); echo "{
-  \"task\": \"[TASK POPIS]\",
-  \"criteria\": \"- brand voice: přímý, věcný\\n- žádná klišé (\\\"inovativní\\\", \\\"synergie\\\")\\n- konkrétní čísla\\n- max 180 slov\\n- CTA: 1 otázka\",
+ssh vps-dev 'export GEMINI_API_KEY=$(grep "^GEMINI_API_KEY=" /home/claude/.credentials/gemini.env | cut -d= -f2); echo "{
+  \"task\": \"Napis 3-odstavcovou nabídku Andreii na pokračující spolupráci OneFlow...\",
+  \"criteria\": \"- brand voice: přímý, sebevědomý, česky\\n- žádná klišé (\\\"inovativní\\\", \\\"synergie\\\", \\\"komplexní řešení\\\")\\n- konkrétní čísla z track recordu\\n- max 180 slov\\n- CTA: 1 otázka\",
   \"min_score\": 85,
   \"max_iterations\": 3,
   \"generator\": \"claude\",
   \"evaluator\": \"gemini\"
-}" | python3 <YOUR_TOOLS_DIR>/evaluator_optimizer.py stdin'
+}" | python3 /opt/conductor/lib/evaluator_optimizer.py stdin'
 ```
 
-### Přes async worker queue
+### Přes Conductor (async queue)
 
-Vytvoř task JSON v `<QUEUE_INBOX>/` s `type=evalopt` — worker routuje na `evaluator_optimizer.py`.
+Vytvoř task JSON v `/opt/conductor/queue/inbox/` s type=evalopt — worker to routuje na evaluator_optimizer.py.
 
 ### Inline v Claude Code (doporučeno)
 
@@ -86,56 +91,58 @@ Napiš `/evalopt` + zadání + kritéria. Claude Code spustí SSH command a vrá
     {"iteration": 1, "verdict": "FAIL", "score": 45, "issues": [...], "improvements": [...]},
     {"iteration": 2, "verdict": "PASS", "score": 92, "issues": [], "improvements": []}
   ],
-  "log_path": "<LOGS_DIR>/evaluator_optimizer/eo_xxx.jsonl",
+  "log_path": "/opt/conductor/logs/evaluator_optimizer/eo_xxx.jsonl",
   "total_time": 96.28
 }
 ```
 
 ## Kritéria — pattern library
 
-### Pro strukturovaný finanční report
+### Pro DD report
 ```
-- Klíčové metriky v konzistentním formátu (2 desetinná místa, benchmark)
-- Regulační compliance flagy explicitně ověřeny nebo označeny jako chybí
-- Risk disclaimer v závěru
-- Čísla z reálných dat (ne plánovaných)
-- Numerické tvrzení = zdroj + datum
+- DSCR prezentován jako X.XX (2 desetinná místa), benchmark <1.2 = riziko
+- LTV jako XX.X%, benchmark >75% = varovný signál
+- CNB/ECSP registrace ověřena nebo explicitně flagged jako chybí
+- ISIR check proveden
+- Risk disclaimer v závěru (ZPKT compliance)
+- Čísla z reálných CF (ne plánovaných)
 ```
 
 ### Pro nabídku klientovi
 ```
-- Brand voice konzistentní s brand guidelines
+- Brand voice: přímý, česky, žádné "s pozdravem", podepsáno "Dopita"
 - Max 1-2 emoji, žádné em dashes
 - Konkrétní čísla (ne "výrazně", "značně")
 - CTA: 1 otázka nebo 1 konkrétní akce
-- Banned words: viz rules/company-brand.md
+- Banned: "inovativní", "synergie", "komplexní řešení", "win-win"
 ```
 
 ### Pro cold email subject
 ```
 - max 7 slov
 - žádné CAPS, žádné "FREE/WIN/URGENT"
-- B2B kontext relevantní cílovce
+- B2B kontext (investice, dluhopisy, fundraising)
 - Evokuje otevření, ne spam-like
 - První dojem: profesionální, ne pushy
 ```
 
 ## Troubleshooting
 
-- **`GEMINI_API_KEY not set`** — export z `<YOUR_CREDS_PATH>/gemini.env`
+- **`GEMINI_API_KEY not set`** — export z `/home/claude/.credentials/gemini.env`
 - **`claude CLI exit X`** — Claude CLI timeout nebo auth problém; zkus `generator: "gemini"` jako fallback
-- **Evaluator vrací parse error** — Gemini občas obalí JSON do markdown; stricter prompt pomůže
-- **Iteration 1 FAIL, 2 FAIL, 3 FAIL** — kritéria jsou nerealistická nebo konfliktní; sniž `min_score` na 70 nebo zjednoduš criteria
+- **Evaluator vrací parse error** — Gemini občas obalí JSON do markdown; modul to strip už řeší, ale stricter prompt pomůže
+- **Iteration 1 FAIL, 2 FAIL, 3 FAIL** — kritéria jsou nerealistická nebo konfliktní; sniž `min_score` na 70, nebo zjednoduš criteria
 
 ## Související
 
-- Manuální quality loop (single agent, jednorázový) = předchůdce automatizované `/evalopt` verze
-- Viz také: Anthropic cookbook evaluator-optimizer pattern
+- `/deset` — manual quality loop (single agent), jednorazový; `/evalopt` = automatizovaná multi-agent verze
+- `/dd-emitent` — doporučeno spouštět s evalopt wrapperem pro automatickou compliance kontrolu
+- `/cold-email` — doporučeno spouštět s evalopt pro deliverability guardrail
 
-## Zdroj pattern
+## Zdroj
 
+- Modul: `/opt/conductor/lib/evaluator_optimizer.py` (Flash VPS)
+- Logy: `/opt/conductor/logs/evaluator_optimizer/*.jsonl`
 - Pattern ref: [anthropics/claude-cookbooks — evaluator-optimizer](https://github.com/anthropics/claude-cookbooks/blob/main/patterns/agents/evaluator_optimizer.ipynb)
-- Reference implementace: napiš jako samostatný Python modul (~150 řádků), input přes stdin JSON, output JSON s history
-- Logy: append-only JSONL do `<LOGS_DIR>/evaluator_optimizer/*.jsonl`
 
-Výsledek: konzistentní kvalita automaticky pro kritické outputy bez ruční revize.
+Výsledek: 10/10 kvalita automaticky pro kritické outputy bez ruční aktivace `/deset`.

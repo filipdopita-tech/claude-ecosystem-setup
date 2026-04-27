@@ -1,7 +1,7 @@
 # Prompt Completeness — Nikdy nevynech bod z promptu
 
 ## PRIORITA: Přepisuje "Token Efficiency" a "brevity" při rozporu
-Každý discrete bod [YOUR_NAME] promptu MUSÍ být zpracován. Žádný nesmí být odsunut, vynechán nebo převeden na "plán", pokud pro to [YOUR_NAME] explicitně nedal svolení.
+Každý discrete bod Filipova promptu MUSÍ být zpracován. Žádný nesmí být odsunut, vynechán nebo převeden na "plán", pokud pro to Filip explicitně nedal svolení.
 
 ---
 
@@ -32,7 +32,7 @@ PŘED prvním tool callem:
 
 4. Každý bod: dokončit → completed → další
    - NIKDY nepřeskakovat
-   - NIKDY nezůstavovat "na později" bez explicit [YOUR_NAME] svolení
+   - NIKDY nezůstavovat "na později" bez explicit Filipova svolení
    - Pokud bod narazí na překážku: zůstává in_progress + hlásí blokátor, ne skip
 ```
 
@@ -42,7 +42,7 @@ PŘED prvním tool callem:
 
 | CO DĚLÁM ŠPATNĚ | CO MÁM DĚLAT |
 |---|---|
-| "Bod 2 udělám po schválení" (bez svolení) | Udělej bod 2. [YOUR_NAME] nepotvrzoval, zadal. |
+| "Bod 2 udělám po schválení" (bez svolení) | Udělej bod 2. Filip nepotvrzoval, zadal. |
 | Vytvořím plán místo akce | Plán JE akce jen u destruktivních operací. Jinak = výsledek. |
 | "Bod 3 vyžaduje X, vrátím se k tomu" | Získej X nebo explicit eskaluj jako blokátor — ne tichý skip. |
 | Odpovídám na nejzřetelnější bod, ignoruju zbytek | Projdi VŠECHNY body. Žádná cherry-pick. |
@@ -53,7 +53,7 @@ PŘED prvním tool callem:
 
 ## CLOSE-OUT Checklist (povinný před final response)
 
-PŘED napsáním final response [YOUR_NAME]:
+PŘED napsáním final response Filipovi:
 
 ```
 □ Projít původní prompt znovu (scroll up, ne z paměti)
@@ -71,8 +71,8 @@ Pokud tento checklist neprošel → response JE nesprávná bez ohledu na to, co
 ## Povolené výjimky (jen explicitní, nikdy implicitní)
 
 Bod smím odsunout jen když:
-- [YOUR_NAME] explicitně napíše "bod X odlož / přeskoč / netřeba teď"
-- Bod vyžaduje informaci od [YOUR_NAME], kterou nelze získat autonomně (HARD-STOP per feedback_full_autonomy.md)
+- Filip explicitně napíše "bod X odlož / přeskoč / netřeba teď"
+- Bod vyžaduje informaci od Filipa, kterou nelze získat autonomně (HARD-STOP per feedback_full_autonomy.md)
 - Bod je v červené zóně (platba, odeslání zprávy, nevratná destrukce) a není předschválen
 
 V každém případě: **EXPLICITNÍ hlášení v response**, ne tiché vynechání.
@@ -83,19 +83,19 @@ V každém případě: **EXPLICITNÍ hlášení v response**, ne tiché vynechá
 
 - **reasoning-depth.md**: reasoning quality > brevity. Tady: completeness > brevity. Obě přepisují token efficiency.
 - **quality-standard.md (BtO)**: completeness řešení (udělej celé). Tenhle rule: completeness promptu (nevynech bod).
-- **full-autonomy**: rozhoduj sám BEZ ptaní. Ale: rozhodovat ≠ přeskakovat. Autonomy = dělej víc sám, ne méně z toho, co [YOUR_NAME] řekl.
-- **Surgical Changes** (common/all-rules.md): "dotkni se jen toho, co musíš". Tady: "dotkni se všeho, co [YOUR_NAME] řekl". Žádný konflikt — oba říkají match the ask.
+- **full-autonomy**: rozhoduj sám BEZ ptaní. Ale: rozhodovat ≠ přeskakovat. Autonomy = dělej víc sám, ne méně z toho, co Filip řekl.
+- **Surgical Changes** (common/all-rules.md): "dotkni se jen toho, co musíš". Tady: "dotkni se všeho, co Filip řekl". Žádný konflikt — oba říkají match the ask.
 
 ---
 
 ## Why
 
-[YOUR_NAME] 2026-04-19 explicitně řekl: "vždycky spolu něco řešíme. Já ti dám nějaký úkol, ty to prostě neuděláš, posereš to, nepřečteš si to, neodbavíš to podle mého promptu. A to mě strašně série."
+Filip 2026-04-19 explicitně řekl: "vždycky spolu něco řešíme. Já ti dám nějaký úkol, ty to prostě neuděláš, posereš to, nepřečteš si to, neodbavíš to podle mého promptu. A to mě strašně série."
 
 Konkrétní incident (Social Publisher audit, stejný den):
-- [YOUR_NAME] zadal 4 body: NotebookLM research, Pinterest inspirace, dashboard audit, napojení pokračovat
+- Filip zadal 4 body: NotebookLM research, Pinterest inspirace, dashboard audit, napojení pokračovat
 - Já udělal 1 (audit), 3 tiše odsunul ("po schválení", "jen plán", "čeká na X")
-- [YOUR_NAME] musel prompt opakovat → čas + frustrace + reputace
+- Filip musel prompt opakovat → čas + frustrace + reputace
 
 Pattern se opakoval i dřív — není to izolovaný incident, je to systematické. Tohle pravidlo je hard blocker, ne hint.
 
@@ -108,4 +108,4 @@ Pattern se opakoval i dřív — není to izolovaný incident, je to systematick
 3. **Close-out**: explicit re-read původního promptu + check všech bodů
 4. **Violation log**: pokud detekuju že jsem porušil → zapsat do `memory/completeness-violations.jsonl` + update anti-patterns tabulky výše
 
-Pokud [YOUR_NAME] upozorní na vynechaný bod → update tohoto rule (přidat do anti-patterns tabulky) + memory/feedback_prompt_completeness.md.
+Pokud Filip upozorní na vynechaný bod → update tohoto rule (přidat do anti-patterns tabulky) + memory/feedback_prompt_completeness.md.

@@ -1,5 +1,9 @@
 ---
 description: Polož rychlou otázku bez spotřebování context window — odpověď se nezapamatuje
+allowed-tools:
+  - Edit
+  - Read
+  - Write
 ---
 
 # /btw — Quick Question (Zero Context Cost)

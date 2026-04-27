@@ -3,6 +3,9 @@ name: copyweb
 description: Pixel-perfect klonování webů. Vytvoří nový Next.js projekt z template, extrahuje design tokeny, assety a CSS přes browser MCP, dispatchne paralelní builder agenty v git worktrees. Trigger na "kopíruj web", "naklonuj stránku", "zkopíruj web", "copyweb". Zadej URL(s) jako argumenty.
 argument-hint: "<url1> [<url2> ...]"
 user-invocable: true
+allowed-tools:
+  - Bash
+  - Task
 ---
 
 # CopyWeb — Pixel-Perfect Website Cloner

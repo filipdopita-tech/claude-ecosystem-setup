@@ -1,6 +1,11 @@
 ---
 name: gsd-reapply-patches
 description: "Reapply local modifications after a GSD update"
+allowed-tools:
+  - Bash
+  - Edit
+  - Grep
+  - Read
 ---
 
 

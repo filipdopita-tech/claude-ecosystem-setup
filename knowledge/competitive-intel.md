@@ -1,7 +1,7 @@
 # Competitive Intelligence — CZ Investment Market
 
-## [YOUR_COMPANY] positioning
-[YOUR_COMPANY] operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční advisory (J&T, WOOD). USP:
+## OneFlow positioning
+OneFlow operuje v mezeře mezi retail robo-advisory (Portu, Fondee) a tradiční advisory (J&T, WOOD). USP:
 - **Premium brand** v casual trhu (dark/gold vs friendly/pastel)
 - **Fundraising + investice** na jedné platformě (nikdo jiný to nedělá)
 - **Dluhopisy + equity + poradenství** jako komplex
@@ -10,7 +10,7 @@
 
 ## Hlavní konkurenti (quick reference)
 
-| Konkurent | Co dělá | Slabina | Jak [YOUR_COMPANY] vyhrává |
+| Konkurent | Co dělá | Slabina | Jak OneFlow vyhrává |
 |-----------|---------|---------|---------------------|
 | Portu | Robo-advisory ETF, 300K klientů, 60 mld AUM | Masový retail, žádný fundraising | Premium segment, aktivní poradenství |
 | Fondee | ETF pro začátečníky, 23K klientů, 2.3 mld | Malé, zakladatelé odešli | Komplexní nabídka, stabilita |
@@ -25,7 +25,7 @@
 
 ## Cenový benchmark
 
-| Segment | Rozsah poplatků | [YOUR_COMPANY] příležitost |
+| Segment | Rozsah poplatků | OneFlow příležitost |
 |---------|----------------|---------------------|
 | Robo-advisory | 0.47-1.2% p.a. | Není cílový segment |
 | P2P/P2B investice | 0% investorovi | Poplatky od emitenta/dlužníka |
@@ -35,7 +35,7 @@
 
 ## Messaging diferenciace
 
-### Co říkat ([YOUR_COMPANY] odlišení)
+### Co říkat (OneFlow odlišení)
 - "Investice i fundraising pod jednou střechou"
 - "Pro zkušené investory, kteří chtějí víc než ETF"
 - "Transparentní track record, žádné skryté poplatky"
@@ -73,4 +73,4 @@
 | Ronda Invest | N/A (není veřejné) |
 | Dluhopisy.cz | Inzertní portál (neregulovaný) |
 
-**Klíčové:** ECSP regulace EU je game-changer. Platformy bez ČNB licence budou ztrácet důvěru. [YOUR_COMPANY] by měl mít plnou licenci jako konkurenční výhodu.
+**Klíčové:** ECSP regulace EU je game-changer. Platformy bez ČNB licence budou ztrácet důvěru. OneFlow by měl mít plnou licenci jako konkurenční výhodu.

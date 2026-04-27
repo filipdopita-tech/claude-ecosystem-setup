@@ -1,6 +1,10 @@
 ---
 name: brainstorming
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+allowed-tools:
+  - Read
+  - Task
+  - Write
 ---
 
 # Brainstorming Ideas Into Designs

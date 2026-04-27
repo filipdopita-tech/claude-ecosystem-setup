@@ -4,8 +4,8 @@
 # 2. Appends final usage snapshot to metrics/usage.jsonl
 # 3. Sends ntfy summary with usage stats
 
-NTFY_URL="https://ntfy.[your-company].com/[YOUR_NAME]"
-NTFY_TOKEN="tk_ahfvizbkyyj78turo1rmevsthimek"
+NTFY_URL="${NTFY_URL:-https://ntfy.example.com/your-topic}"
+NTFY_TOKEN="${NTFY_TOKEN:-}"
 USAGE_LOG="$HOME/.claude/metrics/usage.jsonl"
 
 # --- Usage stats from today's log ---

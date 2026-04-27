@@ -7,12 +7,12 @@ Každý nový UI/design task běží v **2 fázích**:
 ```
 Fáze 1: Google Stitch (exploration)
   → 3-5 design variant rychle
-  → [YOUR_NAME] vybere směr (layout, hierarchie, proportions)
+  → Filip vybere směr (layout, hierarchie, proportions)
   → Output: vizuální reference (screenshot, Figma export)
 
 Fáze 2: Claude Artifacts (production)
   → Vezmi Stitch reference jako vstup
-  → Aplikuj [YOUR_COMPANY] brand (mono palette, Inter Tight, surfaces)
+  → Aplikuj OneFlow brand (mono palette, Inter Tight, surfaces)
   → Iteruj v live preview na finální production code
   → Output: React + Tailwind + shadcn ready to ship
 ```
@@ -21,7 +21,7 @@ Fáze 2: Claude Artifacts (production)
 
 | Task | Pattern |
 |---|---|
-| Landing page (example.com, ASR, lead-magnet) | Stitch → Claude |
+| Landing page (oneflow.cz, ASR, lead-magnet) | Stitch → Claude |
 | Dashboard / admin UI (terminal, social-publisher) | Stitch → Claude |
 | Klientská nabídka HTML/PDF | Stitch → Claude |
 | Email template (transactional, marketing) | Stitch → Claude |
@@ -38,18 +38,18 @@ Fáze 2: Claude Artifacts (production)
 5. Export: screenshot nebo Figma link
 
 **Co Stitch dělá dobře:** Material/iOS look, layout exploration, rychlé varianty, hierarchie.
-**Co Stitch nedělá:** [YOUR_COMPANY] brand, monochrome, Inter Tight, custom motion.
+**Co Stitch nedělá:** OneFlow brand, monochrome, Inter Tight, custom motion.
 
 ## Claude fáze — jak na to
 
 1. Vlož Stitch screenshot/reference + brand context:
    ```
    Tady je Stitch reference [obrázek/popis].
-   Přepiš do [YOUR_COMPANY] brand:
+   Přepiš do OneFlow brand:
    - Dark surface #0A0A0C, Light #F2F0ED
    - Inter Tight only
    - Monochrome (žádné barvy, žádné zlato)
-   - Brand manuál: ~/docs/[your_company]-brand-manual-2026.md
+   - Brand manuál: ~/docs/oneflow-brand-manual-2026.md
    - Stack: React + Tailwind + shadcn
    ```
 2. Iteruj v Artifacts live preview (real-time edits)
@@ -72,12 +72,12 @@ Pokud chceš rozšířit design pipeline, dostupné community skills (žádné l
 - **Design Motion Principles** (kylezantos, audit motion proti Linear/Stripe/Vercel) — install: `npx skills add kylezantos/design-motion-principles`
 - **Frontend Design** (Anthropic plugin, enforces design thinking before coding) — `/plugin` → enable "frontend-design"
 
-Pozor: **UI/UX Pro Max** (50+ stylů, 161 palettes) je SKIP pro [YOUR_COMPANY] brand projekty (off-brand risk), EVAL jen pro klientské projekty mimo brand.
+Pozor: **UI/UX Pro Max** (50+ stylů, 161 palettes) je SKIP pro OneFlow brand projekty (off-brand risk), EVAL jen pro klientské projekty mimo brand.
 
 ## Reference
 
-- Brand manuál: `~/docs/[your_company]-brand-manual-2026.md`
+- Brand manuál: `~/docs/oneflow-brand-manual-2026.md`
 - Design expertise: `~/.claude/expertise/design-visual.yaml`
 - Frontend stack: `~/.claude/expertise/frontend-ui.yaml`
-- Brand DNA: `~/Documents/[your_company]-claude-project/`
+- Brand DNA: `~/Documents/oneflow-claude-project/`
 - External community skills: `~/.claude/knowledge/tenfold-marketing-resources.md`

@@ -1,6 +1,10 @@
 ---
 name: subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
+allowed-tools:
+  - Bash
+  - Read
+  - Task
 ---
 
 # Subagent-Driven Development
