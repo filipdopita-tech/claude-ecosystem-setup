@@ -1,0 +1,141 @@
+name: Claude Cost Cap
+description: >
+  Composite action that enforces a hard cost ceiling before and after any Claude
+  invocation. Reads the MAX_COST_USD environment variable (or the max-cost-usd
+  input). Fails the step if the estimated pre-run token budget or post-run
+  actual cost would exceed the cap. Use this to wrap ad-hoc Claude calls that
+  do not go through the run-claude composite action.
+
+inputs:
+  max-cost-usd:
+    description: >
+      Maximum allowed cost in USD for this Claude invocation.
+      Overrides MAX_COST_USD env var if set.
+    required: false
+    default: ''
+  estimated-input-tokens:
+    description: 'Estimated input tokens for pre-flight check. 0 = skip pre-flight.'
+    required: false
+    default: '0'
+  estimated-output-tokens:
+    description: 'Estimated output tokens for pre-flight check. 0 = skip pre-flight.'
+    required: false
+    default: '0'
+  model:
+    description: 'Model being used — needed for cost estimation.'
+    required: false
+    default: 'claude-sonnet-4-5'
+  actual-cost-usd:
+    description: >
+      Actual cost from a completed Claude run (post-flight check).
+      Pass the cost_usd output from run-claude here.
+    required: false
+    default: ''
+  mode:
+    description: 'preflight | postflight | both — which check(s) to run.'
+    required: false
+    default: 'both'
+
+outputs:
+  cap-usd:
+    description: 'The effective cost cap that was enforced.'
+    value: ${{ steps.resolve-cap.outputs.cap_usd }}
+  estimated-cost-usd:
+    description: 'Pre-flight estimated cost in USD.'
+    value: ${{ steps.preflight.outputs.estimated_cost }}
+  within-cap:
+    description: 'true if all checks passed, false if any check would have failed (only meaningful when action does not exit).'
+    value: ${{ steps.postflight.outputs.within_cap }}
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve effective cost cap
+      id: resolve-cap
+      shell: bash
+      run: |
+        # Priority: input > MAX_COST_USD env > hard default 2.00
+        CAP="${{ inputs.max-cost-usd }}"
+        if [ -z "$CAP" ]; then
+          CAP="${MAX_COST_USD:-2.00}"
+        fi
+        if [ -z "$CAP" ] || [ "$CAP" = "0" ]; then
+          echo "ERROR: No cost cap configured. Set max-cost-usd input or MAX_COST_USD env."
+          exit 1
+        fi
+        echo "cap_usd=${CAP}" >> "$GITHUB_OUTPUT"
+        echo "Effective cost cap: \$${CAP}"
+
+    - name: Pre-flight cost estimate
+      id: preflight
+      if: >
+        inputs.mode == 'preflight' || inputs.mode == 'both'
+      shell: bash
+      run: |
+        INPUT_TOKENS="${{ inputs.estimated-input-tokens }}"
+        OUTPUT_TOKENS="${{ inputs.estimated-output-tokens }}"
+        MODEL="${{ inputs.model }}"
+        CAP="${{ steps.resolve-cap.outputs.cap_usd }}"
+
+        if [ "$INPUT_TOKENS" = "0" ] && [ "$OUTPUT_TOKENS" = "0" ]; then
+          echo "Pre-flight check skipped (no token estimates provided)."
+          echo "estimated_cost=0" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        # Pricing per million tokens (approximate, as of mid-2025)
+        # Sonnet: $3 input / $15 output
+        # Haiku:  $0.25 input / $1.25 output
+        case "$MODEL" in
+          *haiku*)  INPUT_RATE=0.00000025; OUTPUT_RATE=0.00000125 ;;
+          *opus*)
+            echo "ERROR: opus is prohibited in CI."
+            exit 1
+            ;;
+          *)        INPUT_RATE=0.000003; OUTPUT_RATE=0.000015 ;;
+        esac
+
+        ESTIMATED=$(echo "$INPUT_TOKENS $INPUT_RATE $OUTPUT_TOKENS $OUTPUT_RATE" \
+          | awk '{printf "%.4f", $1*$2 + $3*$4}')
+
+        echo "estimated_cost=${ESTIMATED}" >> "$GITHUB_OUTPUT"
+        echo "Pre-flight estimate: \$${ESTIMATED} (cap: \$${CAP})"
+
+        EXCEEDED=$(echo "$ESTIMATED $CAP" | awk '{print ($1 > $2) ? "yes" : "no"}')
+        if [ "$EXCEEDED" = "yes" ]; then
+          echo "ERROR: Estimated cost \$${ESTIMATED} exceeds cap \$${CAP}. Aborting."
+          exit 1
+        fi
+
+    - name: Post-flight actual cost check
+      id: postflight
+      if: >
+        (inputs.mode == 'postflight' || inputs.mode == 'both') &&
+        inputs.actual-cost-usd != ''
+      shell: bash
+      run: |
+        ACTUAL="${{ inputs.actual-cost-usd }}"
+        CAP="${{ steps.resolve-cap.outputs.cap_usd }}"
+
+        echo "Post-flight: actual cost \$${ACTUAL}, cap \$${CAP}"
+
+        EXCEEDED=$(echo "$ACTUAL $CAP" | awk '{print ($1 > $2) ? "yes" : "no"}')
+        if [ "$EXCEEDED" = "yes" ]; then
+          echo "within_cap=false" >> "$GITHUB_OUTPUT"
+          echo "ERROR: Actual cost \$${ACTUAL} exceeded cap \$${CAP}."
+          exit 1
+        fi
+
+        echo "within_cap=true" >> "$GITHUB_OUTPUT"
+        echo "Cost check passed: \$${ACTUAL} <= \$${CAP}"
+
+    - name: Annotate cost cap to summary
+      shell: bash
+      run: |
+        echo "### Cost Cap Check" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+        echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Cap | \$${{ steps.resolve-cap.outputs.cap_usd }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Estimated | \$${{ steps.preflight.outputs.estimated_cost || 'n/a' }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Actual | \$${{ inputs.actual-cost-usd || 'n/a' }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Mode | ${{ inputs.mode }} |" >> "$GITHUB_STEP_SUMMARY"

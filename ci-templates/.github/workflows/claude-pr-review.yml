@@ -1,0 +1,151 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  FAIL_ON_HIGH: ${{ vars.CLAUDE_REVIEW_FAIL_ON_HIGH || 'true' }}
+  MODEL: ${{ vars.CLAUDE_REVIEW_MODEL || 'claude-sonnet-4-5' }}
+  MAX_TURNS: '5'
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    # Skip draft PRs unless label "claude-review" is present
+    if: >
+      !github.event.pull_request.draft ||
+      contains(github.event.pull_request.labels.*.name, 'claude-review')
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Generate PR diff
+        id: diff
+        run: |
+          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD \
+            --unified=5 \
+            -- ':!*.lock' ':!*.sum' ':!dist/' ':!build/' \
+            > /tmp/pr.diff
+          LINES=$(wc -l < /tmp/pr.diff)
+          echo "diff_lines=${LINES}" >> "$GITHUB_OUTPUT"
+          # Truncate very large diffs to avoid runaway token costs
+          if [ "$LINES" -gt 4000 ]; then
+            head -n 4000 /tmp/pr.diff > /tmp/pr_truncated.diff
+            echo "# DIFF TRUNCATED AT 4000 LINES" >> /tmp/pr_truncated.diff
+            mv /tmp/pr_truncated.diff /tmp/pr.diff
+          fi
+
+      - name: Run Claude review
+        id: claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          PROMPT='Review the following PR diff. Identify: bugs (logic errors, null dereferences, off-by-one), security issues (injection, hardcoded secrets, insecure defaults, auth bypass), performance regressions (N+1 queries, unbounded loops, missing indexes), and missing or inadequate tests. For security findings, apply a red-team perspective as if you are a security-redteam agent. Return ONLY a JSON object with this exact schema, no prose outside the JSON:
+          {
+            "summary": "one sentence",
+            "findings": [
+              {
+                "severity": "HIGH|MEDIUM|LOW|INFO",
+                "category": "bug|security|performance|tests|style",
+                "file": "path/to/file.ext",
+                "line": 42,
+                "title": "short title",
+                "detail": "explanation and suggested fix"
+              }
+            ],
+            "overall_grade": "PASS|WARN|FAIL",
+            "high_count": 0,
+            "medium_count": 0
+          }'
+
+          claude -p \
+            --output-format json \
+            --model "$MODEL" \
+            --max-turns "$MAX_TURNS" \
+            "$PROMPT" \
+            < /tmp/pr.diff \
+            > /tmp/claude_raw.json 2>/tmp/claude_err.txt || {
+              echo "Claude CLI error:"
+              cat /tmp/claude_err.txt
+              exit 1
+            }
+
+          # Extract the result field from the Claude SDK JSON envelope
+          jq -r '.result // .' /tmp/claude_raw.json > /tmp/review.json
+
+          HIGH=$(jq -r '.high_count // 0' /tmp/review.json)
+          GRADE=$(jq -r '.overall_grade // "WARN"' /tmp/review.json)
+
+          echo "high_count=${HIGH}" >> "$GITHUB_OUTPUT"
+          echo "grade=${GRADE}" >> "$GITHUB_OUTPUT"
+
+      - name: Format and post PR review comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REVIEW_FILE=/tmp/review.json
+          SUMMARY=$(jq -r '.summary // "No summary."' "$REVIEW_FILE")
+          GRADE=$(jq -r '.overall_grade // "WARN"' "$REVIEW_FILE")
+          HIGH=$(jq -r '.high_count // 0' "$REVIEW_FILE")
+          MED=$(jq -r '.medium_count // 0' "$REVIEW_FILE")
+
+          case "$GRADE" in
+            PASS) GRADE_ICON="[PASS]" ;;
+            WARN) GRADE_ICON="[WARN]" ;;
+            FAIL) GRADE_ICON="[FAIL]" ;;
+            *)    GRADE_ICON="[?]" ;;
+          esac
+
+          {
+            echo "## Claude Code Review ${GRADE_ICON}"
+            echo ""
+            echo "**Summary:** ${SUMMARY}"
+            echo ""
+            echo "| Severity | Count |"
+            echo "|----------|-------|"
+            echo "| HIGH | ${HIGH} |"
+            echo "| MEDIUM | ${MED} |"
+            echo ""
+
+            FINDING_COUNT=$(jq '.findings | length' "$REVIEW_FILE")
+            if [ "$FINDING_COUNT" -gt 0 ]; then
+              echo "### Findings"
+              echo ""
+              jq -r '.findings[] | "**[\(.severity)] \(.category | ascii_upcase) — \(.title)**\n- File: `\(.file)` line \(.line)\n- \(.detail)\n"' "$REVIEW_FILE"
+            else
+              echo "_No findings._"
+            fi
+
+            echo ""
+            echo "<sub>Model: ${MODEL} | Max turns: ${MAX_TURNS} | [Claude Code SDK](https://docs.claude.com/en/docs/claude-code/sdk)</sub>"
+          } > /tmp/comment.md
+
+          gh pr review "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --comment \
+            --body-file /tmp/comment.md
+
+      - name: Fail if HIGH severity issues found
+        if: env.FAIL_ON_HIGH == 'true'
+        run: |
+          HIGH="${{ steps.claude.outputs.high_count }}"
+          if [ "${HIGH}" -gt 0 ]; then
+            echo "ERROR: ${HIGH} HIGH-severity finding(s) detected. Failing check."
+            exit 1
+          fi

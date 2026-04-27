@@ -1,0 +1,150 @@
+name: Run Claude (headless)
+description: >
+  Composite action that runs Claude Code CLI in headless mode (`claude -p`)
+  with cost controls, timeout enforcement, and structured JSON output.
+  Reusable across all Claude Code CI workflows.
+
+inputs:
+  prompt:
+    description: 'The prompt to pass to Claude. For large inputs, use stdin via the wrapper script instead.'
+    required: true
+  model:
+    description: 'Claude model to use. Prefer haiku for triage, sonnet for review. Never use opus in CI.'
+    required: false
+    default: 'claude-sonnet-4-5'
+  output-format:
+    description: 'Output format: json or text'
+    required: false
+    default: 'json'
+  max-turns:
+    description: 'Maximum agentic turns. Keep low to bound cost.'
+    required: false
+    default: '5'
+  tools:
+    description: 'Comma-separated allowlist of tools Claude may use. Empty = default tools only.'
+    required: false
+    default: ''
+  stdin-file:
+    description: 'Path to a file whose contents will be piped to Claude as stdin.'
+    required: false
+    default: ''
+  timeout-minutes:
+    description: 'Hard timeout in minutes before the step is killed.'
+    required: false
+    default: '10'
+  max-cost-usd:
+    description: 'Soft cost ceiling in USD. Action fails if estimated cost exceeds this.'
+    required: false
+    default: '2.00'
+
+outputs:
+  result:
+    description: 'The result string extracted from the Claude JSON envelope.'
+    value: ${{ steps.extract.outputs.result }}
+  cost-usd:
+    description: 'Estimated cost in USD reported by the Claude SDK.'
+    value: ${{ steps.extract.outputs.cost_usd }}
+  tool-calls:
+    description: 'Number of tool calls made during the run.'
+    value: ${{ steps.extract.outputs.tool_calls }}
+  raw-json:
+    description: 'Full raw JSON output file path for downstream parsing.'
+    value: ${{ steps.run.outputs.raw_json_path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate inputs
+      shell: bash
+      run: |
+        MODEL="${{ inputs.model }}"
+        if echo "$MODEL" | grep -qi 'opus'; then
+          echo "ERROR: opus model is prohibited in CI to control costs. Use sonnet or haiku."
+          exit 1
+        fi
+
+        MAX_COST="${{ inputs.max-cost-usd }}"
+        if [ -z "$MAX_COST" ] || [ "$MAX_COST" = "0" ]; then
+          echo "ERROR: max-cost-usd must be set to a positive value."
+          exit 1
+        fi
+
+    - name: Install Claude Code CLI (if not present)
+      shell: bash
+      run: |
+        if ! command -v claude &>/dev/null; then
+          npm install -g @anthropic-ai/claude-code@latest
+        fi
+
+    - name: Run Claude
+      id: run
+      shell: bash
+      timeout-minutes: ${{ fromJSON(inputs.timeout-minutes) }}
+      env:
+        ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
+      run: |
+        RAW_JSON="/tmp/claude_run_${{ github.run_number }}_$(date +%s).json"
+        echo "raw_json_path=${RAW_JSON}" >> "$GITHUB_OUTPUT"
+
+        # Build tool flag
+        TOOL_FLAG=""
+        if [ -n "${{ inputs.tools }}" ]; then
+          TOOL_FLAG="--allowedTools ${{ inputs.tools }}"
+        fi
+
+        CLAUDE_CMD="claude -p \
+          --output-format ${{ inputs.output-format }} \
+          --model ${{ inputs.model }} \
+          --max-turns ${{ inputs.max-turns }} \
+          ${TOOL_FLAG}"
+
+        if [ -n "${{ inputs.stdin-file }}" ] && [ -f "${{ inputs.stdin-file }}" ]; then
+          $CLAUDE_CMD "${{ inputs.prompt }}" < "${{ inputs.stdin-file }}" > "$RAW_JSON" 2>/tmp/claude_run_err.txt
+        else
+          echo "${{ inputs.prompt }}" | $CLAUDE_CMD > "$RAW_JSON" 2>/tmp/claude_run_err.txt
+        fi
+
+        EXIT_CODE=$?
+        if [ $EXIT_CODE -ne 0 ]; then
+          echo "Claude CLI exited with code ${EXIT_CODE}:"
+          cat /tmp/claude_run_err.txt
+          exit $EXIT_CODE
+        fi
+
+    - name: Extract outputs and check cost
+      id: extract
+      shell: bash
+      run: |
+        RAW_JSON="${{ steps.run.outputs.raw_json_path }}"
+
+        RESULT=$(jq -r '.result // ""' "$RAW_JSON" 2>/dev/null || echo "")
+        COST=$(jq -r '.cost_usd // .costUsd // 0' "$RAW_JSON" 2>/dev/null || echo "0")
+        TOOL_CALLS=$(jq -r '.tool_calls // .toolCalls // [] | length' "$RAW_JSON" 2>/dev/null || echo "0")
+
+        echo "result<<CLAUDE_EOF" >> "$GITHUB_OUTPUT"
+        echo "$RESULT" >> "$GITHUB_OUTPUT"
+        echo "CLAUDE_EOF" >> "$GITHUB_OUTPUT"
+        echo "cost_usd=${COST}" >> "$GITHUB_OUTPUT"
+        echo "tool_calls=${TOOL_CALLS}" >> "$GITHUB_OUTPUT"
+
+        echo "Claude run complete | Cost: \$${COST} | Tool calls: ${TOOL_CALLS}"
+
+        # Enforce cost ceiling
+        MAX="${{ inputs.max-cost-usd }}"
+        EXCEEDED=$(echo "$COST $MAX" | awk '{print ($1 > $2) ? "yes" : "no"}')
+        if [ "$EXCEEDED" = "yes" ]; then
+          echo "ERROR: Estimated cost \$${COST} exceeds ceiling \$${MAX}. Failing step."
+          exit 1
+        fi
+
+    - name: Annotate cost to job summary
+      shell: bash
+      run: |
+        echo "### Claude Run Summary" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+        echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Model | \`${{ inputs.model }}\` |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Max turns | ${{ inputs.max-turns }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Cost (USD) | \$${{ steps.extract.outputs.cost_usd }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Tool calls | ${{ steps.extract.outputs.tool_calls }} |" >> "$GITHUB_STEP_SUMMARY"
+        echo "| Cost ceiling | \$${{ inputs.max-cost-usd }} |" >> "$GITHUB_STEP_SUMMARY"

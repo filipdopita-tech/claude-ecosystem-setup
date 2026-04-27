@@ -1,0 +1,187 @@
+{
+  "name": "filipdopita-oneflow-claude-ecosystem",
+  "version": "1.0.0",
+  "description": "Filip Dopita's production Claude Code ecosystem: 299 skills, 270 lived memory entries, OneFlow business operations (CZ regulatory, fundraising, cold email, content), VPS-first architecture, cost-zero-tolerance, EVAL infrastructure (post-Lukáš cherry-pick 2026-04-27).",
+  "author": "Filip Dopita <filipdopit@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/filipdopita-tech",
+  "keywords": [
+    "oneflow",
+    "claude-code",
+    "cz-regulatory",
+    "investment-dd",
+    "fundraising",
+    "cold-email",
+    "ig-content",
+    "vps-first",
+    "cost-discipline",
+    "eval-infrastructure",
+    "multi-agent",
+    "peer-protocol"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filipdopita-tech/claude-ecosystem-setup.git"
+  },
+  "settings": {
+    "model-default": "claude-sonnet-4-6",
+    "model-research": "claude-haiku-4-5-20251001",
+    "model-judgment": "claude-opus-4-7",
+    "model-large-context": "claude-opus-4-7[1m]",
+    "judge-default": "haiku",
+    "primary-language": "cs",
+    "thinking-tokens-max": 63999,
+    "effort-level": "max"
+  },
+  "stack-focus": [
+    "oneflow-business-ops",
+    "cz-fundraising-investment-dd",
+    "cold-email-deliverability",
+    "ig-content-creation",
+    "vps-mac-hybrid-architecture",
+    "cost-zero-tolerance",
+    "lived-memory-pattern"
+  ],
+  "categories": {
+    "skills": {
+      "count": 299,
+      "top-by-usage": [
+        "ig-content-creator",
+        "dd-emitent",
+        "cold-email",
+        "oneflow-diagnose",
+        "deep-post-ideas",
+        "mythos",
+        "leadgen",
+        "deploy-service",
+        "instagram-analyzer",
+        "competitor-intel"
+      ]
+    },
+    "commands": {
+      "count": 188,
+      "namespaces": ["filip", "from-lukas", "swarm", "viral", "ui", "gws", "gsd"]
+    },
+    "rules": {
+      "count": 23,
+      "core": [
+        "cost-zero-tolerance",
+        "prompt-completeness",
+        "filip-autopilot",
+        "fb-scrape-safety",
+        "design-workflow",
+        "knowledge-router",
+        "workflow-routing"
+      ]
+    },
+    "hooks": {
+      "wired-in-settings": 11,
+      "passive-available": 47,
+      "categories": ["safety-guards", "cost-monitoring", "prompt-completeness", "auto-routing"]
+    },
+    "expertise": {
+      "count": 16,
+      "domains": [
+        "czech-regulatory",
+        "email-deliverability",
+        "investor-outreach",
+        "design-visual",
+        "frontend-ui",
+        "cold-email-science",
+        "claude-code-cost-ops",
+        "content-creation",
+        "data-enrichment",
+        "knowledge-graph-ops",
+        "linkedin-automation",
+        "code-patterns",
+        "prompt-engineering",
+        "vps-infra",
+        "crm-ghl",
+        "oneflow-brand"
+      ]
+    },
+    "agents": {
+      "count": 55,
+      "plus-teams": 22,
+      "key-agents": [
+        "ai-citation-strategist",
+        "content-creator",
+        "outbound-strategist",
+        "growth-hacker",
+        "trend-researcher",
+        "orchestrator",
+        "gsd-planner",
+        "gsd-executor"
+      ]
+    },
+    "memory": {
+      "lived-entries": 270,
+      "templates-from-lukas": 9,
+      "type-distribution": "feedback (rules), project (active work), reference (external systems), user (profile)"
+    },
+    "mcps": {
+      "configured": 10,
+      "core": ["github", "openspace", "memory-search", "context7", "obsidian", "filesystem", "playwright", "notebooklm", "stitch", "code-review-graph"]
+    },
+    "evals": {
+      "infrastructure": "imported-from-lukas",
+      "datasets": 5,
+      "judge-model": "claude-haiku-4-5",
+      "regression-threshold": 1.0
+    },
+    "experiments": {
+      "infrastructure": "imported-from-lukas",
+      "stat-tests": ["sign-test", "cliffs-delta", "p<0.05"]
+    }
+  },
+  "differentiators": {
+    "vs-lukas": [
+      "18× more skills (299 vs 16)",
+      "270 lived memory vs 9 templates",
+      "CZ-specific regulatory expertise (CNB/ECSP/AML/GDPR)",
+      "Real production infrastructure (VPS Flash + Mac SSHFS)",
+      "Cost-zero-tolerance with hard guards (post 2× incident)",
+      "Mythos epistemic framework, slime-mold ecosystem optimization",
+      "OneFlow business operations integration (Conductor, Paseo, GHL, lead-ops)"
+    ],
+    "shared-with-lukas": [
+      "EVAL infrastructure (datasets/baselines/scorers/runner)",
+      "EXPERIMENT runner (A/B + statistical tests)",
+      "Output styles (terse/silent/research/teaching/status-footer)",
+      "Memory + doc templates",
+      "CI workflows for Claude Code in headless mode",
+      "Routines (yaml-driven auto-execute)",
+      "Plugin packaging structure"
+    ]
+  },
+  "peer-table": [
+    {
+      "peer": "Lukáš Dlouhý",
+      "github": "https://github.com/Aldocooek/lukasdlouhy-claude-ecosystem",
+      "stack": "video/animation, marketing/CRO, cost-aware",
+      "maturity": "75/100 (per Lukáš own benchmark)",
+      "notable": ["EVAL infra", "EXPERIMENT runner", "CI workflows", "Output styles", "Cost circuit breaker"],
+      "shared-from-filip": ["peer protocol template", "skill registry pattern"],
+      "added": "2026-04-26 (cherry-picked back 2026-04-27)"
+    }
+  ],
+  "requiresSetup": false,
+  "setupInstructions": "This manifest is declarative — describes the existing ~/.claude/ ecosystem. To distribute: bash ~/.claude/scripts/from-lukas/sanitize.sh first to remove credentials.",
+  "category": "production-business-ops",
+  "tags": [
+    "production",
+    "lived-in",
+    "cost-disciplined",
+    "multi-agent",
+    "cz-business",
+    "oneflow",
+    "peer-protocol-producer-and-consumer"
+  ],
+  "version-history": {
+    "1.0.0": {
+      "date": "2026-04-27",
+      "summary": "Initial plugin manifest. Post-Lukáš cherry-pick: 6 components WAVE-1 (output-styles, memory/doc templates, EVAL infra, CI workflows, routines) + WAVE-2 (98 files: 16 hooks, 22 commands, 22 agents, 13 docs, 9 rules, 7 scripts, 5 experiments, 1 audit, plugin packaging).",
+      "score-vs-lukas-benchmark": 100
+    }
+  }
+}

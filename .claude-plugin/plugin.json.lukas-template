@@ -1,0 +1,80 @@
+{
+  "name": "lukasdlouhy-video-marketing-pack",
+  "version": "1.0.0",
+  "description": "Production-grade video marketing & animation ecosystem: HyperFrames HTML-to-video, GSAP timeline automation, CRO funnels, cost-disciplined multi-agent patterns, and hierarchical Claude routing.",
+  "author": "Lukáš Dlouhý",
+  "license": "MIT",
+  "homepage": "https://github.com/lukasdlouhy/claude-ecosystem-setup",
+  "keywords": [
+    "video",
+    "marketing",
+    "hyperframes",
+    "gsap",
+    "animation",
+    "cro",
+    "cost-discipline",
+    "multi-agent",
+    "claude-code"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukasdlouhy/claude-ecosystem-setup.git"
+  },
+  "skills": [
+    "hyperframes-cli",
+    "gsap-timeline-master",
+    "gsap-easing-builder",
+    "gsap-morphing",
+    "landing-page-audit",
+    "funnel-optimizer",
+    "copywriting-guardrails",
+    "cost-calculator",
+    "model-router",
+    "vector-memory-builder"
+  ],
+  "agents": [
+    "researcher-haiku-delegate",
+    "synthesizer-sonnet",
+    "video-reviewer",
+    "cro-strategist",
+    "cost-auditor"
+  ],
+  "commands": [
+    "swarm",
+    "video-brief",
+    "audit-funnel",
+    "cost-report",
+    "skill-catalog"
+  ],
+  "hooks": [
+    "pre-push-leak-scan",
+    "cost-alert-on-token-spike",
+    "skill-eval-weekly",
+    "memory-cleanup-monthly"
+  ],
+  "rules": [
+    "cost-discipline",
+    "model-routing-guard",
+    "security-pipeline",
+    "skill-eval-framework"
+  ],
+  "mcp": [
+    "custom-vector-store"
+  ],
+  "settings": {
+    "model-default": "claude-opus-4-1",
+    "model-research": "claude-haiku-4-5-20251001",
+    "model-synthesis": "claude-sonnet-4-1",
+    "token-budget-daily": "500000",
+    "cost-alert-threshold": "50"
+  },
+  "requiresSetup": true,
+  "setupInstructions": "See docs/PLUGIN_PUBLISHING.md. Run install.sh with --dry-run first.",
+  "category": "video-marketing",
+  "tags": [
+    "production",
+    "cost-optimized",
+    "multi-agent",
+    "telemetry"
+  ]
+}

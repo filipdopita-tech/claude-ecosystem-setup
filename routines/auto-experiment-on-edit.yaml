@@ -1,0 +1,130 @@
+# auto-experiment-on-edit.yaml
+# Automated regression detection: when a skill SKILL.md is edited, snapshot
+# the pre-edit version, soak for 24h, then run an A/B experiment and post
+# results as a summary to the ecosystem log.
+#
+# Trigger: manual invocation or CI webhook after a skill file changes.
+# The routine expects two env vars injected at trigger time:
+#   SKILL_NAME      — e.g. copy-strategist
+#   CONTROL_REF     — git SHA of the pre-edit commit (captured before the edit lands)
+
+name: auto-experiment-on-edit
+description: >
+  Automated A/B experiment runner triggered after a skill prompt edit.
+  Compares the pre-edit version (control) against the post-edit version (variant)
+  on the skill's eval dataset. Posts results to the ecosystem experiment log.
+  Acts as an automated regression detection layer.
+
+schedule: null  # Event-driven, not cron. Invoked by CI or post-commit hook.
+
+soak_hours: 24
+# Wait 24h before running the experiment. This allows any prompt-cache warming
+# or model-behavior drift to stabilize before measurement. Set to 0 to run immediately.
+
+parameters:
+  skill_name:
+    description: Name of the skill that was edited (e.g. copy-strategist)
+    required: true
+    env: SKILL_NAME
+
+  control_ref:
+    description: Git SHA of the pre-edit commit for the skill file
+    required: true
+    env: CONTROL_REF
+
+  n_cases:
+    description: Number of eval cases to sample per arm
+    default: 12
+
+  judge_model:
+    description: Judge model for scoring
+    default: haiku
+    allowed: [haiku, sonnet]
+
+  significance:
+    description: p-value threshold for declaring winner/loser
+    default: 0.05
+
+  dataset_override:
+    description: >
+      Optional path to a custom dataset. If omitted, uses
+      evals/datasets/<skill_name>.jsonl
+    required: false
+
+steps:
+
+  - id: validate
+    description: Confirm skill file and dataset exist
+    run: |
+      REPO="$HOME/Desktop/lukasdlouhy-claude-ecosystem"
+      SKILL_FILE="$REPO/skills/${SKILL_NAME}/SKILL.md"
+      if [[ ! -f "$SKILL_FILE" ]]; then
+        echo "ERROR: Skill file not found: $SKILL_FILE" >&2
+        exit 1
+      fi
+      DATASET="${DATASET_OVERRIDE:-$REPO/evals/datasets/${SKILL_NAME}.jsonl}"
+      if [[ ! -f "$DATASET" ]]; then
+        echo "WARNING: No dataset found at $DATASET — skipping auto-experiment" >&2
+        exit 0
+      fi
+      echo "SKILL_FILE=$SKILL_FILE" >> "$GITHUB_ENV" 2>/dev/null || true
+      echo "DATASET=$DATASET"       >> "$GITHUB_ENV" 2>/dev/null || true
+      echo "Validated: $SKILL_FILE and $DATASET"
+
+  - id: soak
+    description: Wait for soak period before measuring
+    run: |
+      SOAK_SECS=$(( ${SOAK_HOURS:-24} * 3600 ))
+      if [[ "$SOAK_SECS" -gt 0 ]]; then
+        echo "Soaking for ${SOAK_HOURS:-24}h before experiment..."
+        sleep "$SOAK_SECS"
+      fi
+
+  - id: run-experiment
+    description: Run A/B experiment comparing control ref vs current HEAD
+    run: |
+      REPO="$HOME/Desktop/lukasdlouhy-claude-ecosystem"
+      DATASET="${DATASET_OVERRIDE:-$REPO/evals/datasets/${SKILL_NAME}.jsonl}"
+      "$REPO/experiments/runner/run-experiment.sh" \
+        --skill        "${SKILL_NAME}" \
+        --control-version "${CONTROL_REF}" \
+        --variant-version current \
+        --dataset      "$DATASET" \
+        --n            "${N_CASES:-12}" \
+        --judge        "${JUDGE_MODEL:-haiku}" \
+        --significance "${SIGNIFICANCE:-0.05}"
+      echo "EXIT_CODE=$?" >> "$GITHUB_ENV" 2>/dev/null || true
+
+  - id: post-results
+    description: Append experiment verdict to ecosystem log and optionally comment on PR
+    run: |
+      REPO="$HOME/Desktop/lukasdlouhy-claude-ecosystem"
+      LOG="$HOME/.claude/logs/experiments.log"
+      LATEST_RUN=$(ls -t "$REPO/experiments/runs/"*.json 2>/dev/null | head -1)
+      if [[ -z "$LATEST_RUN" ]]; then
+        echo "No run file found; cannot post results" >&2
+        exit 0
+      fi
+      VERDICT=$(jq -r '.verdict'          "$LATEST_RUN")
+      P_SIGN=$(jq -r  '.statistics.p_sign_test // "n/a"' "$LATEST_RUN")
+      DELTA=$(jq -r   '.statistics.mean_delta  // "n/a"' "$LATEST_RUN")
+      CLIFF=$(jq -r   '.statistics.cliffs_delta // "n/a"' "$LATEST_RUN")
+      N=$(jq -r       '.n'                "$LATEST_RUN")
+      echo "auto-experiment: ${SKILL_NAME}  ${CONTROL_REF} vs current  n=${N}  p=${P_SIGN}  delta=${DELTA}  verdict=${VERDICT}" >> "$LOG"
+      # If running in a GitHub Actions context, post a PR comment
+      if [[ -n "${GITHUB_TOKEN:-}" && -n "${PR_NUMBER:-}" ]]; then
+        BODY="**Auto-experiment: ${SKILL_NAME}**\n\n"
+        BODY+="| metric | value |\n|--------|-------|\n"
+        BODY+="| n | ${N} |\n"
+        BODY+="| mean delta | ${DELTA} |\n"
+        BODY+="| p (sign test) | ${P_SIGN} |\n"
+        BODY+="| Cliff's delta | ${CLIFF} |\n"
+        BODY+="| **verdict** | **${VERDICT}** |\n\n"
+        BODY+="Run file: \`${LATEST_RUN}\`"
+        gh pr comment "${PR_NUMBER}" --body "$BODY" || true
+      fi
+
+on_failure:
+  notify: log
+  message: "auto-experiment-on-edit failed for skill ${SKILL_NAME}"
+  log_path: ~/.claude/logs/experiments.log

@@ -1,0 +1,216 @@
+name: Claude Security Scan
+
+on:
+  schedule:
+    # Weekly on Monday at 02:00 UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Git ref to scan (default: HEAD of default branch)'
+        required: false
+        default: ''
+      fail_on_grade:
+        description: 'Open issue if grade is at or below (A/B/C/D/F)'
+        required: false
+        default: 'C'
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  MODEL: ${{ vars.CLAUDE_SECURITY_MODEL || 'claude-sonnet-4-5' }}
+  MAX_TURNS: '10'
+  FAIL_GRADE: ${{ inputs.fail_on_grade || 'C' }}
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Collect codebase snapshot
+        id: snapshot
+        run: |
+          # Collect source files, exclude binaries and generated artifacts
+          find . \
+            -type f \
+            \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' \
+               -o -name '*.py' -o -name '*.go' -o -name '*.rb' -o -name '*.java' \
+               -o -name '*.cs' -o -name '*.rs' -o -name '*.php' -o -name '*.sh' \
+               -o -name '*.yml' -o -name '*.yaml' -o -name 'Dockerfile*' \
+               -o -name '*.tf' -o -name '*.json' \) \
+            -not -path '*/node_modules/*' \
+            -not -path '*/.git/*' \
+            -not -path '*/dist/*' \
+            -not -path '*/build/*' \
+            -not -path '*/vendor/*' \
+            -not -path '*/__pycache__/*' \
+            | head -n 200 \
+            > /tmp/scan_files.txt
+
+          FILE_COUNT=$(wc -l < /tmp/scan_files.txt | tr -d ' ')
+          echo "file_count=${FILE_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "Scanning ${FILE_COUNT} files"
+
+          # Build a combined snapshot, capped at 8000 lines total
+          {
+            echo "=== REPOSITORY SECURITY SCAN ==="
+            echo "Ref: $(git rev-parse HEAD)"
+            echo "Date: $(date -u)"
+            echo ""
+            while IFS= read -r f; do
+              echo "=== FILE: $f ==="
+              cat "$f" 2>/dev/null | head -n 200
+              echo ""
+            done < /tmp/scan_files.txt
+          } | head -n 8000 > /tmp/snapshot.txt
+
+      - name: Run Claude security scan
+        id: scan
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          PROMPT='You are a senior application security engineer performing a full security audit. Analyze the codebase snapshot below. Apply a red-team mindset. Check for: hardcoded secrets/credentials, injection vulnerabilities (SQL, command, LDAP, XPath), insecure deserialization, broken authentication/authorization, SSRF, path traversal, insecure dependencies (flag any obviously outdated or vulnerable package references), missing input validation, cryptographic weaknesses, insecure direct object references, and infrastructure misconfigurations (Dockerfile, Terraform, CI YAML). Return ONLY a JSON object matching this exact schema:
+{
+  "grade": "A|B|C|D|F",
+  "executive_summary": "2-3 sentences",
+  "critical_count": 0,
+  "high_count": 0,
+  "medium_count": 0,
+  "low_count": 0,
+  "findings": [
+    {
+      "severity": "CRITICAL|HIGH|MEDIUM|LOW|INFO",
+      "category": "secrets|injection|auth|crypto|config|dependency|validation|other",
+      "file": "path/to/file",
+      "line": 0,
+      "title": "short title",
+      "cwe": "CWE-XXX",
+      "detail": "description and remediation"
+    }
+  ],
+  "positive_observations": ["list of good security practices observed"]
+}'
+
+          claude -p \
+            --output-format json \
+            --model "$MODEL" \
+            --max-turns "$MAX_TURNS" \
+            "$PROMPT" \
+            < /tmp/snapshot.txt \
+            > /tmp/claude_security_raw.json 2>/tmp/claude_security_err.txt || {
+              echo "Claude error:"
+              cat /tmp/claude_security_err.txt
+              exit 1
+            }
+
+          jq -r '.result // .' /tmp/claude_security_raw.json > /tmp/security_report.json
+
+          GRADE=$(jq -r '.grade // "F"' /tmp/security_report.json)
+          CRITICAL=$(jq -r '.critical_count // 0' /tmp/security_report.json)
+          HIGH=$(jq -r '.high_count // 0' /tmp/security_report.json)
+
+          echo "grade=${GRADE}" >> "$GITHUB_OUTPUT"
+          echo "critical_count=${CRITICAL}" >> "$GITHUB_OUTPUT"
+          echo "high_count=${HIGH}" >> "$GITHUB_OUTPUT"
+
+          echo "Security Grade: ${GRADE} | CRITICAL: ${CRITICAL} | HIGH: ${HIGH}"
+
+      - name: Format security report artifact
+        run: |
+          REPORT=/tmp/security_report.json
+          GRADE=$(jq -r '.grade' "$REPORT")
+          SUMMARY=$(jq -r '.executive_summary' "$REPORT")
+          CRITICAL=$(jq -r '.critical_count' "$REPORT")
+          HIGH=$(jq -r '.high_count' "$REPORT")
+          MED=$(jq -r '.medium_count' "$REPORT")
+          LOW=$(jq -r '.low_count' "$REPORT")
+
+          {
+            echo "# Claude Code Security Scan Report"
+            echo ""
+            echo "**Grade:** ${GRADE}  |  **Ref:** $(git rev-parse --short HEAD)  |  **Date:** $(date -u)"
+            echo ""
+            echo "## Executive Summary"
+            echo "$SUMMARY"
+            echo ""
+            echo "## Findings Summary"
+            echo "| Severity | Count |"
+            echo "|----------|-------|"
+            echo "| CRITICAL | ${CRITICAL} |"
+            echo "| HIGH | ${HIGH} |"
+            echo "| MEDIUM | ${MED} |"
+            echo "| LOW | ${LOW} |"
+            echo ""
+            echo "## Findings"
+            echo ""
+            jq -r '.findings[] | "### [\(.severity)] \(.title)\n- **File:** `\(.file)` line \(.line)\n- **Category:** \(.category)\n- **CWE:** \(.cwe)\n- **Detail:** \(.detail)\n"' "$REPORT" || echo "_No findings._"
+            echo ""
+            echo "## Positive Observations"
+            jq -r '.positive_observations[]? | "- \(.)"' "$REPORT" || true
+            echo ""
+            echo "<sub>Model: ${MODEL} | Max turns: ${MAX_TURNS}</sub>"
+          } > /tmp/security_report.md
+
+          cp /tmp/security_report.json /tmp/security_report_artifact.json
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-security-report-${{ github.run_number }}
+          path: |
+            /tmp/security_report.md
+            /tmp/security_report_artifact.json
+          retention-days: 90
+
+      - name: Open issue if grade is C or worse
+        if: >
+          steps.scan.outputs.grade == 'C' ||
+          steps.scan.outputs.grade == 'D' ||
+          steps.scan.outputs.grade == 'F'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          GRADE="${{ steps.scan.outputs.grade }}"
+          CRITICAL="${{ steps.scan.outputs.critical_count }}"
+          HIGH="${{ steps.scan.outputs.high_count }}"
+          SUMMARY=$(jq -r '.executive_summary' /tmp/security_report.json)
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          TOP_FINDINGS=$(jq -r '[ .findings[] | select(.severity == "CRITICAL" or .severity == "HIGH") ] | .[:5][] | "- **[\(.severity)]** \(.title) (`\(.file)`)"' /tmp/security_report.json || echo "_None_")
+
+          gh issue create \
+            --title "[Security] Grade ${GRADE} — Claude security scan $(date +%Y-%m-%d)" \
+            --body "$(cat <<EOF
+## Security Scan Alert
+
+**Grade:** ${GRADE}
+**Critical:** ${CRITICAL}
+**High:** ${HIGH}
+**Run:** ${RUN_URL}
+
+### Summary
+${SUMMARY}
+
+### Top Findings (CRITICAL/HIGH)
+${TOP_FINDINGS}
+
+### Action Required
+Review the full report artifact attached to the Actions run linked above and remediate CRITICAL and HIGH findings before the next release.
+
+<sub>Opened by Claude Code CI | Model: ${MODEL}</sub>
+EOF
+)" \
+            --label "security,claude-generated" \
+            --assignee "${{ github.repository_owner }}"

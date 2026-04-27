@@ -1,0 +1,63 @@
+# weekly-audit.yaml — Scheduled self-improvement audit routine.
+#
+# This file defines the recurring audit schedule for the Claude Code ecosystem.
+# Format is compatible with the Claude Code CronCreate / ScheduleWakeup system.
+# To activate: use the /schedule skill or CronCreate tool referencing this file.
+
+routine:
+  name: weekly-ecosystem-audit
+  description: >
+    Runs a full ecosystem audit every Monday at 09:00 local time. The agent
+    reviews all skills, agents, hooks, and commands for quality, usage, and
+    drift. It opens at most 3 PRs for high-value, low-risk improvements.
+    All PRs require human review before merge.
+
+schedule:
+  cron: "0 9 * * MON"
+  timezone: "Europe/Prague"
+  # Lukáš Dlouhý is Prague-based; adjust if timezone changes.
+
+agent:
+  model: sonnet
+  prompt: |
+    Run /audit-self all. After the audit completes:
+
+    1. Save the report to audits/<ISO-date>-all.md in the ecosystem directory.
+    2. If there are P1 improvements with grade C or D, run /audit-self --apply
+       to open up to 3 refactor PRs. Skip any deprecation actions.
+    3. Post a summary to the conversation:
+       - Total components audited
+       - Grade distribution (A/B/C/D/F counts)
+       - PRs opened (if any) with links
+       - Components flagged for human review
+
+    Constraints:
+    - Never auto-merge any PR.
+    - Never delete files without explicit user confirmation.
+    - Never modify session archives or memory files.
+    - Max 3 PRs per run.
+    - If gh is not available or the repo is not a git repo, skip the PR step
+      and note it in the summary.
+
+  max_iterations: 25
+  tools_allowed:
+    - Read
+    - Bash
+    - WebFetch
+    - Write
+    - Edit
+
+notifications:
+  on_complete: true
+  on_error: true
+
+risk_controls:
+  max_prs_per_run: 3
+  auto_merge: false
+  never_touch:
+    - "~/.claude/sessions-archive/"
+    - "~/.claude/memory.db"
+    - "~/.claude/CLAUDE.md"
+    - "~/.claude/projects/"
+  backup_before_edit: true
+  backup_suffix: ".bak-{date}"

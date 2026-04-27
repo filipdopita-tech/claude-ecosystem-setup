@@ -144,6 +144,7 @@ Public Claude Code ecosystems I've cherry-picked from. If you publish yours, ope
 
 | Author | Repo | Standout skills/rules I borrowed |
 |---|---|---|
+| **Lukáš Dlouhý** | https://github.com/Aldocooek/lukasdlouhy-claude-ecosystem | **EVAL infrastructure** (datasets/baselines/scorers/runner with regression detection), **EXPERIMENT runner** (statistical A/B testing — sign test, Cliff's delta, p<0.05), **Output styles** (terse/silent/research/teaching/status-footer), **Memory + doc templates** (three-layer pattern, five-layer project docs), **CI workflows for Claude Code headless** (PR review, security scan, test gen, docs update), **Routines** (yaml auto-execute), **Plugin packaging structure**, **Cost discipline expertise**. See [LUKAS-CHERRYPICK.md](LUKAS-CHERRYPICK.md) and [LUKAS-CHERRYPICK-WAVE2-100.md](LUKAS-CHERRYPICK-WAVE2-100.md) for full cherry-pick log + score breakdown (89→100). Reciprocity: Lukáš originally cherry-picked the peer protocol template from this repo. |
 | _(you?)_ | _(your repo)_ | _(what was great)_ |
 
 ---

@@ -1,0 +1,201 @@
+name: Claude Docs Update
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      # Trigger on API/schema/interface changes
+      - '**/*.proto'
+      - '**/openapi*.yml'
+      - '**/openapi*.yaml'
+      - '**/swagger*.yml'
+      - '**/schema*.json'
+      - '**/schema*.ts'
+      - 'src/**/*.ts'
+      - 'src/**/*.py'
+      - 'src/**/*.go'
+      - 'lib/**'
+      - 'api/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  MODEL: ${{ vars.CLAUDE_DOCS_MODEL || 'claude-sonnet-4-5' }}
+  MAX_TURNS: '6'
+
+jobs:
+  detect-and-update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Do not run on commits already made by the bot
+    if: "!contains(github.event.head_commit.message, '[skip-docs]') && github.actor != 'claude-code-bot'"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Detect API/schema changes
+        id: detect
+        run: |
+          git diff HEAD~1..HEAD --name-only \
+            | grep -E '\.(proto|json|yaml|yml|ts|py|go)$' \
+            | grep -Ev '(test|spec|\.test\.|\.spec\.|node_modules|dist|build|\.lock)' \
+            > /tmp/changed_sources.txt || true
+
+          SOURCE_COUNT=$(wc -l < /tmp/changed_sources.txt | tr -d ' ')
+          echo "source_count=${SOURCE_COUNT}" >> "$GITHUB_OUTPUT"
+
+          # Collect existing doc files
+          find . -maxdepth 3 -name '*.md' \
+            -not -path '*/node_modules/*' \
+            -not -path '*/.git/*' \
+            | sort > /tmp/doc_files.txt
+
+          DOC_COUNT=$(wc -l < /tmp/doc_files.txt | tr -d ' ')
+          echo "doc_count=${DOC_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "Changed sources: ${SOURCE_COUNT} | Existing docs: ${DOC_COUNT}"
+
+      - name: Skip if no relevant changes
+        if: steps.detect.outputs.source_count == '0'
+        run: echo "No API/schema changes detected. Skipping docs update."
+
+      - name: Build context for Claude
+        if: steps.detect.outputs.source_count != '0'
+        run: |
+          {
+            echo "=== CHANGED SOURCE FILES (diff) ==="
+            while IFS= read -r f; do
+              echo "--- $f ---"
+              git diff HEAD~1..HEAD -- "$f" | head -n 300
+              echo ""
+            done < /tmp/changed_sources.txt
+
+            echo ""
+            echo "=== EXISTING DOCUMENTATION FILES ==="
+            while IFS= read -r doc; do
+              echo "--- $doc ---"
+              cat "$doc" | head -n 150
+              echo ""
+            done < /tmp/doc_files.txt
+          } | head -n 8000 > /tmp/docs_context.txt
+
+      - name: Run Claude docs update
+        if: steps.detect.outputs.source_count != '0'
+        id: claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          PROMPT='You are a technical writer. You are given diffs of changed source files and the current state of documentation files. Identify which documentation is now stale or incomplete due to the source changes. Return ONLY a JSON object:
+{
+  "needs_update": true,
+  "summary": "one sentence describing what changed",
+  "doc_updates": [
+    {
+      "file": "README.md",
+      "reason": "why this doc needs updating",
+      "updated_content": "FULL new content for the file"
+    }
+  ]
+}'
+
+          claude -p \
+            --output-format json \
+            --model "$MODEL" \
+            --max-turns "$MAX_TURNS" \
+            "$PROMPT" \
+            < /tmp/docs_context.txt \
+            > /tmp/claude_docs_raw.json 2>/tmp/claude_docs_err.txt || {
+              echo "Claude error:"
+              cat /tmp/claude_docs_err.txt
+              exit 1
+            }
+
+          jq -r '.result // .' /tmp/claude_docs_raw.json > /tmp/docs_result.json
+
+          NEEDS_UPDATE=$(jq -r '.needs_update // false' /tmp/docs_result.json)
+          UPDATE_COUNT=$(jq -r '.doc_updates | length' /tmp/docs_result.json)
+          echo "needs_update=${NEEDS_UPDATE}" >> "$GITHUB_OUTPUT"
+          echo "update_count=${UPDATE_COUNT}" >> "$GITHUB_OUTPUT"
+          echo "Needs update: ${NEEDS_UPDATE} | Files to update: ${UPDATE_COUNT}"
+
+      - name: Apply doc updates and open PR
+        if: >
+          steps.detect.outputs.source_count != '0' &&
+          steps.claude.outputs.needs_update == 'true' &&
+          steps.claude.outputs.update_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "claude-code-bot"
+          git config user.email "claude-code-bot@users.noreply.github.com"
+
+          BASE_BRANCH="${{ github.ref_name }}"
+          DOCS_BRANCH="claude-docs/$(date +%Y%m%d%H%M%S)"
+          git checkout -b "$DOCS_BRANCH"
+
+          UPDATE_COUNT=${{ steps.claude.outputs.update_count }}
+          UPDATED_LIST=""
+
+          for i in $(seq 0 $((UPDATE_COUNT - 1))); do
+            FILE=$(jq -r ".doc_updates[$i].file" /tmp/docs_result.json)
+            CONTENT=$(jq -r ".doc_updates[$i].updated_content" /tmp/docs_result.json)
+            REASON=$(jq -r ".doc_updates[$i].reason" /tmp/docs_result.json)
+
+            if [ -z "$FILE" ] || [ "$FILE" = "null" ]; then
+              continue
+            fi
+
+            mkdir -p "$(dirname "$FILE")"
+            echo "$CONTENT" > "$FILE"
+            git add "$FILE"
+            UPDATED_LIST="${UPDATED_LIST}\n- \`${FILE}\`: ${REASON}"
+          done
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          SUMMARY=$(jq -r '.summary' /tmp/docs_result.json)
+
+          git commit -m "docs: Claude auto-update following source changes
+
+${SUMMARY}
+
+Triggered by: ${{ github.sha }}
+[skip-docs]"
+
+          git push origin "$DOCS_BRANCH"
+
+          gh pr create \
+            --title "docs: auto-update following $(echo '${{ github.sha }}' | head -c 7) — ${SUMMARY}" \
+            --body "$(cat <<EOF
+## Automated Documentation Update
+
+Claude Code detected API/schema changes and updated the following documentation:
+$(echo -e "$UPDATED_LIST")
+
+### Source changes that triggered this
+$(cat /tmp/changed_sources.txt | sed 's/^/- `/' | sed 's/$/ `/')
+
+### Review checklist
+- [ ] Verify updated content is accurate
+- [ ] Check for any sections that need manual adjustment
+- [ ] Run any doc linters / link checkers
+
+<sub>Model: ${MODEL} | Commit: ${{ github.sha }} | [SDK docs](https://docs.claude.com/en/docs/claude-code/sdk)</sub>
+EOF
+)" \
+            --base "$BASE_BRANCH" \
+            --head "$DOCS_BRANCH" \
+            --label "documentation,claude-generated"

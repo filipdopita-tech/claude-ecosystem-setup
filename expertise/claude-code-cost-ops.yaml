@@ -1,0 +1,117 @@
+domain: claude-code-cost-ops
+keywords: [cost, tokens, usage, cache, billing, opus, haiku, token-burn, context-window]
+last_updated: 2026-04-26
+confidence: approximate  # prices from training data; verify at anthropic.com/pricing
+
+# Lukáš tracks token spend obsessively — this file exists to prevent expensive sessions
+
+model_pricing_tiers:
+  # Approximate as of training cutoff; Anthropic changes pricing; always verify
+  claude_opus_4:
+    input: $15 / MTok
+    output: $75 / MTok
+    cache_write: $18.75 / MTok
+    cache_read: $1.50 / MTok
+    use_when: complex reasoning, code generation requiring judgment, architecture decisions
+    avoid_when: research, grep-heavy exploration, web scraping, summarization
+  claude_sonnet_4_6:
+    input: $3 / MTok
+    output: $15 / MTok
+    cache_write: $3.75 / MTok
+    cache_read: $0.30 / MTok
+    use_when: implementation, code review, most agentic tasks, subagent work
+    notes: Lukáš's workspace default as of 2026-04-24
+  claude_haiku_3_5:
+    input: $0.80 / MTok
+    output: $4 / MTok
+    cache_write: $1 / MTok
+    cache_read: $0.08 / MTok
+    use_when: mechanical tasks — listing, counting, simple grep, web fetch, format conversion
+    notes: 10-20× cheaper than Opus; use for all web/search delegation per CLAUDE.md rules
+  cost_ratio:
+    opus_vs_haiku: ~19× on input, ~19× on output
+    sonnet_vs_haiku: ~4× on input, ~4× on output
+
+context_burn_patterns:
+  multi_file_read:
+    description: Reading 20+ files in sequence dumps all content into context
+    example: "Agent reads every .ts file in a large codebase to find one pattern"
+    cost: 100KB of file content ≈ 25K tokens ≈ $0.38 on Opus input
+    trigger_word: "explore / audit / review the codebase"
+  webfetch_output_dumping:
+    description: WebFetch returns full page HTML/markdown directly into expensive context
+    example: "Fetching a docs page on Opus — 10K tokens of HTML noise"
+    cost: single fetch ≈ 5-15K tokens; 10 fetches on Opus = ~$1.50
+    rule: NEVER WebFetch/WebSearch directly from Opus or Sonnet main thread
+  long_bash_transcripts:
+    description: Bash tool running verbose commands (npm install, test suites) pipes all stdout back
+    example: "npm test with 500 test cases — full output in context"
+    cost: 1000 lines of output ≈ 5-8K tokens
+    fix: pipe to tail -20, grep for FAIL, or redirect to file and read only errors
+  tool_result_accumulation:
+    description: Every tool result stays in context for the session
+    example: "10 Bash calls × 2K tokens each = 20K tokens of transcript by mid-session"
+    cost: 20K extra tokens per subsequent message ≈ $0.30/message on Opus
+  re_render_loops:
+    description: hyperframes render called in iteration loop without preview-first discipline
+    cost: each render ≈ $1-4 for a 60s video; 5 iterations = $5-20 burned
+
+mitigation_playbook:
+  delegate_to_haiku:
+    when: web search, web fetch, mechanical grep, file listing, counting, simple transforms
+    how: |
+      # In Claude Code, spawn subagent explicitly:
+      # Agent tool with model: "haiku"
+      # Per CLAUDE.md global rules — REQUIRED, not optional
+  delegate_to_sonnet:
+    when: research, codebase exploration, architectural review, multi-file analysis
+    how: spawn subagent with model: "sonnet"
+  read_with_limits:
+    instead_of: reading entire 2000-line file
+    do: "Read file with offset+limit to target the relevant section"
+    example: "Read lines 150-300 of the config file"
+  summarize_bash_output:
+    pattern: "command 2>&1 | tail -30"  # only last 30 lines in context
+    pattern2: "command 2>&1 | grep -E 'ERROR|WARN|FAIL' | head -20"
+  targeted_grep:
+    instead_of: "find . -name '*.ts' | xargs cat"  # catastrophic
+    do: "grep -r 'specificFunction' src/ --include='*.ts' -l"  # filenames only first
+  session_hygiene:
+    - /clear between unrelated tasks to reset context
+    - avoid long planning conversations before implementation (those tokens persist)
+    - use compact representations: file paths not full content in task descriptions
+
+cache_economics:
+  5_min_ttl:
+    applies_to: API requests without explicit cache_control headers
+    cost: cache_write + cache_read for re-use within 5 min
+    sweet_spot: tight loops, repeated subagent calls with same system prompt
+  1_hour_ttl:
+    applies_to: explicitly marked cache checkpoints (cache_control: ephemeral in SDK)
+    cost: 25% premium on write; 10× cheaper on reads
+    sweet_spot: long documents, large system prompts reused across many calls
+  when_cache_wins:
+    rule: "cache_write cost / (input_cost - cache_read_cost) = break-even reuse count"
+    example: "Opus: $18.75 write / ($15 - $1.50) = 1.4 reuses to break even — almost always worth it"
+  when_cache_loses:
+    - single-use fetches (fetch once, never re-read)
+    - sessions that don't repeat same context block
+    - content that changes between calls (dynamic data)
+  prompt_cache_ttl_trap:
+    description: cache expires at 5 min if you sleep >300s between loop iterations
+    fix: use ScheduleWakeup with delaySeconds < 270 to stay in cache window
+
+red_flags:
+  session_is_bleeding_tokens:
+    - multiple WebSearch/WebFetch calls happening on main thread (not subagent)
+    - "let me read through the codebase" without delegation
+    - Bash commands with unbounded output (npm install, full test suite stdout)
+    - iterative renders/builds without checking output format first
+    - planning conversation stretching past 5 back-and-forths before any code written
+    - subagent spawned without explicit model override on Opus main thread
+  expensive_session_signatures:
+    - >$2 in 30 minutes of work: suspect large file reads or web fetches on main thread
+    - >$5 in one session: almost certainly undelegated research or render loop
+  diagnostic:
+    check: claude.ai usage dashboard or API usage endpoint
+    frequency: check after any session that felt "exploration-heavy"

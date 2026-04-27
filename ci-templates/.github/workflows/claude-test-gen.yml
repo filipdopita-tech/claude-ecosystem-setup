@@ -1,0 +1,180 @@
+name: Claude Test Generation
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+      - 'feat/**'
+      - 'fix/**'
+      - 'dev/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  MODEL: ${{ vars.CLAUDE_TESTGEN_MODEL || 'claude-sonnet-4-5' }}
+  MAX_NEW_TEST_FILES: '5'
+  MAX_TURNS: '8'
+
+jobs:
+  detect-and-generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Skip if commit message contains [skip-testgen] or PR label skip-claude-testgen
+    if: "!contains(github.event.head_commit.message, '[skip-testgen]')"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code@latest
+
+      - name: Detect new source files without tests
+        id: detect
+        run: |
+          # Find files added in the last commit that look like source, not test files
+          git diff --name-only --diff-filter=A HEAD~1..HEAD \
+            | grep -E '\.(ts|tsx|js|jsx|py|go|rb|java|cs|rs|swift|kt)$' \
+            | grep -Ev '(test|spec|_test|\.test\.|\.spec\.|__tests__)' \
+            | head -n "$MAX_NEW_TEST_FILES" \
+            > /tmp/new_sources.txt || true
+
+          COUNT=$(wc -l < /tmp/new_sources.txt | tr -d ' ')
+          echo "source_count=${COUNT}" >> "$GITHUB_OUTPUT"
+          echo "Detected ${COUNT} new source file(s) without tests:"
+          cat /tmp/new_sources.txt
+
+      - name: Skip if nothing to do
+        if: steps.detect.outputs.source_count == '0'
+        run: |
+          echo "No new source files detected. Skipping test generation."
+
+      - name: Generate tests with Claude
+        if: steps.detect.outputs.source_count != '0'
+        id: generate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          FILES=$(cat /tmp/new_sources.txt | tr '\n' ' ')
+          mkdir -p /tmp/generated_tests
+
+          while IFS= read -r src_file; do
+            [ -z "$src_file" ] && continue
+            echo "Generating tests for: ${src_file}"
+
+            FILE_CONTENT=$(cat "$src_file" 2>/dev/null || echo "# file not found")
+
+            PROMPT="You are a test engineer. Given the source file below, generate a complete, runnable test file. Follow the project's existing test patterns if detectable. Include: unit tests for all exported functions/classes, edge cases, and error paths. Return ONLY the test file content with no markdown fences or prose. The test file should be saved alongside the source at the path you infer from the project structure (e.g., src/foo.test.ts for src/foo.ts).
+
+Source file path: ${src_file}
+
+Source content:
+${FILE_CONTENT}"
+
+            SAFE_NAME=$(echo "$src_file" | tr '/' '_')
+
+            echo "$PROMPT" | claude -p \
+              --output-format json \
+              --model "$MODEL" \
+              --max-turns "$MAX_TURNS" \
+              > /tmp/claude_test_raw_${SAFE_NAME}.json 2>/tmp/claude_test_err.txt || {
+                echo "Warning: Claude failed for ${src_file}:"
+                cat /tmp/claude_test_err.txt
+                continue
+              }
+
+            TEST_CONTENT=$(jq -r '.result // ""' /tmp/claude_test_raw_${SAFE_NAME}.json)
+            if [ -z "$TEST_CONTENT" ]; then
+              echo "Warning: empty result for ${src_file}"
+              continue
+            fi
+
+            # Derive test file path
+            EXT="${src_file##*.}"
+            BASE="${src_file%.*}"
+            case "$EXT" in
+              py)     TEST_PATH="test_${src_file}" ;;
+              go)     TEST_PATH="${BASE}_test.go" ;;
+              rb)     TEST_PATH="${BASE}_spec.rb" ;;
+              java|cs|kt|swift) TEST_PATH="${BASE}Test.${EXT}" ;;
+              rs)     TEST_PATH="${src_file}" ;;  # Rust tests inline
+              *)      TEST_PATH="${BASE}.test.${EXT}" ;;
+            esac
+
+            mkdir -p "$(dirname "$TEST_PATH")"
+            echo "$TEST_CONTENT" > "$TEST_PATH"
+            echo "$TEST_PATH" >> /tmp/generated_test_files.txt
+            echo "  -> Written to ${TEST_PATH}"
+          done < /tmp/new_sources.txt
+
+          if [ ! -f /tmp/generated_test_files.txt ] || [ ! -s /tmp/generated_test_files.txt ]; then
+            echo "No test files generated."
+            echo "tests_generated=false" >> "$GITHUB_OUTPUT"
+          else
+            GENERATED_COUNT=$(wc -l < /tmp/generated_test_files.txt | tr -d ' ')
+            echo "tests_generated=true" >> "$GITHUB_OUTPUT"
+            echo "generated_count=${GENERATED_COUNT}" >> "$GITHUB_OUTPUT"
+            echo "Generated ${GENERATED_COUNT} test file(s)."
+          fi
+
+      - name: Open PR with generated tests
+        if: steps.generate.outputs.tests_generated == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "claude-code-bot"
+          git config user.email "claude-code-bot@users.noreply.github.com"
+
+          SOURCE_BRANCH="${{ github.ref_name }}"
+          TEST_BRANCH="claude-tests/${SOURCE_BRANCH}-$(date +%Y%m%d%H%M%S)"
+
+          git checkout -b "$TEST_BRANCH"
+
+          # Stage only the generated test files
+          while IFS= read -r test_file; do
+            git add "$test_file"
+          done < /tmp/generated_test_files.txt
+
+          git commit -m "test: Claude-generated tests for new source files
+
+Source branch: ${SOURCE_BRANCH}
+Trigger commit: ${{ github.sha }}
+Generated by Claude Code (model: ${MODEL})
+
+REQUIRES human review before merge."
+
+          git push origin "$TEST_BRANCH"
+
+          FILES_LIST=$(cat /tmp/generated_test_files.txt | sed 's/^/- /')
+
+          gh pr create \
+            --title "tests: Claude-generated tests for ${SOURCE_BRANCH}" \
+            --body "$(cat <<EOF
+## Claude-Generated Tests
+
+This PR adds tests generated by Claude Code for newly added source files in \`${SOURCE_BRANCH}\`.
+
+### Generated files
+${FILES_LIST}
+
+### Required before merge
+- [ ] Review each test file for correctness
+- [ ] Ensure tests actually run (\`npm test\` / \`pytest\` / etc.)
+- [ ] Remove or rewrite any tests that rely on incorrect assumptions
+- [ ] Human approval required (draft status — do not auto-merge)
+
+### Cost note
+Model used: \`${MODEL}\` | Source files processed: ${{ steps.detect.outputs.source_count }}
+
+<sub>Generated by Claude Code CI | [SDK docs](https://docs.claude.com/en/docs/claude-code/sdk)</sub>
+EOF
+)" \
+            --base "$SOURCE_BRANCH" \
+            --head "$TEST_BRANCH" \
+            --draft \
+            --label "claude-generated,needs-review"

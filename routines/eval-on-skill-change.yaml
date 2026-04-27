@@ -1,0 +1,57 @@
+# eval-on-skill-change.yaml
+# Trigger: Run eval when a skill file changes. Fail (exit 2) if regression > 1.0 score point.
+# This is a declarative config — execute via hooks or CI. See evals/README.md for manual run instructions.
+
+version: "1"
+
+trigger:
+  type: file-change
+  watch:
+    - path: "skills/*/SKILL.md"
+    - path: "agents/*.md"
+  exclude:
+    - path: "agents/eval-judge.md"   # The judge itself changing doesn't trigger an eval
+
+on_trigger:
+  - step: resolve-dataset
+    description: "Map changed skill/agent filename to its eval dataset"
+    mapping:
+      "skills/copy-strategist/**":     "evals/datasets/copywriting.jsonl"
+      "agents/copy-strategist.md":     "evals/datasets/copywriting.jsonl"
+      "agents/video-director.md":      "evals/datasets/storyboard.jsonl"
+      "agents/brief-author.md":        "evals/datasets/prompt-decompose.jsonl"
+      "skills/security-*/**":          "evals/datasets/security-redteam.jsonl"
+      "skills/lean-refactor/**":       "evals/datasets/lean-refactor.jsonl"
+      "skills/prompt-decompose/**":    "evals/datasets/prompt-decompose.jsonl"
+
+  - step: run-eval
+    command: >
+      bash evals/runner/run-eval.sh
+        --target {resolved_target}
+        --dataset {resolved_dataset}
+        --judge haiku
+        --baseline evals/baselines/{resolved_target}-baseline.json
+        --threshold 1.0
+    on_missing_baseline: warn-and-continue
+    # If no baseline exists yet, run still executes but regression check is skipped.
+    # Promote the run manually after reviewing: cp evals/runs/<run>.json evals/baselines/<target>-baseline.json
+
+  - step: fail-on-regression
+    condition: "exit_code == 2"
+    message: |
+      EVAL REGRESSION: {resolved_target} dropped more than 1.0 points vs baseline.
+      Run file: evals/runs/{run_id}.json
+      Review the failing cases before merging this skill change.
+    action: block
+
+cadence:
+  type: on-change
+  # Also run full suite weekly (manual or via cron):
+  # bash evals/runner/run-eval.sh --target copy-strategist --dataset evals/datasets/copywriting.jsonl
+  # ... (repeat for each dataset)
+
+notes:
+  - "Regression threshold is 1.0 score points (0–10 scale). Adjust with --threshold flag if too sensitive."
+  - "Judge model is Haiku by default. Do not change to Sonnet for routine runs — cost increase is 8x."
+  - "Baselines must be promoted manually. The runner never auto-updates baselines."
+  - "After a Claude model version bump, re-run all evals and review before re-baselining."

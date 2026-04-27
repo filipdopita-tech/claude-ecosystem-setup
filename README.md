@@ -1,8 +1,10 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 298 skills, 51 automation hooks, 23 behavioral rule files, 14 expertise YAMLs, 17 MCP server integrations, 55 custom agents, 188 slash commands, and a full VPS compute architecture.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 291 skills, 47 automation hooks, 23 behavioral rule files, 16 expertise YAMLs, 17 MCP server integrations, 54 custom agents, 188 slash commands, full VPS compute architecture, **EVAL infrastructure with 16 datasets, EXPERIMENT runner with statistical A/B testing, plugin packaging, output styles, memory + doc templates, CI workflows, and routines**.
 
 **Production-grade. Battle-tested.** Drives a real fintech operation (OneFlow.cz) — investor outreach, due diligence, content publishing, deliverability, CZ regulatory compliance.
+
+> **2026-04-27 update**: This release scores **100/100** on the Lukáš Dlouhý peer benchmark (skill breadth/depth, rules, hooks, expertise, docs, maintainability, cost awareness). See [LUKAS-CHERRYPICK.md](LUKAS-CHERRYPICK.md) and [LUKAS-CHERRYPICK-WAVE2-100.md](LUKAS-CHERRYPICK-WAVE2-100.md) for the cherry-pick log + score breakdown.
 
 > **Cherry-pick mode**: see [COLLABORATION.md](COLLABORATION.md) — copy any single skill, rule, or expertise YAML without a full install. Includes reciprocity protocol for peer ecosystem exchange.
 > **Outreach to peers**: [PEER_PROMPT.md](PEER_PROMPT.md) has a ready-to-send message template for asking other engineers to mirror their `~/.claude/` so you can both cherry-pick.
@@ -33,15 +35,24 @@ claude
 
 | Component | Count | What it does |
 |---|---|---|
-| Skills | **298** | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, `/mythos`, `/ultraplan`, and 292 more |
-| Hooks | **51** | Auto-run on Claude Code events: format on save, security guard, anti-deletion, model routing, cost discipline, session state, desktop notifications |
+| Skills | **291** | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, `/mythos`, `/ultraplan`, and 285 more |
+| Hooks | **47** | Auto-run on Claude Code events: format on save, security guard, anti-deletion, model routing, cost discipline, session state, desktop notifications |
 | Slash commands | **188** | User-facing commands across all skills + meta commands |
-| Custom agents | **55** | Specialized subagents: `gsd-planner`, `gsd-executor`, `gsd-debugger`, `architect`, `security-reviewer`, `seo-*`, `outbound-strategist`, more |
-| Expertise YAMLs | **14** | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, design, frontend, more |
+| Custom agents | **54** | Specialized subagents: `gsd-planner`, `gsd-executor`, `gsd-debugger`, `architect`, `security-reviewer`, `seo-*`, `outbound-strategist`, more |
+| Expertise YAMLs | **16** | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, design, frontend, **claude-code-cost-ops**, more |
 | Behavioral rules | **23** | 18 root + 5 subdomains (cold-email, compliance, investment, cyber-disclosure, common). Reasoning depth, quality, completeness, autonomy, security, FB safety, knowledge routing |
 | Knowledge MDs | **37** | Reference: coding standards, sales psychology, design patterns, compliance, finance, GitHub recon |
 | MCP integrations | **17** | Figma, Canva, Gmail, Google Calendar, Drive, Notion, Webflow, GitHub, context7, code-review-graph, notebooklm, obsidian-vault, filesystem, openspace, memory-search, claude-flow, stitch-pdf-export |
-| Memory entries | **258** | Auto-populated persistent memory: user profile, feedback rules, active projects, infra references, credentials index |
+| Memory entries | **272** | Auto-populated persistent memory: user profile, feedback rules, active projects, infra references, credentials index |
+| **Output styles** | **6** | Modal Claude behavior: `/output-style terse`, `silent`, `research`, `teaching`, `status-footer` |
+| **Memory templates** | **18** | Three-layer pattern: index → topic → project. DECISIONS, LEARNINGS, MISTAKES, CONVENTIONS, user_brand, project_template, feedback_cost |
+| **Doc templates** | **11** | Five-layer project docs: PROJECT (rare) → REQUIREMENTS (additive) → ROADMAP (quarterly) → STATE (weekly) → ACTIVE (daily) |
+| **EVAL infrastructure** | **23 files** | Skill quality regression detection. Runner + scorers (LLM judge + regex) + judge-prompt + cost analysis. Haiku judge ~$0.04/run |
+| **EVAL datasets** | **16** | 5 OneFlow-specific (ig-content-creator, dd-emitent, cold-email-cz, oneflow-diagnose, deep-post-ideas) + 11 generic |
+| **EXPERIMENT runner** | **5 files** | A/B prompt variant testing with sign test, Cliff's delta, p<0.05 |
+| **CI workflows** | **4** | GitHub Actions for Claude Code in headless mode: PR review, security scan, test gen, docs update |
+| **Routines** | **3 yaml** | Auto-execute: eval-on-skill-change, weekly-audit, auto-experiment-on-edit |
+| **Plugin packaging** | **1 manifest** | `.claude-plugin/plugin.json` for distribution as Claude Code plugin |
 
 ---
 
@@ -49,24 +60,45 @@ claude
 
 ```
 ~/.claude/
-├── rules/           # How Claude thinks and behaves
-│   ├── autopilot.md         # Your identity + autonomy settings
-│   ├── reasoning-depth.md   # Effort and analysis depth
-│   ├── quality-standard.md  # Boil the Ocean principle
+├── rules/             # How Claude thinks and behaves
+│   ├── filip-autopilot.md      # Your identity + autonomy settings
+│   ├── reasoning-depth.md      # Effort and analysis depth
+│   ├── quality-standard.md     # Boil the Ocean principle
 │   ├── security-hardening.md
-│   ├── workflow-routing.md  # GSD vs skills auto-routing
-│   ├── knowledge-router.md  # Domain → expertise file mapping
-│   └── domains/             # Cold email, compliance, investment rules
-├── expertise/       # 14 domain YAMLs (loaded on-demand)
-├── knowledge/       # 25 reference MDs + 12 code standards (37 total)
-├── skills/          # 298 slash-command skill directories
-├── hooks/           # 51 automation scripts (anti-deletion, security-guard, cost-guard, model-routing, prompt-completeness, more)
-├── agents/          # 55 specialized subagents
-├── commands/        # 188 slash commands
-├── settings.json    # Claude Code config + hook wiring
+│   ├── workflow-routing.md     # GSD vs skills auto-routing
+│   ├── knowledge-router.md     # Domain → expertise file mapping
+│   └── domains/                # Cold email, compliance, investment rules
+├── expertise/         # 16 domain YAMLs (loaded on-demand)
+├── knowledge/         # 25 reference MDs + 12 code standards (37 total)
+├── skills/            # 291 slash-command skill directories
+├── hooks/             # 47 automation scripts (anti-deletion, security-guard, cost-guard, model-routing, prompt-completeness, more)
+├── agents/            # 54 specialized subagents
+├── commands/          # 188 slash commands
+├── output-styles/     # 5 modal styles (terse, silent, research, teaching, status-footer) ⭐ NEW
+├── memory-templates/  # Three-layer memory pattern templates ⭐ NEW
+├── doc-templates/     # PROJECT/REQUIREMENTS/ROADMAP/STATE/ACTIVE templates ⭐ NEW
+├── evals/             # Skill quality regression detection ⭐ NEW
+│   ├── runner/        #   run-eval.sh + judge-prompt
+│   ├── scorers/       #   LLM judge + regex checks
+│   ├── datasets/      #   16 datasets (5 OneFlow + 11 generic)
+│   ├── baselines/     #   Promoted runs for regression check
+│   └── runs/          #   Historical run outputs
+├── ci-templates/      # GitHub Actions for Claude headless ⭐ NEW
+│   └── .github/workflows/
+│       ├── claude-pr-review.yml
+│       ├── claude-security-scan.yml
+│       ├── claude-test-gen.yml
+│       └── claude-docs-update.yml
+├── routines/          # YAML auto-execute schedules ⭐ NEW
+├── experiments/       # A/B prompt variant testing ⭐ NEW
+│   ├── runner/        #   run-experiment.sh + stat-test.py
+│   └── templates/
+├── .claude-plugin/    # Plugin packaging manifest ⭐ NEW
+│   └── plugin.json
+├── settings.json      # Claude Code config + hook wiring
 └── projects/
     └── -Users-<username>/
-        └── memory/  # Persistent AI memory (auto-managed)
+        └── memory/    # Persistent AI memory (auto-managed)
 ```
 
 ---
