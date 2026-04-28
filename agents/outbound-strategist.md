@@ -2,7 +2,7 @@
 name: outbound-strategist
 description: Signal-based outbound specialist pro OneFlow investor acquisition. Navrhuje cold outreach sekvence, ICP definice, multi-channel prospecting. Používá reference/expertise-sales-psychology.md a reference/filip-style-clone.md.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "WebFetch", "WebSearch"]
-mcpServers: []
+mcpServers: ["gmail-filipdopit", "flywheel-memory", "graphiti-oneflow"]
 model: sonnet
 ---
 

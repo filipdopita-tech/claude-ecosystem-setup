@@ -1,6 +1,8 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 291 skills, 47 automation hooks, 23 behavioral rule files, 16 expertise YAMLs, 17 MCP server integrations, 54 custom agents, 188 slash commands, full VPS compute architecture, **EVAL infrastructure with 16 datasets, EXPERIMENT runner with statistical A/B testing, plugin packaging, output styles, memory + doc templates, CI workflows, and routines**.
+A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 313 skills, 68 automation hooks, 38 behavioral rule files (incl. Iron Rules + Lukas-wisdom cherry-pick + Power Skills Stack), 21 expertise YAMLs, 17 MCP server integrations, 56 custom agents, 217 slash commands, full VPS compute architecture, **EVAL infrastructure with 16 datasets, EXPERIMENT runner with statistical A/B testing, plugin packaging, output styles, memory + doc templates, CI workflows, and routines**.
+
+> **Latest sync (2026-04-28)**: +15 skills (agent-loop, chains, dd-batch-sql, ecosystem-radar, leadgen, meta-ads, notebooklm-research, orchestrate, outreach-oneflow, prd-spec, recall, saas-from-workflow, site-builder, slime-mold, trend-tracker), +17 hooks (Iron Rules enforcement: hallucination-guard, completion-mandate-inject, completion-stop-verify, memory-cap-guard, memory-secret-scan, weekly-audit-gate), +15 rules (anti-hallucination, completion-mandate, hard-stop-zone, power-skills-stack + 8× from-lukas + 1× from-best-practice), +5 expertise YAMLs (agent-employees, agent-loop-engineering, claude-code-cost-ops, prd-driven-saas), commands/ directory pushed for the first time (190 slash commands). See [CHANGELOG entry below](#changelog).
 
 **Production-grade. Battle-tested.** Drives a real fintech operation (OneFlow.cz) — investor outreach, due diligence, content publishing, deliverability, CZ regulatory compliance.
 
@@ -35,15 +37,15 @@ claude
 
 | Component | Count | What it does |
 |---|---|---|
-| Skills | **291** | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, `/mythos`, `/ultraplan`, and 285 more |
-| Hooks | **47** | Auto-run on Claude Code events: format on save, security guard, anti-deletion, model routing, cost discipline, session state, desktop notifications |
-| Slash commands | **188** | User-facing commands across all skills + meta commands |
-| Custom agents | **54** | Specialized subagents: `gsd-planner`, `gsd-executor`, `gsd-debugger`, `architect`, `security-reviewer`, `seo-*`, `outbound-strategist`, more |
-| Expertise YAMLs | **16** | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, design, frontend, **claude-code-cost-ops**, more |
-| Behavioral rules | **23** | 18 root + 5 subdomains (cold-email, compliance, investment, cyber-disclosure, common). Reasoning depth, quality, completeness, autonomy, security, FB safety, knowledge routing |
-| Knowledge MDs | **37** | Reference: coding standards, sales psychology, design patterns, compliance, finance, GitHub recon |
+| Skills | **313** | Slash-command workflows: `/deploy-service`, `/dd-emitent`, `/ig-content-creator`, `/status`, `/mythos`, `/ultraplan`, `/orchestrate`, `/recall`, `/leadgen`, and 304 more |
+| Hooks | **68** | Auto-run on Claude Code events: Iron Rules enforcement (hallucination-guard, completion-mandate, hard-stop-zone), format on save, security guard, anti-deletion, model routing, cost discipline, memory cap, secret scan, session state, desktop notifications |
+| Slash commands | **217** | User-facing commands across all skills + meta commands (`/godmode`, `/challenge`, `/redteam`, `/ooda`, `/scenario`, `/mythos`, `/deset`, plus 210 more — see Power Skills Stack tiering) |
+| Custom agents | **56** | Specialized subagents: `gsd-planner`, `gsd-executor`, `gsd-debugger`, `architect`, `security-reviewer`, `seo-*`, `outbound-strategist`, `eng-director`, `creative-director`, more |
+| Expertise YAMLs | **21** | Domain knowledge Claude loads on-demand: code, content, SEO, outbound, regulatory, VPS infra, design, frontend, agent-employees, agent-loop-engineering, claude-code-cost-ops, prd-driven-saas, more |
+| Behavioral rules | **38** | Iron Rules (anti-hallucination, completion-mandate, hard-stop-zone, power-skills-stack), reasoning-depth, quality (Boil-the-Ocean), prompt-completeness, autonomy, security, FB safety, knowledge routing, lean-engine, n8n-vs-claude-code; 4 subdomains (cold-email, compliance, investment, cyber-disclosure); 8× Lukas-wisdom cherry-pick; 1× best-practice mining (Cherny/Boris tips). |
+| Knowledge MDs | **38** | Reference: coding standards, sales psychology, design patterns, compliance, finance, GitHub recon, Skool intel distillation, Winston presentation framework, Tenfold marketing resources |
 | MCP integrations | **17** | Figma, Canva, Gmail, Google Calendar, Drive, Notion, Webflow, GitHub, context7, code-review-graph, notebooklm, obsidian-vault, filesystem, openspace, memory-search, claude-flow, stitch-pdf-export |
-| Memory entries | **272** | Auto-populated persistent memory: user profile, feedback rules, active projects, infra references, credentials index |
+| Memory entries | **258+** | Auto-populated persistent memory (excluded from this repo — user-specific): user profile, feedback rules, active projects, infra references, credentials index |
 | **Output styles** | **6** | Modal Claude behavior: `/output-style terse`, `silent`, `research`, `teaching`, `status-footer` |
 | **Memory templates** | **18** | Three-layer pattern: index → topic → project. DECISIONS, LEARNINGS, MISTAKES, CONVENTIONS, user_brand, project_template, feedback_cost |
 | **Doc templates** | **11** | Five-layer project docs: PROJECT (rare) → REQUIREMENTS (additive) → ROADMAP (quarterly) → STATE (weekly) → ACTIVE (daily) |
@@ -306,6 +308,46 @@ Add routing rule in `~/.claude/rules/knowledge-router.md`:
 ## License
 
 MIT — use, modify, share freely.
+
+---
+
+## Changelog
+
+### 2026-04-28 — Iron Rules sync + first commands push
+**Skills (+15):** `agent-loop`, `chains`, `cold-outreach-v3`, `completion-check`, `dd-batch-sql`, `ecosystem-radar`, `leadgen`, `meta-ads`, `notebooklm-research`, `orchestrate`, `outreach-oneflow`, `prd-spec`, `recall`, `saas-from-workflow`, `site-builder`, `site-teardown`, `slime-mold`, `trend-tracker`, `seo` (consolidated). Heavy upstream skills (`gstack`, `koda-stack`, `last30days`, `marketingskills`) excluded — install from their own repos.
+
+**Hooks (+17):** Iron Rules enforcement layer — `hallucination-guard.sh` (verify-before-claim), `completion-mandate-inject.sh`, `completion-stop-verify.sh`, `completion-blocking-words-guard.sh`, `completion-subagent-mandate.sh`, `memory-cap-guard.sh` (22KB hard cap on MEMORY.md), `memory-secret-scan.sh`, `auto-handoff.sh`, `dream-gate.sh`, `loop-guard.sh`, `pre-compact.sh`, `prompt-rewrite-log.sh`, `learning-detector-hook.sh`, `weekly-audit-gate.sh`, `session-decisions-to-obsidian.sh`, plus `hooks-common.sh` shared library and `hooks/from-lukas/` upstream cherry-picks.
+
+**Rules (+15):** **Iron Rules** (`anti-hallucination.md`, `completion-mandate.md`, `hard-stop-zone.md`, `power-skills-stack.md`) — gold standard for autonomy + verification. **Lukas wisdom cherry-pick** (`from-lukas/verify-before-done.md`, `lean-execution.md`, `parallel-worktrees.md`, `augmented-vs-vibe.md`, `lessons-loop.md`, `claude-md-size.md`, `nested-claude-md.md`, `path-scoped-loading.md`, `subagent-success-criteria.md`). **Best-practice mining** (`from-best-practice/claude-code-tips.md` — Cherny/Boris workflow patterns). Plus `n8n-vs-claude-code.md` decision matrix.
+
+**Expertise YAMLs (+5):** `agent-employees.yaml`, `agent-loop-engineering.yaml`, `claude-code-cost-ops.yaml`, `prd-driven-saas.yaml`.
+
+**Commands (+190 first push):** Full slash-command directory — `/godmode`, `/challenge`, `/redteam`, `/ooda`, `/scenario`, `/wargame`, `/premortem`, `/banger`, `/punch`, `/ghost`, `/viral`, `/mythos`, `/deset`, `/postmortem`, `/handoff`, plus 175 more across 6 tiers (S/A/B/C/D/E/F). See [`rules/power-skills-stack.md`](rules/power-skills-stack.md) for tier matrix and chain recipes.
+
+**Sanitization:** 127 hardcoded paths (`/Users/<user>/`, `/mac/`, `<private-subnet>/24` IPs) replaced with generic placeholders. Zero personal data, zero credentials, zero PII.
+
+### 2026-04-27 — 100/100 push + audit fixes + new agents
+See commit `8e51672`.
+
+### 2026-04-26 — Major docs upgrade
+5 new public docs + README refresh. See commit `7078b5c`.
+
+### 2026-04-25 — Peer collaboration protocol
+[COLLABORATION.md](COLLABORATION.md) + [PEER_PROMPT.md](PEER_PROMPT.md) — cherry-pick + reciprocity.
+
+---
+
+## For collaborators
+
+This repo is designed for **cherry-picking, not just installing whole-hog**. To adopt the latest patterns into your own ecosystem:
+
+1. **Iron Rules** — copy `rules/anti-hallucination.md`, `completion-mandate.md`, `hard-stop-zone.md`, `power-skills-stack.md` into your `~/.claude/rules/`. Wire the matching hooks (`hallucination-guard.sh`, `completion-mandate-inject.sh`, `completion-stop-verify.sh`) in your `settings.json` PreToolUse + Stop. These solo are worth the visit.
+2. **Lukas wisdom** — `rules/from-lukas/*.md` are 8 distilled rules from Lukas Dlouhy's ecosystem (verify-before-done, lean-execution, parallel-worktrees, etc.). Drop-in compatible.
+3. **Power Skills Stack** — `rules/power-skills-stack.md` + `skills/chains/CHAINS.md` defines 6-tier chain recipes (DD-MAX, INVESTOR-PITCH, COLD-EMAIL-MAX, CONTENT-VIRAL, STRATEGIC-DECISION, etc.). Map your own high-stakes workflows onto these.
+4. **Memory protocol** — see [`rules/knowledge-router.md`](rules/knowledge-router.md) for on-demand expertise loading. Adapt to your domain by editing the routing tables.
+5. **Skill cherry-pick** — `skills/recall/`, `skills/orchestrate/`, `skills/agent-loop/` are stack-agnostic. Copy whole directory into your `~/.claude/skills/`.
+
+Reciprocity protocol: see [PEER_PROMPT.md](PEER_PROMPT.md) for the message template to ask other engineers to mirror their `~/.claude/` for mutual cherry-pick.
 
 ---
 

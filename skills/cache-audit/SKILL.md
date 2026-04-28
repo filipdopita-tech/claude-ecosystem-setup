@@ -14,7 +14,7 @@ Anthropic prompt cache = 10% ceny vs full input. Claude Code cache TTL = 5 min. 
 
 ## Co dělá
 
-Parsuje `~/.claude/projects/-Users-filipdopita/*.jsonl` session transcripty a spočítá:
+Parsuje `~/.claude/projects/<your-project-id>/*.jsonl` session transcripty a spočítá:
 - Overall cache hit rate
 - Cost savings vs hypothetical no-cache
 - Per-session breakdown s verdiktem

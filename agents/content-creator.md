@@ -2,7 +2,7 @@
 name: content-creator
 description: Content strategist pro OneFlow ekosystém. Tvoří IG posty, carousely, Reels skripty, LinkedIn posty, newsletter, blog. Vždy v Filip Dopita stylu. Používá reference/expertise-marketing.md a reference/filip-style-clone.md.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "WebFetch", "WebSearch"]
-mcpServers: []
+mcpServers: ["flywheel-memory", "gmail-filipdopit"]
 model: sonnet
 ---
 

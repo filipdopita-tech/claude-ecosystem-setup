@@ -1,0 +1,210 @@
+name: prd-driven-saas
+description: |
+  PRD-first methodology pro převod automation/workflow do plně nasazené SaaS aplikace.
+  Knowledge base pro /saas-from-workflow + /prd-spec skills. OneFlow context: emitent
+  tools, klient nabídky, productized services.
+
+source:
+  insights:
+    - skool-intel/chase-ai "Claude Code: n8n Workflow to Deployed SaaS (Complete System)"
+    - skool-intel/chase-ai "Turn n8n Workflows into AI Saas Products"
+    - skool-intel/chase-ai "Claude Code Custom GPT" (PRD generator)
+    - skool-intel/cc-strategic "Why I Stopped Creating AI Workflows (& Made 10x More)"
+  filip_adaptation: 2026-04-28
+  related_skills:
+    - ~/.claude/skills/prd-spec/SKILL.md
+    - ~/.claude/skills/saas-from-workflow/SKILL.md
+    - ~/.claude/skills/site-builder/SKILL.md
+
+core_thesis: |
+  "Workflow je prototyp, produkt je SaaS. n8n/Conductor JSON files don't pay subscriptions.
+   Customer chce klikací app, ne raw workflow. Pattern shift v 2026:
+   workflow → Claude Code → Next.js → Auth + Stripe → Vercel → recurring revenue."
+
+stack_defaults:
+  frontend:
+    framework: next.js-14-app-router
+    styling: tailwind-css
+    components: shadcn-ui
+    fonts: inter-tight  # OneFlow brand mandatory
+    icons: lucide-react
+
+  auth:
+    primary: supabase-auth  # bundled s DB, less boilerplate
+    alternative: nextauth-js
+    decision_rule: "Supabase pokud OAuth provider stačí (Google/GitHub). NextAuth pokud custom flow."
+
+  database:
+    primary: supabase-postgres
+    alternative: planetscale-mysql
+    decision_rule: "Supabase pokud bundled auth. PlanetScale pokud potřebuješ horizontal scaling > 100k users."
+
+  payment:
+    primary: stripe
+    alternative: lemonsqueezy  # EU MoR, pokud Filip nechce CZ DPH paperwork
+    test_card: 4242424242424242
+    webhook_required: true
+
+  email:
+    primary: resend  # 100/day free, dev-friendly
+    alternative: postmark
+    decision_rule: "Resend free tier sufficient pro <3000 emails/měsíc. Postmark pokud transactional > marketing."
+
+  analytics:
+    primary: plausible  # privacy + simple, no cookie banner needed
+    alternative: posthog
+    decision_rule: "Plausible default. PostHog pokud potřebuješ event tracking + feature flags."
+
+  error_tracking:
+    primary: sentry  # 5k errors/mo free
+    alternative: logtail
+    decision_rule: "Sentry default. Logtail pokud structured logs > stack traces."
+
+  deploy:
+    primary: vercel  # Filip access ready
+    alternative: cloudflare-pages
+    decision_rule: "Vercel default. Cloudflare pokud bandwidth > 100GB/mo (Vercel Pro pricing kicks in)."
+
+phases:
+  1_prd:
+    duration: 60-90min
+    output: PRD.md (~2500 words)
+    skill: ~/.claude/skills/prd-spec/SKILL.md
+    quality_gate: "All 15 sections present, success metrics quantifiable, out-of-scope explicit"
+
+  2_scaffold:
+    duration: 30-45min
+    output: ~/Documents/saas-projects/{slug}/ (Next.js + Tailwind + shadcn + Supabase + Stripe)
+    commands:
+      - npx create-next-app@latest . --typescript --tailwind --app
+      - npx shadcn-ui@latest init -d
+      - npx shadcn-ui@latest add button card dialog input form toast
+      - npm install @supabase/supabase-js @supabase/ssr stripe @stripe/stripe-js
+
+  3_implementation:
+    duration: 6-10h
+    structure: wave-based-parallel-subagents
+    waves:
+      wave_1:
+        focus: auth + DB
+        parallel: true
+        subagents:
+          - subagent_a: Supabase migrations (users, profiles, settings)
+          - subagent_b: Auth flows (sign up, sign in, password reset, OAuth)
+
+      wave_2:
+        focus: core workflow (THE value)
+        parallel: false  # state-dependent
+        subagent: single Sonnet, full context
+
+      wave_3:
+        focus: payment + subscription
+        parallel: true
+        subagents:
+          - subagent_c: Stripe Checkout + webhook handler
+          - subagent_d: Pricing page + upgrade flow UI
+
+      wave_4:
+        focus: polish
+        parallel: true
+        subagents:
+          - subagent_e: Email notifications (Resend)
+          - subagent_f: Analytics (Plausible)
+          - subagent_g: Error tracking (Sentry)
+
+  4_pre_deploy_gate:
+    duration: 30min
+    skill: ~/.claude/skills/agent-loop/SKILL.md (review pattern)
+    checklist:
+      - all env vars set in Vercel
+      - Supabase RLS policies enabled per table
+      - Stripe webhook secret in Vercel env
+      - Lighthouse > 90 (perf + a11y + SEO)
+      - no secrets in git
+      - brand voice check (OpenSpace oneflow-brand-voice-check)
+
+  5_deploy:
+    duration: 15min
+    commands:
+      - cd $PROJECT && vercel --prod --yes
+      - vercel domains add ${PRODUCT_NAME}.oneflow.cz (optional)
+      - ntfy push notification
+
+cost_per_mvp:
+  vercel: $0  # hobby tier
+  supabase: $0  # 500MB DB free
+  stripe: $0  # only on revenue (2.9% + $0.30/tx)
+  resend: $0  # 100/day free
+  plausible: $0  # 9 EUR/mo paid (eval)
+  sentry: $0  # 5k errors/mo free
+  total_fixed: $0/mo
+
+oneflow_specific_use_cases:
+  ares_lookup_tool:
+    workflow: ARES API + enrichment + export
+    saas_url: oneflow-ares-lookup.com
+    pricing: $19/mo subscription | 50 lookups/mo free
+    build_time_h: 12
+
+  dd_pre_screen:
+    workflow: oneflow-dscr-screener + oneflow-ltv-screener (OpenSpace)
+    saas_url: pre-screen.oneflow.cz
+    pricing: $49/screen one-time | $99/mo unlimited
+    build_time_h: 16
+    note: "Klient-facing, requires legal disclaimer (CNB/ECSP not financial advice)"
+
+  email_compliance_checker:
+    workflow: oneflow-deliverability-check + oneflow-brand-voice-check
+    saas_url: email-check.oneflow.cz
+    pricing: $9/checking-pack 50 calls
+    build_time_h: 10
+
+anti_patterns:
+  skip_prd:
+    why_bad: "Implementation drift, scope creep, missed requirements"
+    fix: "Use /prd-spec before any implementation"
+
+  serial_implementation:
+    why_bad: "10-15h tasks block, no parallelization"
+    fix: "Wave architecture per Phase 3"
+
+  custom_auth_roll_your_own:
+    why_bad: "OAuth complexity, security risks, maintenance burden"
+    fix: "Use Supabase Auth or NextAuth"
+
+  hardcoded_secrets:
+    why_bad: "Git leak risk, security incident"
+    fix: "Vercel env vars, .env in gitignore"
+
+  skip_stripe_webhook_verification:
+    why_bad: "Payment fraud risk"
+    fix: "Always verify Stripe-Signature header"
+
+  marketing_copy_no_brand_check:
+    why_bad: "Off-brand UI, banned words slip in"
+    fix: "OpenSpace oneflow-brand-voice-check pre-deploy"
+
+  deploy_without_lighthouse:
+    why_bad: "Slow + inaccessible product, churn risk"
+    fix: "npx lighthouse + fix scores < 90"
+
+ten_eighty_ten_rule:
+  description: "Claude Code agent management — 10/80/10 split"
+  source: claude-code-architects "Managing Multiple AI Agents at Once"
+  breakdown:
+    planning: 10%  # PRD + architecture
+    delegation: 80%  # subagent dispatch + monitoring
+    review: 10%  # ship gate + verification
+  oneflow_match: "GSD framework matches (plan → execute paralelně → verify-phase)"
+
+verification_checklist_pre_launch:
+  - "Health check endpoint returns 200"
+  - "Sign up flow tested manually"
+  - "Sign in flow tested manually"
+  - "Stripe test card 4242... works in test mode"
+  - "Welcome email received via Resend"
+  - "Analytics events firing in Plausible"
+  - "Error logged to Sentry on intentional throw"
+  - "Lighthouse > 90 on landing + dashboard"
+  - "Brand voice check PASS on all UI copy"
+  - "GDPR + cookie disclosure present"

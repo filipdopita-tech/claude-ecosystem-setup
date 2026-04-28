@@ -1,6 +1,100 @@
 domain: outbound-sales-science
-last_updated: 2026-04-13
-description: Cold email + LinkedIn outreach věda — A/B testing, reply psychology, sekvence, CZ-specifika pro OneFlow
+last_updated: 2026-04-27
+description: Cold email + LinkedIn + DM outreach věda — A/B testing, reply psychology, FBI/Voss techniky, anti-robot patterns, CZ-specifika pro OneFlow
+
+# =========================
+# v4 FRAMEWORK (2026-04-27) — povinný pro VŠECHNY outreach výstupy
+# =========================
+# Aplikuje se PŘED každým generováním cold emailu / DM / FB Messenger zprávy.
+# Zdroj: project_tereza_outreach_revize_v4_2026_04_27.md (Tereza Tulcová cycle)
+
+mandatory_v4:
+  hard_ban_phrases:  # automatický kill — generuj znovu
+    - "Dovoluji si"
+    - "Dovolte mi"
+    - "Rád bych Vám"
+    - "Obracím se na Vás"
+    - "Ráda bych Vás"  # ženský variant
+    - "navazuji na předchozí email"  # threading je viditelný
+    - "Pokud Vás nabídka oslovila"  # pasivní fade-out
+    - "S pozdravem"  # podpis je jen Dopita / Filip Dopita
+    - "Inovativní" / "revoluční" / "komplexní řešení" / "win-win" / "synergie" / "paradigma"
+
+  soft_ban:  # použij jen pokud cíl explicitně formální / regulátor / advokát
+    - "ctím" / "ctím Vás"
+    - "v této záležitosti"
+    - "v rámci našeho podniku"
+
+  must_have:
+    - "1 specifický detail z příjemcova profilu/recenze/postu (1-věta personalizace)"
+    - "Krátká věta + delší věta = rytmus (varied sentence length)"
+    - "Calibrated CTA (Voss): 'Co by muselo platit / Jak by / Bylo by mimo' — NE ano-ne otázka"
+    - "Konkrétní číslo (180 leadů, 28 let) > přídavné jméno (hodně, dlouho)"
+    - "Podpis: jen Dopita (FB/IG) nebo Filip Dopita | OneFlow | +420 607 445 004 (email)"
+
+  pre_send_checklist:
+    - "Personalizace = 1 specifický detail z ARES nebo profilu/postu nebo recenze?"
+    - "Vykání pokud nový kontakt, tykání jen pokud existující vazba?"
+    - "Délka pod limit (FB 60w / IG 50w / Email 100w)?"
+    - "Žádné 'dovoluji si' / 'rád bych' / 'obracím se' / 's pozdravem'?"
+    - "Žádný vykřičník v B2B?"
+    - "CTA je calibrated question, ne ano-ne?"
+    - "Podpis = jen Dopita (DM) nebo Filip Dopita | OneFlow (email)?"
+    - "Žádný odkaz v PRVNÍ zprávě?"
+    - "Mobile preview vypadá OK (ne wall of text)?"
+
+# =========================
+# FBI TECHNIKY (Chris Voss — Never Split the Difference)
+# =========================
+fbi_voss:
+  mirroring:
+    technique: "Opakuj posledních 1-3 slov hostovy zprávy/posty/biograf jako otázku"
+    when: "V reply pro pochopení + získání více informací"
+    example: "Píšete že jste 28 let v Praze. Praze?"
+
+  labeling:
+    technique: "'Zní to, jako byste...' — pojmenuj jejich pravděpodobnou emoci/námitku"
+    when: "Když cítíš nevyřčenou rezistenci"
+    example: "Zní to, jako byste podobné nabídky dostával často."
+
+  tactical_empathy:
+    technique: "Explicit acknowledge jejich situace bez patolízalství"
+    when: "První zpráva s busy senior persona"
+    example: "Vím že nemáte čas — proto přepínám rychle."
+
+  accusation_audit:
+    technique: "Zmínit nejhorší možnou námitku PŘED nimi"
+    when: "Když očekáváš automatický 'spam' filter v jejich hlavě"
+    example: "Možná to zní jak pitch — není to pitch, je to konkrétní pozvání."
+
+  calibrated_questions:
+    technique: "'Jak by...' / 'Co by...' / 'Co je nejdůležitější aby...' místo ano-ne"
+    when: "VŽDY u CTA — donutí příjemce myslet a odpovědět konkrétně"
+    examples:
+      - "Jak by pro Vás dávalo smysl 45 minut investovat?"
+      - "Co by muselo platit, abyste si na to udělal prostor?"
+      - "Co je nejdůležitější aby Vás přesvědčilo?"
+
+  no_oriented_questions:
+    technique: "Otázka kde NE = bezpečný (lidi cítí kontrolu když řeknou NE)"
+    when: "Soft ask kde chceš nízký risk pro příjemce"
+    examples:
+      - "Bylo by mimo, kdybych Vám poslal 2-min ukázku?"
+      - "Mýlím se, když si myslím že tohle je relevantní pro {jejich situace}?"
+
+  thats_right:
+    technique: "Návrh, který vyvolá souhlas s tvojí interpretací jejich situace"
+    when: "V reply abys získal breakthrough moment ('That's right' > 'You're right')"
+    example: "Říkáte to správně — většina hostů řeší prezenci až post-natáčení."
+
+  late_night_dj_voice:
+    technique: "Krátké věty, klidný tón v textu (FB DJ voice = deeper, slower v audio)"
+    when: "Když jde o úzkostné/citlivé téma (např. cena, závazek)"
+    example: "Beze stresu. Když to nesedí, dejte vědět."
+
+# =========================
+# ANTI-ROBOT PATTERNS
+# =========================
 
 # =========================
 # ONEFLOW OUTREACH STACK
@@ -117,10 +211,41 @@ reply_psychology:
 
   cz_specific_patterns:
     - "Vykání povinné v B2B (nikdy tykání bez pokynu)"
-    - "'Dovoluji si' = okamžitý spam pocit — NIKDY"
+    - "'Dovoluji si' / 'Rád bych' / 'Obracím se na Vás' = okamžitý spam pocit — NIKDY"
     - "Investoři v CZ jsou skeptičtější než DE/AT/UK — více důkazů"
     - "Referral na společného kontakta funguje 3-5x lépe"
     - "Telefon v podpisu zvyšuje response rate (přidává důvěryhodnost)"
+    - "Em dash v B2B textu = AI signal pro CZ čtenáře — používej pomlčku - místo —"
+    - "Přesně 5 nebo 10 položek v listu = AI tell, použij 4 nebo 7 nebo 12"
+
+  channel_length_limits:
+    fb_messenger_first: 60  # slov, ideálně 35-50
+    fb_messenger_followup: 30
+    ig_dm_first: 50  # slov, mobile screen limit
+    ig_dm_followup: 25
+    email_cold: 100
+    email_followup: 60
+    email_breakup: 40
+
+  reply_handlers:
+    positive:
+      pattern: "Tactical empathy + soft commitment ladder"
+      example: "díky za rychlou odpověď. Pošlu 2-min ukázku — a k tomu: jak vypadá Váš květen?"
+      do_not: "Pitchnout v reply (oni řekli ano dalšímu kroku, ne natáčení)"
+
+    skeptical:
+      pattern: "Direct fakta + calibrated"
+      example: "produkce zdarma, žádný hidden cost. Co Vás v tomhle směru reálně zajímá?"
+      do_not: "Bránit se nebo opakovat sales"
+
+    negative:
+      pattern: "Voss respect — relationship preservation"
+      example: "chápu. Vrátím se v Q3. Kdyby vyšel volný termín dřív, dám vědět."
+      do_not: "Přesvědčovat — respect = future channel open"
+
+    silent_d3:
+      pattern: "Šablona 5 follow-up s NOVOU hodnotou (ne 'navazuji')"
+      example: "{nový insight} | Pro {firma}: hangár, MiG-15, květen 1 termín. Bylo by mimo zkusit 10min call?"
 
 # =========================
 # CIALDINI APPLIED (ONEFLOW)

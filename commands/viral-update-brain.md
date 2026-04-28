@@ -1,0 +1,1 @@
+/Users/filipdopita/Documents/goviralbro/.claude/commands/viral-update-brain.md

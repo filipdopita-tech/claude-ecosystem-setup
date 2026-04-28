@@ -4,7 +4,7 @@
 # Tier 1 (session auto-memory) → Tier 2 (Obsidian 09-Agent-Memory)
 # Zero LLM calls, zero token cost — čistý file sync
 
-MEMORY_DIR="$HOME/.claude/projects/-Users-filipdopita/memory"
+MEMORY_DIR="$HOME/.claude/projects/<your-project-id>/memory"
 VAULT="$HOME/Documents/OneFlow-Vault/09-Agent-Memory"
 
 # Vault musí existovat

@@ -1,0 +1,210 @@
+name: agent-loop-engineering
+description: |
+  Engineering pattern pro decomposition multi-step úkolů na investigate → review → pickup
+  subagent chains. Aktivuj při: bug fixing, DD validation, investor research, refactor s blast
+  radius, copy/content review, klient deliverable QA.
+
+source:
+  insight: skool-intel/claude-code-architects 2026-04-26 (Grant Charge 'Egnineering Agent Loops and Workflows')
+  filip_adaptation: 2026-04-28 (OneFlow context: DD, outreach, klient deliverables)
+  related_skill: ~/.claude/skills/agent-loop/SKILL.md
+  related_rules:
+    - ~/.claude/rules/from-lukas/subagent-success-criteria.md
+    - ~/.claude/rules/common/all-rules.md (Debug Iron Law)
+
+core_principle: |
+  "Bez review subagent: Claude udělá → 70% kvalita → ship → bug found → opravit.
+   S review subagent: Claude udělá → review najde gaps → opravit → 95% kvalita → ship.
+   ROI: investice 2× tokenů na review = ušetření 5-20× tokenů na opravách."
+
+architecture:
+  layers:
+    1_main: Articulate problem to Claude itself (forced understanding)
+    2_investigate: Spawn subagent (different agent_type, full context) for deep work
+    3_review: Spawn DIFFERENT subagent (fresh context, adversarial mindset)
+    4_pickup: Apply solution only if review PASS
+
+  agent_type_matrix:
+    investigate:
+      preferred:
+        - general-purpose
+        - gsd-phase-researcher
+        - architect
+      model: claude-opus-4-7  # quality > cost on investigate step
+      tools: full set
+    review:
+      preferred:
+        - eval-judge
+        - gsd-code-reviewer
+        - security-redteam (pro security tasks)
+      model: claude-sonnet-4-6  # independent + cheap
+      tools: read-only preferred
+      RULE: "Must be DIFFERENT agent_type than investigate (no shared bias)"
+    pickup:
+      preferred:
+        - gsd-executor
+        - main thread
+      model: claude-sonnet-4-6  # straightforward apply
+      tools: write enabled
+
+decision_rules:
+  use_loop_if:
+    - Task complexity score >= 6/10
+    - Stakes high (investor-facing, deploy prod, >10k Kč budget impact, legal binding)
+    - Filip phrase indicates: "kritické", "fakt důležité", "rozcupuj", "zkontroluj", "nesmí selhat"
+    - Multi-step task with intermediate validation needs
+
+  skip_loop_if:
+    - Trivial ops (grep, ls, mv, single read)
+    - Pure formatting / typo fix
+    - Filip explicit: "rovnou", "rychlý draft", "skip review"
+    - Cost > expected benefit (single sentence message Filipovi)
+    - Already covered by /evalopt or /challenge auto-trigger
+
+ready_made_loops:
+  debug_loop:
+    purpose: "Bug fix s reproducible scenario"
+    sequence:
+      - articulate: "Reproduce bug, state context"
+      - investigate: "gsd-debugger subagent — root cause, evidence, hypothesis"
+      - review: "eval-judge — is repro deterministic? root cause vs symptom? blast radius >5 files?"
+      - pickup: "Apply fix, run tests, verify original repro now PASSES"
+    success_criteria:
+      - Original failing test/scenario now passes
+      - No regression in adjacent files
+      - Root cause documented in commit message
+      - Blast radius <5 files OR escalation to Filipa
+
+  dd_loop:
+    purpose: "Due Diligence emitent validation"
+    sequence:
+      - articulate: "Emitent {X}, scope: ARES + ISIR + DSCR + LTV + UBO + A-F scoring"
+      - investigate: "dd-emitent skill — full DD draft"
+      - review: "Red-team mode: find halucinated metrics, missing risk dimensions, unsupported claims"
+      - pickup: "/evalopt loop pokud score <85, jinak ship"
+    success_criteria:
+      - All financial metrics cite source
+      - All czech-regulatory.yaml red-flags evaluated
+      - Risk disclaimer present
+      - A-F grade with rationale per dimension
+
+  outreach_loop:
+    purpose: "High-stakes investor/client outreach (HARD-STOP zone respect)"
+    sequence:
+      - articulate: "Prospect {X}, channel {Y}, goal {Z}"
+      - investigate: "outreach-oneflow skill — draft message"
+      - review_3a: "oneflow-brand-voice-check (OpenSpace) — banned words"
+      - review_3b: "oneflow-deliverability-check (OpenSpace) — SPF/DKIM/DMARC"
+      - review_3c: "Cialdini framework check (per outbound-sales-science.yaml)"
+      - pickup: "RETURN draft to Filip + verdict — NEVER auto-send (HARD-STOP)"
+    success_criteria:
+      - Brand voice PASS
+      - Deliverability SEND verdict
+      - At least 1 calibrated question CTA
+      - All claims verifiable
+      - Filipova explicit approval pro send
+
+  refactor_loop:
+    purpose: "Refactor s blast radius >3 souborů"
+    sequence:
+      - articulate: "Refactor scope, motivation, success criteria"
+      - investigate: "architect subagent — impact analysis, migration plan, risks"
+      - review: "gsd-code-reviewer — completeness, edge cases, test coverage"
+      - pickup: "Phased execution per migration plan, atomic commits"
+    success_criteria:
+      - All existing tests pass
+      - No functional regression
+      - No orphan code (per common/all-rules.md Surgical Changes)
+      - Migration plan documented in commit history
+
+anti_patterns:
+  same_agent_for_investigate_and_review:
+    why_bad: "Compromised independence, bias preserved, gaps survive"
+    fix: "Always different subagent_type for review step"
+
+  skip_review_when_stakes_high:
+    why_bad: "Defeats whole purpose, lazy work ships"
+    fix: "Use /challenge or /redteam single-pass if full loop overhead unacceptable"
+
+  loop_3plus_iterations_failing:
+    why_bad: "Architectural problem, ne kódový — víc iterations nepomůže"
+    fix: "After 3rd FAIL, escalate to Filipa with what-tried + what-failed analysis"
+
+  loop_for_trivial_task:
+    why_bad: "Overhead 30-60s + 5-10× tokens for nothing"
+    fix: "Direct execution + fast review (eyeballs check), no formal loop"
+
+  auto_send_or_auto_deploy_skipping_human:
+    why_bad: "HARD-STOP zone violation per ~/.claude/rules/hard-stop-zone.md"
+    fix: "Loop returns draft + verdict, Filip approves send/deploy"
+
+integration_with_existing_skills:
+  gsd_debug:
+    relation: "Native agent loop pro debugging within GSD framework"
+    use_when: "Bug fix s GSD project context"
+
+  evalopt:
+    relation: "Iterative review loop pro copy/content (Generator-Evaluator pattern)"
+    use_when: "Copy/content task, brand voice + factcheck rubric"
+
+  challenge:
+    relation: "Tier A power skill pro single-pass review (faster than full loop)"
+    use_when: "Quick stakes-check, ne deep investigate needed"
+
+  redteam:
+    relation: "Adversarial mode of review subagent"
+    use_when: "Security review, contract review, investment thesis tear-apart"
+
+  sentinel:
+    relation: "Pre-ship gate (errors, risks, missed details)"
+    use_when: "Final review before deploy/send/publish"
+
+  dd_emitent:
+    relation: "Existing DD skill — extend with review subagent for v2"
+    use_when: "Standard DD; for max-stakes emitent (>5M Kč) wrap with dd_loop above"
+
+  outreach_oneflow:
+    relation: "Existing outreach skill — wrap with outreach_loop for c-suite/celebrity"
+    use_when: "Cold email, podcast outreach, investor pitch"
+
+token_economics:
+  loop_overhead_baseline:
+    investigate_tokens: 3000-8000
+    review_tokens: 1500-3000
+    total: 4500-11000
+
+  saved_tokens_via_avoided_rework:
+    bug_with_review: ~30000 tokens fix-on-first-try
+    bug_without_review: ~80000 tokens (3 fix-and-retry cycles)
+    net_savings: ~50000 tokens
+
+  break_even_threshold:
+    "Loop is positive ROI if task complexity > 6/10 AND likelihood of needing rework > 30%"
+
+verification_checklist:
+  before_marking_loop_complete:
+    - "Investigate subagent output reviewed by DIFFERENT subagent_type"
+    - "Review verdict explicit: PASS | REVISE | ESCALATE"
+    - "If REVISE: max 3 iterations before escalation"
+    - "Pickup applied solution validates against original success criteria"
+    - "Tokens used logged for ROI tracking"
+
+  red_flags:
+    - "Review subagent same agent_type as investigate"
+    - "Review skipped 'because trivial'"
+    - "Loop iteration 4+ without escalation"
+    - "Auto-send/auto-deploy without Filipova approval"
+    - "Pickup applied without verifying review PASS"
+
+future_extensions:
+  multi_review_quorum:
+    description: "2-3 review subagenty paralelně, majority vote"
+    use_when: "Maximum stakes (DD >50M Kč emise, legal binding contracts)"
+
+  self_correcting_loop:
+    description: "Investigate sees own past failures, adjusts hypothesis"
+    use_when: "Long debug sessions, complex root causes"
+
+  meta_loop:
+    description: "Loop o smyslu loopu: should we even attempt this task?"
+    use_when: "Strategic decisions before commitment of resources"

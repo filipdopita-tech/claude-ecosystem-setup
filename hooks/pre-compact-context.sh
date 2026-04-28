@@ -3,7 +3,7 @@
 # Enhanced 7-section output inspired by Claude Code internal compact prompt
 # Outputs key info that must survive context compression
 
-MEMORY_DIR="$HOME/.claude/projects/-Users-filipdopita/memory"
+MEMORY_DIR="$HOME/.claude/projects/<your-project-id>/memory"
 HOMUNCULUS="$HOME/.claude/homunculus"
 PLANS_DIR="$HOME/.claude/plans"
 
@@ -77,7 +77,7 @@ if [ -f "$HOMUNCULUS/observations.jsonl" ]; then
 fi
 
 # 8. Session digest — auto-memory capture (claude-mem inspired)
-bash /Users/filipdopita/.claude/scripts/session-digest.sh 2>/dev/null || true
+bash ~/.claude/scripts/session-digest.sh 2>/dev/null || true
 
 # 9. ContextRecovery — structured JSON snapshot before lossy compact
 SNAPSHOT_DIR="$HOME/.claude/context-snapshots"
@@ -88,11 +88,11 @@ import json, os, datetime
 snapshot = {
     'ts': datetime.datetime.utcnow().isoformat(),
     'cwd': os.getcwd(),
-    'memory_dir': os.path.expanduser('~/.claude/projects/-Users-filipdopita/memory'),
+    'memory_dir': os.path.expanduser('~/.claude/projects/<your-project-id>/memory'),
     'note': 'Pre-compact context recovery snapshot'
 }
 # Grab last 5 session handoff lines
-handoff = os.path.expanduser('~/.claude/projects/-Users-filipdopita/memory/session_handoff.md')
+handoff = os.path.expanduser('~/.claude/projects/<your-project-id>/memory/session_handoff.md')
 if os.path.exists(handoff):
     with open(handoff) as f:
         snapshot['handoff_excerpt'] = f.read(2000)

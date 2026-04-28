@@ -8,7 +8,7 @@ compatibility: Requires SSH root access to Flash and Alfa VPS via WireGuard. Nma
 metadata:
   requires-env: SSH_KEY
   allowed-hosts:
-    - 10.77.0.1
+    - <vps-private-ip>
     - 89.221.212.203
     - 173.212.220.67
   version: "1.1"
@@ -32,7 +32,7 @@ allowed-tools:
 ## Scope
 
 Audit se spouští na **obou VPS**:
-- **Flash** (Contabo): `ssh root@10.77.0.1`
+- **Flash** (Contabo): `ssh root@<vps-private-ip>`
 - **Alfa** (Wedos): `ssh root@89.221.212.203`
 
 Pokud uživatel specifikuje jen jeden server, audituj jen ten. Default = oba.
@@ -327,7 +327,7 @@ Po dokončení obou auditů vytvoř:
 
 | Server | Score | FAILs | WARNs | PASSes |
 |---|---|---|---|---|
-| Flash (10.77.0.1) | XX% | N | N | N |
+| Flash (<vps-private-ip>) | XX% | N | N | N |
 | Alfa (89.221.212.203) | XX% | N | N | N |
 | **CELKEM** | **XX%** | **N** | **N** | **N** |
 
@@ -378,7 +378,7 @@ curl -s \
 ```
 
 ### Aktualizace memory
-Po auditu přidej do `~/.claude/projects/-Users-filipdopita/memory/security_hardening_2026_04_09.md`:
+Po auditu přidej do `~/.claude/projects/<your-project-id>/memory/security_hardening_2026_04_09.md`:
 ```
 ## Audit [YYYY-MM-DD]
 Score: Flash XX%, Alfa XX%
@@ -436,7 +436,7 @@ Pořadí závažnosti:
 
 | Situace | Akce |
 |---|---|
-| SSH connection timeout | Ověř WireGuard: `wg show`, `ping 10.77.0.1`. Pokud WG down, restart: `wg-quick down wg0 && wg-quick up wg0` |
+| SSH connection timeout | Ověř WireGuard: `wg show`, `ping <vps-private-ip>`. Pokud WG down, restart: `wg-quick down wg0 && wg-quick up wg0` |
 | nmap: permission denied | Spusť s `sudo`. Nmap SYN scan vyžaduje root |
 | SSL check: connection refused | Služba neběží nebo Caddy/nginx down. Zkontroluj `systemctl status caddy` |
 | UFW: command not found | UFW není nainstalovaný (nemělo by se stát). FAIL + okamžitá remediace |

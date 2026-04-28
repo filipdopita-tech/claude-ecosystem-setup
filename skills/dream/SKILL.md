@@ -12,9 +12,9 @@ allowed-tools:
 Reflektivní průchod nad memory soubory. Syntetizuj naučené do trvalých, organizovaných pamětí, aby budoucí session mohla rychle orientovat.
 
 **Konvence:**
-- Memory dir: `~/.claude/projects/-Users-filipdopita/memory/`
+- Memory dir: `~/.claude/projects/<your-project-id>/memory/`
 - Index: `MEMORY.md` (max 200 řádků, max ~25KB, entries ≤150 znaků)
-- Transcripts: `~/.claude/projects/-Users-filipdopita/*.jsonl` (velké, grep narrow)
+- Transcripts: `~/.claude/projects/<your-project-id>/*.jsonl` (velké, grep narrow)
 - Observations: `~/.claude/homunculus/observations.jsonl`
 - State: `~/.claude/homunculus/.last_dream_run`, `.last_dream_sessions`
 
@@ -43,7 +43,7 @@ Pokud argument neodpovídá, default = `consolidate`.
 ## Consolidate
 
 ### Phase 1 — Orient
-- `ls ~/.claude/projects/-Users-filipdopita/memory/` — co existuje
+- `ls ~/.claude/projects/<your-project-id>/memory/` — co existuje
 - Read `MEMORY.md` — aktuální index
 - Skim existující topic files (ne všechny, vzorky podle kategorií v indexu) abys rozšířil místo duplikoval
 - Zkontroluj `~/.claude/homunculus/observations.jsonl` posledních ~200 řádků
@@ -54,10 +54,10 @@ Zdroje v prioritě:
 2. **Existing memories that drifted** — fakta contradicted codebasem/aktuálním stavem (ssh, files, git log)
 3. **Transcript grep** (jen cílený, ne full read):
    ```bash
-   grep -l "<narrow term>" ~/.claude/projects/-Users-filipdopita/*.jsonl | tail -5
+   grep -l "<narrow term>" ~/.claude/projects/<your-project-id>/*.jsonl | tail -5
    ```
    Grep za konkrétními pojmy co už tušíš, že jsou důležité. Nečti celé.
-4. **Session handoff** — `~/.claude/projects/-Users-filipdopita/memory/session_handoff.md` pokud existuje
+4. **Session handoff** — `~/.claude/projects/<your-project-id>/memory/session_handoff.md` pokud existuje
 
 Nečti transcripts exhaustivně. Hledej jen co už tušíš, že matters.
 
@@ -102,7 +102,7 @@ Vrať krátké shrnutí: kolik sloučeno/přidáno/prunováno. Pokud nic nezměn
 
 Lehčí pass — jen mazání stale a collapse duplikátů. Bez gather signal fáze.
 
-1. `find ~/.claude/projects/-Users-filipdopita/memory/ -name '*.md'` — enumeruj
+1. `find ~/.claude/projects/<your-project-id>/memory/ -name '*.md'` — enumeruj
 2. Pro každý soubor rozhodni:
    - **Stale/invalidated** — contradicted codebasem/aktuálním stavem → smaž
    - **Duplicate** — jiná memory už pokrývá → smaž redundantní. Pokud jeden richer file nahradí cluster, smaž cluster a napiš jeden nový (zachovej nejstarší `created`)
@@ -146,7 +146,7 @@ CronCreate:
 Report aktuálního stavu bez změn.
 
 ```bash
-MEMORY_DIR=~/.claude/projects/-Users-filipdopita/memory
+MEMORY_DIR=~/.claude/projects/<your-project-id>/memory
 echo "Memory files: $(ls $MEMORY_DIR/*.md 2>/dev/null | wc -l)"
 echo "MEMORY.md lines: $(wc -l < $MEMORY_DIR/MEMORY.md)"
 echo "MEMORY.md size: $(wc -c < $MEMORY_DIR/MEMORY.md) bytes"

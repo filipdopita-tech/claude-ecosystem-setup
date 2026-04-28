@@ -24,12 +24,12 @@ Zachovej kontext konverzace mezi sessions. Strukturovaný checkpoint formát + f
 
 ### Režim A: Strukturovaný checkpoint (PREFER pro GSD / git repos / komplexní tasky)
 
-Uložit do: `~/.claude/projects/-Users-filipdopita/checkpoints/{YYYYMMDD-HHMMSS}-{title-slug}.md`
+Uložit do: `~/.claude/projects/<your-project-id>/checkpoints/{YYYYMMDD-HHMMSS}-{title-slug}.md`
 
 **Sběr stavu (vždy nejdřív):**
 
 ```bash
-mkdir -p ~/.claude/projects/-Users-filipdopita/checkpoints
+mkdir -p ~/.claude/projects/<your-project-id>/checkpoints
 echo "=== BRANCH ==="
 git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "no-git"
 echo "=== STATUS ==="
@@ -86,7 +86,7 @@ next_action: {jedno-větný konkrétní další krok}
 ### Režim B: Flat memory handoff (FALLBACK, backward-compat)
 
 Pokud session byla jednoduchá nebo mimo git repo, uložit do:
-`~/.claude/projects/-Users-filipdopita/memory/session_handoff.md`
+`~/.claude/projects/<your-project-id>/memory/session_handoff.md`
 
 **Schema (přepíše předchozí):**
 
@@ -123,9 +123,9 @@ originSessionId: {session ID if available}
 
 ```bash
 echo "=== RECENT CHECKPOINTS ==="
-find ~/.claude/projects/-Users-filipdopita/checkpoints -maxdepth 1 -name "*.md" -type f 2>/dev/null | xargs ls -1t 2>/dev/null | head -10
+find ~/.claude/projects/<your-project-id>/checkpoints -maxdepth 1 -name "*.md" -type f 2>/dev/null | xargs ls -1t 2>/dev/null | head -10
 echo "=== FLAT HANDOFF ==="
-ls -la ~/.claude/projects/-Users-filipdopita/memory/session_handoff.md 2>/dev/null
+ls -la ~/.claude/projects/<your-project-id>/memory/session_handoff.md 2>/dev/null
 ```
 
 **Priority čtení:**
@@ -164,7 +164,7 @@ Pak zeptat přes AskUserQuestion:
 ## List flow (/checkpoint list)
 
 ```bash
-find ~/.claude/projects/-Users-filipdopita/checkpoints -maxdepth 1 -name "*.md" -type f 2>/dev/null | xargs ls -1t 2>/dev/null
+find ~/.claude/projects/<your-project-id>/checkpoints -maxdepth 1 -name "*.md" -type f 2>/dev/null | xargs ls -1t 2>/dev/null
 ```
 
 Prezentuj jako tabulku:

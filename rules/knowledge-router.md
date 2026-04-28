@@ -24,6 +24,20 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 | Konkurence, competitor, scrape IG profil, hook pattern, co dělá X, inspirace pro hook | skill: competitor-intel |
 | SEO, AEO, GEO, AI citace, Perplexity, ChatGPT visibility, schema markup, E-E-A-T, structured data | skill: seo-audit |
 | obsidian, OneFlow-Vault, vault, search note, create note, find tag, .canvas, .base | skill: obsidian-cli + obsidian-markdown + obsidian-bases + json-canvas |
+| Skool intel patterns, top insights z Skool komunit, cross-community distillation, Mr Kattani, Charles cc-strategic | knowledge/skool-intel-distillation.md + memory/project_skool_intel_implementation_2026_04_28.md |
+| n8n, Zapier, Make, Pipedream, "buduji workflow", "automation pipeline", "stack rozhodnutí pro workflow" | rules/n8n-vs-claude-code.md + memory/project_conductor.md |
+| agent loop, investigate review pickup, decomposition subagentu, multi-step debugging s reviewem, chain of agents pro DD/refactor/outreach | skill: agent-loop + expertise/agent-loop-engineering.yaml |
+| NotebookLM research, YouTube research, zero-RAG agent, prospekt PDF + YT research, podcast prep, market intel přes NotebookLM | skill: notebooklm-research + knowledge/research-via-notebooklm.md |
+| site builder, landing page z business name, emitent landing, klient nabídka stránka, programmatic SEO pages, ARES + Vercel deploy | skill: site-builder |
+| trend tracker, daily content nápady, YT+X+Reddit+web monitoring, denní investiční trendy CZ, content pipeline pro IG/LinkedIn | skill: trend-tracker |
+| browser network tab access, Chrome DevTools MCP, scrape přes network introspekce, ARES via traffic analysis | mcp: chrome-devtools (npx chrome-devtools-mcp@latest) |
+| Apollo Apify deprecated, lead-gen scraper alternatives, Apollo official scraper paid | expertise/data-enrichment.yaml § apollo (po 2026-09 DEPRECATION block) + knowledge/skool-intel-distillation.md § Pattern 8 |
+| batch DD, 50+ emitenti najednou, agentic RAG nad SQL, halucinace v DD finanční metriky, portfolio review, sector benchmarking | skill: dd-batch-sql + memory/project_scraping_engine.md |
+| productize workflow do SaaS, n8n → Next.js + Stripe, Conductor automation → klikací app, OneFlow internal tool → recurring revenue | skill: saas-from-workflow + expertise/prd-driven-saas.yaml |
+| PRD, product requirements document, spec dokument, "napiš PRD pro X", before implementation | skill: prd-spec + expertise/prd-driven-saas.yaml |
+| OneFlow cold outreach kampaň 100-1000 leadů, ARES + LinkedIn + Hunter waterfall, Cialdini Voss CTA, Apollo direct (ne Apify), CZ ICP | skill: cold-outreach-v3 (NOT cold-email which is generic English) |
+| AI employees mental model, pipeline + parallel + sub agents archetypes, "hire" Claude pro task, agent team architecture | expertise/agent-employees.yaml + skill: dispatching-parallel-agents |
+| macOS screen capture, automated screenshots, visual QA pro AI agents, vision question answering nad screenshots | CLI: peekaboo (brew install steipete/tap/peekaboo, /opt/homebrew/bin/peekaboo) |
 | shadcn, shadcn/ui, component, registry, button, card, dialog, theming | skill: shadcn |
 | Next.js, Vercel, React, server components, app router, performance, RSC | skill: vercel-react-best-practices + nextjs-app-router-patterns + vercel-composition-patterns |
 | Google Sheets, gws-sheets, append row, read spreadsheet, VPS Dashboard | skill: gws-sheets-read + gws-sheets-append + sheets-automation |
@@ -47,6 +61,27 @@ NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
 | Kód refactor, optimization, compaction, cleanup, token efficiency v kódu | rules/lean-engine.md |
 | JS/TS/Python/Bash patterns, arrow fn, list comprehension, walrus, destructuring | rules/lean-engine.md |
 | Subagent prompt tuning, compact agent output, agent report format | rules/lean-engine.md §3-4 |
+
+## Completion Mandate (HARDCORE behavioral, načti VŽDY pro task s akčním slovesem)
+| Task obsahuje | Načti |
+|---|---|
+| Filipův pokyn s imperativem (udělej, sprav, vytvoř, nasaď, oprav, scrape, deploy, atd.) | rules/completion-mandate.md + memory/feedback_completion_mandate.md |
+| Scraping/data task se zdrojem ≥100 záznamů | rules/completion-mandate.md (scope ≥50% pravidlo) |
+| Cokoli kde mi přijde napsat "to nejde", "potřebuji vaše schválení", "po schválení", "doporučuji udělat", "navrhuji", "nemám přístup" | rules/completion-mandate.md (zakázané fráze) |
+| Auto-trigger na blocking phrases | hooks/completion-blocking-words-guard.sh blokuje exit 2 (3+ Tier 1 + >500 chars) |
+| Override legitimate edge case | env COMPLETION_OVERRIDE=1 |
+
+## Power Skill Stack (40+ slash commands tier system, S/A/B/C/D/E/F)
+| Task obsahuje | Načti |
+|---|---|
+| High-stakes výstup (DD report, investor memo, klientský deliverable >50k Kč, ad creative >5k Kč budget) | rules/power-skills-stack.md + skills/chains/CHAINS.md |
+| Filip phrase: "fakt důležité", "kritické", "rozcupuj", "tear apart", "stuck", "deep dive", "max detail", "viral", "ghostwrite" | rules/power-skills-stack.md (auto-trigger mapping) |
+| Strategic decision (pivot, big bet, new service, hiring) | skills/chains/CHAINS.md → STRATEGIC-DECISION recipe |
+| Cold email/DM na c-suite/celebrity/podcast guest | skills/chains/CHAINS.md → COLD-EMAIL-MAX recipe |
+| Content pillar launch / hero post / viral attempt | skills/chains/CHAINS.md → CONTENT-VIRAL recipe |
+| Investor pitch / podcast outreach / sales letter high-stakes | skills/chains/CHAINS.md → INVESTOR-PITCH recipe |
+| Comprehensive research / market intel / competitive map | skills/chains/CHAINS.md → DEEP-RESEARCH recipe |
+| Pre-deploy / pre-send final gate | skills/chains/CHAINS.md → SHIP-GATE recipe |
 
 ## CARL Domain Rules (behavioral constraints, načti SPOLU s YAML)
 | Task obsahuje | Načti |

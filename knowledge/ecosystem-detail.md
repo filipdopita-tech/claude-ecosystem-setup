@@ -44,9 +44,9 @@ Screen: social-terminal, wa-bridge, sms-receiver, oneflow-bot, beskyd_form, http
 gh, ffmpeg, vercel, playwright, stripe (1.40.3)
 
 ## Klíčové cesty
-- /mac/Documents/ = Mac Documents (source of truth)
+- ~/Documents/ = Mac Documents (source of truth)
 - /home/claude/knowledge-base/ = KB API data (Flash)
 - /home/claude/dubai-scraper/ = UAE lead scraper (Flash)
 
 ## Resolved Issues (2026-04-08)
-Caddy active, GEMINI_API_KEY in .env, backup cron 4:00, SSHFS fixed, li-ghl-sync disabled+masked, WG 10.77.0.0/24, Alfa disk 53%, Postfix LE cert (exp 2026-07-07), SN expired+disabled, Cloudflare token saved, WEDOS WAPI fixed, DMARC quarantine+SPF -all
+Caddy active, GEMINI_API_KEY in .env, backup cron 4:00, SSHFS fixed, li-ghl-sync disabled+masked, WG <private-subnet>/24, Alfa disk 53%, Postfix LE cert (exp 2026-07-07), SN expired+disabled, Cloudflare token saved, WEDOS WAPI fixed, DMARC quarantine+SPF -all

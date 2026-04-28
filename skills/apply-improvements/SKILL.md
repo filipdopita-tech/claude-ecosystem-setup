@@ -63,7 +63,7 @@ Pak čekej na Filipův pokyn: "aplikuj 1,2" nebo "aplikuj vše" nebo "skip 2, ap
 
 ### 4. Apply (po explicit OK)
 
-- Feedback memory: Write do `~/.claude/projects/-Users-filipdopita/memory/feedback_*.md` + append do `MEMORY.md` index
+- Feedback memory: Write do `~/.claude/projects/<your-project-id>/memory/feedback_*.md` + append do `MEMORY.md` index
 - Rule update: Edit do `~/.claude/rules/*.md` (surgical, jen navrhnuté řádky)
 - Anomaly: log do `~/.claude/logs/anomalies-$WEEK.jsonl`, no-op default
 
@@ -89,7 +89,7 @@ Po apply přesun source do `~/.claude/review-queue/_archive/YYYY-MM-applied.md`.
 ## Integrace
 
 - Vstup: `~/.claude/review-queue/*.md` (z memory-improvement-batch.sh v2)
-- Výstup: `~/.claude/projects/-Users-filipdopita/memory/feedback_*.md` + `MEMORY.md` + `~/.claude/rules/*.md`
+- Výstup: `~/.claude/projects/<your-project-id>/memory/feedback_*.md` + `MEMORY.md` + `~/.claude/rules/*.md`
 - Archive: `~/.claude/review-queue/_archive/`
 - Log: `~/.claude/logs/apply-improvements.log`
 
@@ -101,7 +101,7 @@ Po apply přesun source do `~/.claude/review-queue/_archive/YYYY-MM-applied.md`.
 ## Rollback
 
 Každá změna je atomicky přidaná řádek/soubor.
-- Feedback memory: `rm ~/.claude/projects/-Users-filipdopita/memory/feedback_NEW.md` + remove řádek z MEMORY.md
+- Feedback memory: `rm ~/.claude/projects/<your-project-id>/memory/feedback_NEW.md` + remove řádek z MEMORY.md
 - Rule update: git revert v `~/.claude/rules/` pokud je git; jinak manual
 
 ## Notes

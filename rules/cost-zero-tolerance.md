@@ -9,8 +9,9 @@ Toto pravidlo **PŘEPISUJE** ostatní rules. Zero tolerance.
 **Incident historie:**
 - 2026-04-17: CZK 1 019,73 overdue, Visa 9591 declined
 - 2026-04-24: CZK 3 000 (~$125) Solar+Maps Platform via `nemakej-solar-outbound` pipeline
+- 2026-04-27: Filip spotted Gemini requests v billing → **HARDCORE GEMINI BAN** (viz níže)
 
-**Po 2. incidentu (2026-04-24) jsou aktivní HARD GUARDS na úrovni systému** — viz sekce "System Guards" níže. Pokud guard blokuje legitimní call, eskaluj Filipovi, nezkoušej obejít.
+**Po 3. cost concernu (2026-04-27) Filip explicit pokyn: "rozhodně nepoužívej žádný Google API, pokud se bavíme o nějakých requestech na Gemini". = NULL Google API (i free tier Gemini).** Hard guards aktivní, viz "System Guards" níže.
 
 ---
 
@@ -31,8 +32,10 @@ Před jakýmkoli Google API callem:
 
 ## POVOLENO (bez eskalace, free tier only)
 
-- Gemini API — **jen přes `gemini --model gemini-2.5-flash`**, max 1500 req/den (free tier limit). Nad to STOP, ne retry, ne paid upgrade
-- Gmail API / Google Drive / Calendar / People / Docs / Sheets — osobní OAuth free quota
+- ~~Gemini API — **jen přes `gemini --model gemini-2.5-flash`**, max 1500 req/den~~ **🛑 BLOCKED 2026-04-27** — Filip rule "rozhodně nepoužívej žádný Google API". Použij místo toho:
+  - Claude (Sonnet/Opus) v Claude Code session
+  - OpenRouter free models: `deepseek/deepseek-r1:free`, `qwen/qwen-3-coder:free`, `moonshotai/kimi-k2:free`, `nvidia/nemotron-nano-9b-v2:free` (1500 req/den each)
+- Gmail API / Google Drive / Calendar / People / Docs / Sheets — osobní OAuth free quota (POVOLENO, není to "Gemini API" kterého se to týká, jsou to OAuth scoped services bez per-request fee)
 - YouTube Data API read — do 10 000 units/den (monitor, nad to STOP)
 
 ---
@@ -40,6 +43,7 @@ Před jakýmkoli Google API callem:
 ## HARD STOP (vždy eskaluj, nikdy auto)
 
 Všechny Google Cloud placené služby:
+- **Gemini API (any tier, including free)** — added 2026-04-27 (Filip rule no Google API)
 - Vertex AI (Gemini přes Vertex, Imagen, ostatní modely)
 - Compute Engine, Cloud Run, Cloud Functions, App Engine
 - Cloud Storage, BigQuery, Firestore, Cloud SQL
@@ -74,7 +78,7 @@ Všechny Google Cloud placené služby:
 ### 2. Daily monitoring
 - Cron na Macu: `0 8 * * * ~/scripts/automation/google-api-status.sh`
 - Kontroluje: paid keys v env (Mac+VPS), nemakej-solar source state, paid API URLs v VPS logách za 24h
-- Alerty: ntfy `https://ntfy.example.com/your-topic` při detekci paid endpoint nebo paid key
+- Alerty: ntfy `https://ntfy.oneflow.cz/Filip` při detekci paid endpoint nebo paid key
 - Log: `~/.claude/logs/google-api-status.log`
 
 ### 3. Source code lockdown

@@ -4,8 +4,8 @@
 # 2. Appends final usage snapshot to metrics/usage.jsonl
 # 3. Sends ntfy summary with usage stats
 
-NTFY_URL="${NTFY_URL:-https://ntfy.example.com/your-topic}"
-NTFY_TOKEN="${NTFY_TOKEN:-}"
+NTFY_URL="https://ntfy.oneflow.cz/Filip"
+NTFY_TOKEN="${NTFY_TOKEN:-}"  # configure in ~/.claude/mcp-keys.env
 USAGE_LOG="$HOME/.claude/metrics/usage.jsonl"
 
 # --- Usage stats from today's log ---

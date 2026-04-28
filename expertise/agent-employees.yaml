@@ -1,0 +1,196 @@
+name: agent-employees
+description: |
+  Mental model "AI employees" pro Claude Code — 3 archetypy agentů (pipeline / parallel /
+  sub) + decision rules kdy použít který. Distillation z noeai-free + agent-lab posts.
+
+source:
+  insights:
+    - skool-intel/noeai "How I Built a Team of AI Employees Inside Claude Code (Step-by-Step)"
+    - skool-intel/noeai "I turned Claude into an AI employee (here's how)"
+    - skool-intel/agent-lab "3 MCP Servers That Make Claude Code Feel Human"
+    - skool-intel/agent-lab "Lobster Bot: Life OS just dropped"
+  filip_adaptation: 2026-04-28
+  related_skills:
+    - ~/.claude/skills/dispatching-parallel-agents/SKILL.md
+    - ~/.claude/skills/agent-loop/SKILL.md
+    - ~/.claude/skills/agent-harness-construction/SKILL.md
+  related_rules:
+    - ~/.claude/rules/from-lukas/subagent-success-criteria.md
+
+core_thesis: |
+  "Don't think 'I'll ask Claude to do X'. Think 'I'm hiring an employee to handle X — what's
+   their role, scope, deliverable, success criteria?' Claude becomes a team, not a tool."
+
+three_archetypes:
+  pipeline_agents:
+    description: "Sequential dependency chain — output of A is input of B"
+    use_when:
+      - Data flows linearly through stages
+      - Each stage transforms output of prior
+      - Order matters, parallelization impossible
+    examples:
+      - "data fetch → enrichment → ideation → script generation → ad creative"
+      - "PDF prospekt → text extract → entity extract → DD report"
+      - "lead scrape → email enrich → personalization → deliverability check → send"
+    implementation:
+      tool: Agent tool sequential calls (1 at a time)
+      anti_pattern: "Trying to parallelize — race conditions, missing context"
+
+  parallel_agents:
+    description: "Independent workers, no shared state, fire-and-forget"
+    use_when:
+      - Each task self-contained
+      - No dependency between tasks
+      - Speed > coordination overhead
+    examples:
+      - "Morning brief: 5 agents fire simultaneously (email, calendar, news, stats, research)"
+      - "Multi-file scan: 1 agent per file, results aggregated"
+      - "Multi-source enrichment: ARES + LinkedIn + Hunter all parallel per lead"
+    implementation:
+      tool: Agent tool single message, multiple Agent calls
+      max_concurrent: 4-5 (per ~/.claude/CLAUDE.md "Max 3 concurrent long-running")
+      anti_pattern: "Sequential calls when parallel possible — wasted time"
+
+  sub_agents:
+    description: "Specialized expertise hired for specific subtask within parent agent"
+    use_when:
+      - Parent agent identifies need for specialized skill
+      - Subtask isolated with clear input/output
+      - Different model/tools beneficial (e.g., Haiku for simple, Opus for complex)
+    examples:
+      - "DD agent → security audit subagent (different lens)"
+      - "Code review agent → security-redteam subagent for sec-sensitive changes"
+      - "Research agent → fact-check subagent for cited claims"
+    implementation:
+      tool: Agent tool inside another agent's flow
+      isolation: "Fresh context, explicit deliverable"
+      anti_pattern: "Spawning subagent for trivial task — overhead > benefit"
+
+archetypes_decision_matrix:
+  task_signature_examples:
+    "Build feature with multiple stages":
+      archetype: pipeline_agents
+      reason: "Sequential dependency"
+
+    "Scan codebase for issues across N files":
+      archetype: parallel_agents
+      reason: "Independent per file"
+
+    "DD report needing legal + financial expertise":
+      archetype: sub_agents
+      reason: "Specialized subagents within main flow"
+
+    "Daily morning brief from 5 sources":
+      archetype: parallel_agents
+      reason: "Fire-and-forget independent fetches"
+
+    "Cold outreach campaign 100 leads":
+      archetype: hybrid
+      reason: "Pipeline (enrich → personalize → send) WITH parallel within each stage (per lead)"
+
+oneflow_application_examples:
+  conductor_daemon:
+    archetypes_used: [pipeline, parallel]
+    flow: "Trigger → fetch (parallel sources) → process (pipeline stages) → notify"
+
+  dd_emitent_skill:
+    archetypes_used: [pipeline, sub]
+    flow: "ARES (parallel multi-source) → analysis (pipeline) → red-team subagent → report"
+
+  trend_tracker_skill:
+    archetypes_used: [parallel, pipeline]
+    flow: "Parallel YT + X + Reddit + web fetch → pipeline (dedup → score → ideate → write)"
+
+  agent_loop_skill:
+    archetypes_used: [pipeline, sub]
+    flow: "Articulate → investigate subagent → review subagent (different type) → pickup"
+
+  saas_from_workflow_skill:
+    archetypes_used: [pipeline, parallel]
+    flow: "PRD (pipeline) → Wave 1-4 (parallel within each wave)"
+
+mcp_servers_that_extend_employees:
+  source: skool-intel/agent-lab "3 MCP Servers That Make Claude Code Feel Human"
+  servers:
+    playwright_mcp:
+      gives: "Browser eyes + clicks"
+      use_case: "QA testing, web scraping, form automation"
+      install: "claude mcp add playwright npx @playwright/mcp@latest"
+      filip_status: connected
+
+    chrome_devtools_mcp:
+      gives: "Network tab introspection"
+      use_case: "API discovery, scrape via traffic analysis (ARES, ISIR, emitent webs)"
+      install: "claude mcp add chrome-devtools npx chrome-devtools-mcp@latest"
+      filip_status: connected (added 2026-04-28)
+
+    peekaboo_mcp:
+      gives: "macOS screen capture + visual QA"
+      use_case: "Visual question answering on screenshots, IG analyzer, automated UI verification"
+      install: "claude mcp add peekaboo npx -y @steipete/peekaboo"
+      filip_status: TBD (eval after Playwright limits hit)
+
+    maestro_mcp:
+      gives: "iOS/Android UI test automation"
+      use_case: "Mobile app testing"
+      install: "claude mcp add maestro npx -y @mobile-dev-inc/Maestro"
+      filip_status: skip (no mobile app)
+
+10_80_10_rule:
+  description: "Time allocation managing N AI agents"
+  source: claude-code-architects "Managing Multiple AI Agents at Once"
+  breakdown:
+    planning_scoping: 10%
+    delegation_monitoring: 80%
+    review_ship_gate: 10%
+  signal_for_misalignment:
+    "If reviewing > 30%": "PRD too vague, agents producing low quality"
+    "If planning > 30%": "Over-engineering, just start"
+    "If delegation < 50%": "Doing work yourself instead of delegating, low leverage"
+
+anti_patterns:
+  treating_subagents_as_disposable:
+    why_bad: "Loses learning, repeats mistakes across sessions"
+    fix: "Capture decisions/lessons in memory or skill files"
+
+  spawning_for_every_task:
+    why_bad: "Overhead > benefit on trivial tasks (single read, grep, ls)"
+    fix: "Subagent only when task complexity > 6/10 OR specialized skill needed"
+
+  no_explicit_deliverable:
+    why_bad: "Subagent drifts, returns vague summary, can't verify"
+    fix: "PRD-style brief: input + output spec + success criteria + word cap"
+
+  same_agent_type_for_review:
+    why_bad: "Compromised independence, bias preserved"
+    fix: "Review subagent MUST be different agent_type than investigate"
+
+  parallel_without_dedup:
+    why_bad: "Multiple agents do same work, wasted tokens"
+    fix: "Coordinator agent that distributes uniquely-scoped tasks"
+
+filip_specific_employees_to_hire:
+  ares_enrichment_employee:
+    description: "Specialized in CZ firm data lookup, ARES + ISIR + Justice"
+    when_hire: "Anytime IČO scrape needed for emitent or lead-gen"
+    related: ~/.claude/skills/dd-batch-sql/SKILL.md
+
+  brand_voice_compliance_employee:
+    description: "OneFlow brand voice + banned words enforcement"
+    when_hire: "Pre-publish on any client-facing copy"
+    related: OpenSpace skill oneflow-brand-voice-check
+
+  deliverability_gatekeeper_employee:
+    description: "Email pre-send verification (SPF/DKIM/DMARC, spam score, bounce risk)"
+    when_hire: "Pre-send on any cold outreach"
+    related: OpenSpace skill oneflow-deliverability-check
+
+  dd_red_team_employee:
+    description: "Adversarial review of DD reports, find halucinated metrics"
+    when_hire: "Post-DD draft, before Filip approval"
+    related: ~/.claude/skills/agent-loop/SKILL.md (dd_loop)
+
+  trend_curator_employee:
+    description: "Daily CZ investiční scéna monitoring, idea generation"
+    when_hire: "Cron 08:00, before Filip's morning"
+    related: ~/.claude/skills/trend-tracker/SKILL.md

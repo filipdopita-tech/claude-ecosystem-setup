@@ -1,10 +1,11 @@
 # Domain Rules: Cold Email / Outbound / Deliverability
 # CARL — aktivuj při cold email, outreach sekvence, deliverability, spam, warmup
 
-## Pre-Send Mandatory Checks
+## Pre-Send Mandatory Checks (v4 — 2026-04-27)
 
 PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 
+### Infrastruktura (technical deliverability)
 ```
 □ Proofpoint PDR status? (viz ecosystem-map.md → Flash IP)
 □ SPF/DKIM/DMARC všech domén platné? (mxtoolbox.com)
@@ -14,7 +15,33 @@ PŘED jakýmkoli odesláním nebo doporučením k odeslání:
 □ Warm-up fáze dodržena? (min 21 dní před full volume)
 ```
 
-Pokud jakýkoli check selže → HALT. Neposílej. Eskaluj Filipovi.
+### Content (v4 quality gate — NEW 2026-04-27)
+```
+□ Personalizace = 1 specifický detail z ARES nebo profilu/postu nebo recenze?
+□ Vykání pokud nový kontakt, tykání jen pokud existující vazba?
+□ Délka pod limit (FB 60w / IG 50w / Email 100w)?
+□ Žádné "Dovoluji si" / "Rád bych" / "Obracím se" / "S pozdravem"?
+□ Žádný vykřičník v B2B?
+□ CTA = calibrated question (Voss), NE ano-ne?
+□ Podpis = jen "Dopita" (DM) nebo "Filip Dopita | OneFlow" (email)?
+□ Žádný odkaz v PRVNÍ zprávě (FB filter + spam signal)?
+□ Mobile preview vypadá OK (ne wall of text)?
+□ Konkrétní čísla externí (recenze, followers, čísla firem) ověřena dnes přes WebSearch nebo direct visit?
+```
+
+Pokud jakýkoli check selže → HALT. Neposílej. Vygeneruj znovu nebo eskaluj Filipovi.
+
+## Calibrated Questions Framework (Voss)
+
+CTA NIKDY není ano-ne otázka. Aplikuj:
+
+| Cíl | Šablona |
+|---|---|
+| Soft ask, nízký risk | "Bylo by mimo, kdybych Vám poslal 2-min ukázku?" |
+| Forcing function | "Co by muselo platit, abyste si na 45 min udělal čas?" |
+| Open conversation | "Jak by pro Vás dávalo smysl 45 min investovat?" |
+| Reply trigger | "Co je nejdůležitější aby Vás přesvědčilo?" |
+| Empathy + reframe | "Mýlím se, když si myslím že tohle je relevantní pro Vás?" |
 
 ## Domain Health Thresholds
 
@@ -61,7 +88,7 @@ Flash IP je na Proofpoint PDR blocklist. Čeká na delisting (odesláno 2026-04-
 → Do clearance: ŽÁDNÉ cold emaily z Flash IP.
 → Alternativa: posílej přes Alfa VPS (CZ IP) nebo SMTP relay (Mailgun/Brevo).
 
-Zkontroluj aktuální stav: viz `~/.claude/projects/-Users-filipdopita/memory/cold_email_setup.md`
+Zkontroluj aktuální stav: viz `~/.claude/projects/<your-project-id>/memory/cold_email_setup.md`
 
 ## Content Rules
 

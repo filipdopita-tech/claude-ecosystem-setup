@@ -19,7 +19,7 @@ for dir in "$HOME"/.vscode-server/extensions/anthropic.claude-code-*/resources; 
 done
 
 # Mac (via SSHFS mount)
-for dir in /mac/.vscode/extensions/anthropic.claude-code-*/resources; do
+for dir in ~/.vscode/extensions/anthropic.claude-code-*/resources; do
   [ -d "$dir" ] && patch_svg "$dir/claude-logo-done.svg"
 done
 

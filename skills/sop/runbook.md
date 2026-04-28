@@ -9,7 +9,7 @@ Použij tento template pro dokumentaci provozu existující služby na Flash neb
 ```markdown
 # Runbook: {Název Služby}
 
-- **Server**: Flash (10.77.0.1) / Alfa (WG .3)
+- **Server**: Flash (<vps-private-ip>) / Alfa (WG .3)
 - **Port**: {port} ({local/public/WG})
 - **Systemd unit**: {service-name}.service
 - **Monit**: ano/ne
@@ -113,8 +113,8 @@ journalctl -u {service} -p err -n 20
 ## Escalation
 
 - Pokud fix nefunguje do 10 minut → spusť `/postmortem`
-- ntfy alert: `curl -d "🚨 {service} DOWN" https://ntfy.example.com/alerts`
-- Monit dashboard: http://10.77.0.1:2812 (nebo přes SSH tunnel)
+- ntfy alert: `curl -d "🚨 {service} DOWN" https://ntfy.oneflow.cz/alerts`
+- Monit dashboard: http://<vps-private-ip>:2812 (nebo přes SSH tunnel)
 ```
 
 ---

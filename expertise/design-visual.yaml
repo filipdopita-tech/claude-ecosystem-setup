@@ -758,9 +758,9 @@ audit_workflow:
 # CROSS-REFERENCES
 # =========================
 related_files:
-  research: "/Users/filipdopita/docs/design-research-2025.md"
-  stitch_systems: "/Users/filipdopita/docs/design-stitch-systems-2025.md"
-  brand_dna: "/Users/filipdopita/docs/DESIGN.md"
+  research: "~/docs/design-research-2025.md"
+  stitch_systems: "~/docs/design-stitch-systems-2025.md"
+  brand_dna: "~/docs/DESIGN.md"
   oneflow_brand: "~/.claude/expertise/oneflow-brand.yaml"
 
 related_knowledge:

@@ -1,3 +1,5 @@
 # Doc examples — explicit placeholder/mock tokens used in tutorials
 skills/_archived/api-design-2/SKILL.md:generic-api-key:306
 skills/playwright-best-practices/advanced/authentication-flows.md:generic-api-key:54
+# Educational red-team example finding — placeholder string sk-prod-abc123def456 inside a mock vulnerability report
+agents/teams-from-lukas/security-redteam.md:generic-api-key:91

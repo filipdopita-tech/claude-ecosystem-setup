@@ -2,7 +2,7 @@
 name: trend-researcher
 description: Market intelligence analyst. Identifikuje emerging trendy, competitive intel, tržní příležitosti. Používá Gemini deep-research, web search a analýzu dat. Pro OneFlow a Filipovy projekty.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "WebFetch", "WebSearch"]
-mcpServers: []
+mcpServers: ["playwright", "flywheel-memory"]
 model: sonnet
 ---
 

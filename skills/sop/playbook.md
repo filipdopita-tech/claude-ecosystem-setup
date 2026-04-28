@@ -204,5 +204,5 @@ df -h
 
 - [ ] Spusť `/postmortem` pro zdokumentování incidentu
 - [ ] Zkontroluj, zda monit opět hlídá: `monit status`
-- [ ] ntfy notifikace o obnově: `curl -d "✅ {service} obnovena" https://ntfy.example.com/alerts`
+- [ ] ntfy notifikace o obnově: `curl -d "✅ {service} obnovena" https://ntfy.oneflow.cz/alerts`
 ```

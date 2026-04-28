@@ -1,6 +1,8 @@
 #!/bin/bash
 # google-api-guard.sh — PreToolUse hook blocking ALL mutating gcloud + paid Google API calls
 #
+# v3 — HARDENED 2026-04-27 — Filip rule "rozhodně nepoužívej žádný Google API" (po 3 cost incidentech)
+#       Added: generativelanguage.googleapis.com (Gemini API) + gemini CLI command block
 # v2 — HARDENED 2026-04-25 after 3rd cost concern (Filip vidí Kč 3.16K April spend)
 # v1 — Created 2026-04-25 after 2nd GCP cost incident (3000 CZK Solar+Maps)
 #
@@ -36,7 +38,12 @@ if echo "$COMMAND" | grep -qE '(^|[[:space:]/])gcloud([[:space:]]|$)'; then
 fi
 
 # ---- BLOCK PATTERNS: paid Google API endpoints (HTTP calls) ----
-BLOCK_REGEX='(solar\.googleapis\.com|maps\.googleapis\.com|aiplatform\.googleapis\.com|documentai\.googleapis\.com|(^|[^a-z])speech\.googleapis\.com|texttospeech\.googleapis\.com|translation\.googleapis\.com|translate\.googleapis\.com|vision\.googleapis\.com|run\.googleapis\.com|cloudfunctions\.googleapis\.com|sqladmin\.googleapis\.com|firestore\.googleapis\.com|bigquery\.googleapis\.com|compute\.googleapis\.com|storage-api\.googleapis\.com|videointelligence\.googleapis\.com|naturallanguage\.googleapis\.com|dialogflow\.googleapis\.com|automl\.googleapis\.com|recommendationengine\.googleapis\.com|recaptchaenterprise\.googleapis\.com|cloudbuild\.googleapis\.com|secretmanager\.googleapis\.com|cloudkms\.googleapis\.com|geocoding\.googleapis\.com|places\.googleapis\.com|streetviewpublish\.googleapis\.com|directions\.googleapis\.com|elevation\.googleapis\.com|distance\.googleapis\.com|timezone\.googleapis\.com|roads\.googleapis\.com)'
+BLOCK_REGEX='(solar\.googleapis\.com|maps\.googleapis\.com|aiplatform\.googleapis\.com|documentai\.googleapis\.com|(^|[^a-z])speech\.googleapis\.com|texttospeech\.googleapis\.com|translation\.googleapis\.com|translate\.googleapis\.com|vision\.googleapis\.com|run\.googleapis\.com|cloudfunctions\.googleapis\.com|sqladmin\.googleapis\.com|firestore\.googleapis\.com|bigquery\.googleapis\.com|compute\.googleapis\.com|storage-api\.googleapis\.com|videointelligence\.googleapis\.com|naturallanguage\.googleapis\.com|dialogflow\.googleapis\.com|automl\.googleapis\.com|recommendationengine\.googleapis\.com|recaptchaenterprise\.googleapis\.com|cloudbuild\.googleapis\.com|secretmanager\.googleapis\.com|cloudkms\.googleapis\.com|geocoding\.googleapis\.com|places\.googleapis\.com|streetviewpublish\.googleapis\.com|directions\.googleapis\.com|elevation\.googleapis\.com|distance\.googleapis\.com|timezone\.googleapis\.com|roads\.googleapis\.com|generativelanguage\.googleapis\.com)'
+
+# ---- BLOCK: gemini CLI command (added v3 2026-04-27 — Filip rule "no Google API") ----
+# Matches: `gemini --version`, `gemini -m gemini-2.5-flash`, `command -v gemini`, etc.
+# Allow:   `which gemini` (read-only), `cat *gemini*` (file ops), comments containing "gemini"
+GEMINI_CLI_REGEX='(^|[[:space:]]|;|&&|\|\|)gemini[[:space:]]+(-[a-zA-Z]|--[a-z])'
 
 # ---- BLOCK PATTERNS: ALL mutating gcloud commands (no exceptions) ----
 # Allow: list, describe, get, get-iam-policy, config get/list/set, auth list/login (interactive)
@@ -51,7 +58,7 @@ GCLOUD_ADC_REGEX='gcloud[[:space:]]+auth[[:space:]]+application-default[[:space:
 if echo "$COMMAND" | grep -qE "$BLOCK_REGEX"; then
   MATCHED=$(echo "$COMMAND" | grep -oE "$BLOCK_REGEX" | head -1)
   cat <<EOF >&2
-🛑 GOOGLE API GUARD v2: BLOCKED paid Google API endpoint
+🛑 GOOGLE API GUARD v3: BLOCKED paid Google API endpoint
 Endpoint: $MATCHED
 Command (first 200 chars): $(echo "$COMMAND" | head -c 200)
 
@@ -63,7 +70,7 @@ Incident historie:
 
 Override: ŽÁDNÝ env-var override. Edit hook manualně pokud absolutní nezbytí.
 EOF
-  echo '{"decision":"block","reason":"Paid Google API endpoint blocked by google-api-guard v2"}'
+  echo '{"decision":"block","reason":"Paid Google API endpoint blocked by google-api-guard v3"}'
   exit 0
 fi
 
@@ -71,7 +78,7 @@ fi
 if echo "$COMMAND" | grep -qE "$GCLOUD_MUTATING_REGEX"; then
   MATCHED=$(echo "$COMMAND" | grep -oE "$GCLOUD_MUTATING_REGEX" | head -1)
   cat <<EOF >&2
-🛑 GOOGLE API GUARD v2: BLOCKED mutating gcloud command
+🛑 GOOGLE API GUARD v3: BLOCKED mutating gcloud command
 Pattern: $MATCHED
 Command (first 200 chars): $(echo "$COMMAND" | head -c 200)
 
@@ -83,18 +90,40 @@ Pokud je tohle absolutní nezbytí (nikoli "asi by to šlo"):
   2. Filip manuálně provede operaci v Cloud Console UI
   3. Hook se NEMODIFIKUJE bez Filipova explicit pokynu
 EOF
-  echo '{"decision":"block","reason":"Mutating gcloud command blocked by google-api-guard v2"}'
+  echo '{"decision":"block","reason":"Mutating gcloud command blocked by google-api-guard v3"}'
   exit 0
 fi
 
 # ---- CHECK 3: gcloud auth application-default login ----
 if echo "$COMMAND" | grep -qE "$GCLOUD_ADC_REGEX"; then
   cat <<EOF >&2
-🛑 GOOGLE API GUARD v2: BLOCKED gcloud auth application-default login
+🛑 GOOGLE API GUARD v3: BLOCKED gcloud auth application-default login
 Tohle vytvoří ADC token, který může být použit jakoukoliv knihovnou pro paid API call.
 Použij místo toho Filipovu existující SA: ~/.credentials/oneflow-scraper-new.json (free APIs only)
 EOF
-  echo '{"decision":"block","reason":"gcloud ADC login blocked by google-api-guard v2"}'
+  echo '{"decision":"block","reason":"gcloud ADC login blocked by google-api-guard v3"}'
+  exit 0
+fi
+
+# ---- CHECK 4: gemini CLI invocation (v3, 2026-04-27) ----
+if echo "$COMMAND" | grep -qE "$GEMINI_CLI_REGEX"; then
+  cat <<EOF >&2
+🛑 GOOGLE API GUARD v3: BLOCKED gemini CLI invocation
+Command (first 200 chars): $(echo "$COMMAND" | head -c 200)
+
+Filip rule 2026-04-27: "rozhodně nepoužívej žádný Google API"
+Reason: 2 cost incidents (Kč 1019 + Kč 3000) + reduced trust v Google billing.
+
+Alternative LLMs (free):
+  • Claude (Sonnet/Opus) — already in this session
+  • OpenRouter free models: deepseek-r1:free, qwen3-coder:free, kimi-k2:free
+    Example: curl https://openrouter.ai/api/v1/chat/completions -H "Authorization: Bearer \$OPENROUTER_API_KEY" \\
+             -d '{"model":"deepseek/deepseek-r1:free","messages":[...]}'
+
+Re-enable (Filip only):
+  Edit hook ~/.claude/hooks/google-api-guard.sh — comment out CHECK 4 block
+EOF
+  echo '{"decision":"block","reason":"gemini CLI blocked by google-api-guard v3 (Filip no-Google-API rule)"}'
   exit 0
 fi
 

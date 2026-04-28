@@ -29,7 +29,7 @@ Přečti historii konverzace, identifikuj:
 ### 2. Pattern detection (DETECT fáze)
 Před generováním reportu:
 ```bash
-ls ~/.claude/projects/-Users-filipdopita/memory/pm_*.md 2>/dev/null
+ls ~/.claude/projects/<your-project-id>/memory/pm_*.md 2>/dev/null
 ```
 Přečti existující postmortem soubory. Pokud root cause matchuje existující PM:
 - Přidej `[RECURRING]` tag
@@ -37,7 +37,7 @@ Přečti existující postmortem soubory. Pokud root cause matchuje existující
 - Odkázej na předchozí PM
 
 ### 3. Report generation
-Vygeneruj post-mortem v tomto formátu a ulož do `~/.claude/projects/-Users-filipdopita/memory/pm_{slug}.md`:
+Vygeneruj post-mortem v tomto formátu a ulož do `~/.claude/projects/<your-project-id>/memory/pm_{slug}.md`:
 
 ```markdown
 ---
@@ -83,7 +83,7 @@ Z každého PM extrahuj 2-5 konkrétních prevention rules. Pravidla musí být:
 ### 5. Feedback memory creation (PREVENT fáze)
 Ulož prevention rules jako feedback memory:
 ```
-~/.claude/projects/-Users-filipdopita/memory/feedback_pm_{slug}.md
+~/.claude/projects/<your-project-id>/memory/feedback_pm_{slug}.md
 ```
 Updatuj MEMORY.md index.
 

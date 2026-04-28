@@ -216,7 +216,7 @@ skóre <= 12                  → SKIP (archive only)
 POZOR: AUTO_IMPLEMENT blokuje (F-003: rozšířeno):
 - Jakýkoli paid API klíč (Vertex, OpenAI paid, atd.)
 - Destruktivní změny (drop tabulek, rm -rf, force push)
-- Systemové změny mimo ~/.claude/ a /mac/scripts/
+- Systemové změny mimo ~/.claude/ a ~/scripts/
 - Cokoli vyžadující odeslání zprávy / platby
 - **Nové rules v ~/.claude/rules/domains/** → vždy REVIEW (orphan risk bez knowledge-router integrace)
 - **Per-run cap: max 5 AUTO_IMPLEMENT položek**; 6+ kandidátů → zbylé přesunout do REVIEW (anti-noise guardrail)

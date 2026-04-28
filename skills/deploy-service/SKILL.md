@@ -1,11 +1,11 @@
 ---
 name: deploy-service
 description: "Deploy nové služby na VPS (Flash/Alfa). Systemd + Monit + Fluent Bit + Caddy + ntfy alert. Trigger: 'nasaď službu', 'deploy na VPS', 'nový service', 'přidej na server'."
-compatibility: Requires SSH access to VPS Flash (10.77.0.1) and/or Alfa (89.221.212.203) via WireGuard.
+compatibility: Requires SSH access to VPS Flash (<vps-private-ip>) and/or Alfa (89.221.212.203) via WireGuard.
 metadata:
   requires-env: SSH_KEY
   allowed-hosts:
-    - 10.77.0.1
+    - <vps-private-ip>
     - 89.221.212.203
   version: "1.0"
 allowed-tools:
@@ -105,7 +105,7 @@ ssh [target] "monit reload"
 
 ### Krok 5: Fluent Bit logging (pokud na Flash)
 ```bash
-ssh root@10.77.0.1 "cat >> /etc/fluent-bit/parsers-custom.conf << 'EOF'
+ssh root@<vps-private-ip> "cat >> /etc/fluent-bit/parsers-custom.conf << 'EOF'
 [PARSER]
     Name   [service-name]_parser
     Format regex
@@ -146,7 +146,7 @@ ssh [target] "curl -s -d '[service-name] deployed successfully on [target]' ntfy
 ### Krok 8: Aktualizuj ecosystem-map
 Po úspěšném nasazení uprav:
 - `~/.claude/rules/ecosystem-map.md` — přidej službu do tabulky
-- `~/.claude/projects/-Users-filipdopita/memory/project_vps_new_services.md` — zaloguj
+- `~/.claude/projects/<your-project-id>/memory/project_vps_new_services.md` — zaloguj
 
 ### Krok 9: Ověření
 ```bash
@@ -177,7 +177,7 @@ ssh [target] "ss -tlnp | grep [port]"
 
 | Situace | Akce |
 |---|---|
-| SSH connection refused | Ověř WireGuard (`wg show`), zkus ping 10.77.0.1 |
+| SSH connection refused | Ověř WireGuard (`wg show`), zkus ping <vps-private-ip> |
 | Systemd unit failed | `journalctl -u [service] -n 50 --no-pager`, oprav a `systemctl restart` |
 | Port already in use | `ss -tlnp \| grep [port]`, identifikuj konflikt, přeřaď port |
 | Monit: does not exist | `monit reload`, pokud přetrvává zkontroluj syntax `/etc/monit/conf.d/` |
@@ -189,5 +189,5 @@ ssh [target] "ss -tlnp | grep [port]"
 1. **Neházkuj porty.** Vždy zkontroluj ecosystem-map.md jestli port není obsazený.
 2. **Nekopíruj secrets přes scp.** Credentials patří do master.env na cílovém VPS, ne do zdrojového kódu.
 3. **Nespouštěj službu bez Monit watcheru.** Každý service MUSÍ mít monit config.
-4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = 10.77.0.x, veřejné = 0.0.0.0.
+4. **Nezapomeň na bind adresu.** Interní služby = 127.0.0.1, WG služby = <private-subnet>.x, veřejné = 0.0.0.0.
 5. **Netestuj jen start.** Ověř i restart (`systemctl restart`) a recovery po kill (`kill -9`).

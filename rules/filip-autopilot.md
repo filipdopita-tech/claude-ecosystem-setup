@@ -29,7 +29,7 @@ Founder OneFlow (investice, dluhopisy, fundraising). Technicky zdatný, čas dra
 ## VPS architektura
 - VŠE na VPS, Mac = terminál. Dlouhé úlohy = screen/tmux
 - Flash = compute + Claude Code. Alfa = email + CZ IP
-- Vizuální výstupy -> Mac (/Users/filipdopita/)
+- Vizuální výstupy -> Mac (~/)
 
 ## Quality Standard (Boil the Ocean)
 Viz `quality-standard.md` — platí automaticky.
@@ -75,15 +75,33 @@ Pokud description obsahuje → hook routing-guard doporučí model:
 - `large context`, `whole repo`, `full codebase`, `cross-file refactor`, `1m context`, `mega batch` → opus 4.7 1M
 - `grep`, `read`, `classify`, `count`, `list`, `search`, `lint`, `health check` → haiku 4.5
 
-### Gemini routing (free tier, 1500 req/den)
-Routuj na `gemini-2.5-flash` přes Gemini CLI když:
-- Vstup >80K tokenů (Gemini má 1M kontext vs Claude 200K)
-- Batch zpracování >50 položek (scraping, enrichment, klasifikace)
-- Large document analysis (prospekty, právní docs, velké logy)
-- Paralelní research kde Claude limit může být problém
+### Gemini routing — 🛑 BLOCKED 2026-04-27
+**Filip rule "rozhodně nepoužívej žádný Google API"** (po 3 cost concernech).
 
-Gemini CLI: `gemini --model gemini-2.5-flash --prompt "..."` (klíč v mcp-keys.env)
-OpenRouter fallback: `google/gemini-2.5-flash` ($0.30/$2.50 per 1M)
+Pro use cases co dříve šly do Gemini, použij:
+- **Vstup >80K tokenů** → `claude-opus-4-7[1m]` (1M context, 0 incremental cost na Max sub)
+- **Batch >50 položek** → OpenRouter free model:
+  - `deepseek/deepseek-r1:free` (default general)
+  - `qwen/qwen-3-coder:free` (code-heavy)
+  - `moonshotai/kimi-k2:free` (long context)
+  - `nvidia/nemotron-nano-9b-v2:free` (small/fast)
+  - 1500 req/den per key, 0 Kč
+- **Large doc analysis** → 1M Opus přímo
+- **Parallel research** → Haiku subagenty paralelně přes Agent tool
+
+Curl pattern:
+```bash
+curl -s https://openrouter.ai/api/v1/chat/completions \
+  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+  -d '{"model":"deepseek/deepseek-r1:free","messages":[{"role":"user","content":"..."}]}' \
+  | jq -r '.choices[0].message.content'
+```
+
+Disabled artefakty:
+- `gemini` CLI binary → error stub at `/opt/homebrew/bin/gemini`
+- 4 cron entries → `# DISABLED 2026-04-27` markers
+- Sandbox blocks `generativelanguage.googleapis.com` + `ai.google.dev`
+- Hook `~/.claude/hooks/google-api-guard.sh` v3 — CHECK 4 blocks `gemini` CLI commands
 
 ### GSD projekty
 Nastav adaptive profil: `/gsd-set-profile adaptive` na začátku každého GSD projektu.

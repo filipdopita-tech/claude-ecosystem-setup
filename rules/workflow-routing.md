@@ -60,6 +60,7 @@ PRAVIDLO: Před odpovědí na task VŽDY zkontroluj auto-trigger pattern. Pokud 
 | SEO audit, AEO audit, AI citace, viditelnost v Perplexity, schema markup, E-E-A-T, oneflow.cz audit | `seo-audit` |
 | nová nabídka, nový lead-magnet, má to smysl stavět, před implementací, product diagnostic, nový service/pivot, diagnose | `oneflow-diagnose` |
 | nový landing page, nový design, UI mockup, nová nabídka HTML, dashboard UI, email template, redesign | `design-workflow` (Stitch → Claude pattern, viz rules/design-workflow.md) |
+| cold email, outreach, DM zpráva, FB Messenger, IG DM, podcast pozvání, OneFlow Cast outreach, napiš zprávu pro X, Tereza Tulcová zpráva, investor outreach | `outreach-oneflow` (v4: FBI Voss + Cialdini + anti-robot + 9-bod pre-send checklist) |
 | DSCR screening, LTV screening, emitent A-F risk, ARES lookup, deliverability check, brand voice check | **OpenSpace skill execute** (viz OpenSpace Routing níže) |
 
 ## OpenSpace Routing (`mcp__openspace__*` po session restart)
@@ -176,7 +177,56 @@ Před každým NOVÝM projektem, skillem nebo infrastrukturním taskem (ne hotfi
 
 Přeskoč pro: triviální ops (grep, ls, mv), hotfix, jednokrokové tasky, pokud Filip explicitně řekne "rovnou do toho"
 
+## Power Skill Stack (40+ slash commands tier system)
+
+Plný systém: `~/.claude/rules/power-skills-stack.md` (decision matrix S/A/B/C/D/E/F).
+Pre-built chain recipes: `~/.claude/skills/chains/CHAINS.md` (10 OneFlow workflows).
+
+### Auto-Trigger Power Chains (POVINNÉ pro high-stakes)
+
+| Filip phrase / signal | Auto-chain |
+|---|---|
+| "fakt důležité", "kritické", "vysoké stakes", "nesmí selhat", `!!` prefix | Tier S(`/godmode`) + Tier A(`/challenge` + `/factcheck`) |
+| "rozcupuj", "najdi díry", "co může selhat", "tear apart" | `/redteam` + `/sentinel` |
+| "stuck", "vymysli alternativy", "default selhal", "potřebuju jiný úhel" | `/flip` + `/angles` + `/remix` |
+| "rozhodni mezi", "jaká strategie", "kam jít", "pivot or stay" | `/ooda` + `/scenario` + `/wargame` |
+| "co kdyby spadlo", "premortem", "co když to selže" | `/premortem` + `/redteam` |
+| "udělej to viral", "punch hardcore", "banger line" | `/banger` + `/punch` + `/viral` |
+| "neznělo to AI", "ghostwrite", "po lidsku", "anti-detection" | `/ghost` + `/trim` + `/polish` (NE pro investor/legal) |
+| "deep dive", "max detail", "comprehensive", "neopouštěj žádný detail" | `/godmode` (or `/beastmode` for speed) |
+| "10 nápadů", "víc verzí", "alternativ" | `/angles` (or `/hooks10` for hooks) |
+| "co mi uniká", "blind spots", "co nevidím", "missing" | `/blindspots` + `/xray` |
+| "20/80", "leverage", "pareto", "co má největší impact" | `/pareto` + `/leverage` |
+| "investigate", "research jak novinář", "skeptical" | `/investigate` + `/sources` |
+| "fact-check", "ověř claims", "je to pravda" | `/factcheck` + `/sources` |
+| "polish na 10/10", "iter to perfect" | `/deset` |
+
+### Auto-Chain Recipes pro klientské workflows
+
+| Task signature | Recipe |
+|---|---|
+| DD report >5 stran, emise >3M Kč, investor-facing | DD-MAX (`/dd-emitent` → `/godmode` → `/factcheck` → `/challenge` → `/redteam` → `/sentinel` → `/deset`) |
+| Investor pitch / podcast outreach high-profile | INVESTOR-PITCH (`/office-hours` → `/redteam` → `/scenario` → `/godmode` → `/storysell` → `/punch` → `/hooks10` → `/trim` → `/polish` → `/deset`) |
+| Cold email / DM na c-suite / podcast guest | COLD-EMAIL-MAX (`/dossier` → outreach-oneflow → `/factcheck` → `/ghost` → `/punch` → `/trim` → `/hook` → `/sentinel` → deliverability-check) |
+| Content pillar launch (IG/LinkedIn hero post) | CONTENT-VIRAL (competitor-intel → `/angles` → `/hooks10` → ig-content-creator → `/ghost` → `/banger` → `/viral` → `/thumbnail` → brand-voice-check → content-repurpose) |
+| Strategic decision (pivot / new service >100k Kč stakes) | STRATEGIC-DECISION (oneflow-diagnose → `/ooda` → `/scenario` → `/wargame` → `/premortem` → `/redteam` → `/office-hours` → `/pareto`) |
+| Stuck / creative block | STUCK-UNSTUCK (`/flip` → `/invert` → `/angles` → `/remix` → `/xray` → `/blindspots` → `/leverage`) |
+| Klientský deliverable >50k Kč (nabídka, návrh, retainer) | CLIENT-DELIVERABLE (oneflow-diagnose → `/godmode` → `/l99` → `/factcheck` → `/challenge` → `/trim` → `/polish` → brand-voice-check → `/deset`) |
+| Meta Ads / sales letter / hero landing copy | AD-CREATIVE-MAX (`/angles` → `/hooks10` → ad-creative → `/punch` → `/banger` → `/viral` → `/challenge` → `/factcheck` → `/trim` → A/B test) |
+| Comprehensive research / market intel / competitive map | DEEP-RESEARCH (`/timeline` → `/dossier` → `/investigate` → `/xray` → `/gapfinder` → `/angles` → `/factcheck` → `/sources`) |
+| Pre-deploy / pre-send final gate | SHIP-GATE (`/sentinel` → `/factcheck` → `/challenge` → `/trim` → ship-checker) |
+
+### Power Skill Anti-Patterns (NIKDY)
+
+- Tier stacking >3 commands v jednom chain (overhead > benefit, max 10 v recipe)
+- `/godmode` + `/beastmode` + `/l99` v sérii (overlap >70%)
+- `/ghost` na investor/legal/compliance dokumenty (poškodí precision)
+- Tier C polish bez Tier A factcheck (pretty mistake)
+- Tier B (`/ooda`, `/scenario`) na operativní task (typo fix, grep)
+- `/unlocked` + `/nofilter` na klientský výstup (interní debate-mode only)
+
 ## NESPOUŠTĚJ když:
-- Filip řekne "nespouštěj skill" / "bez playbooku"
-- Task je triviální (grep, ls, mv)
+- Filip řekne "nespouštěj skill" / "bez playbooku" / "rovnou" / "rychlý draft"
+- Task je triviální (grep, ls, mv, status check)
 - Skill už spuštěn manuálně v kontextu
+- Conversation/info-only odpověď ("co to dělá", "vysvětli")

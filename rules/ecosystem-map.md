@@ -1,9 +1,9 @@
 # Ecosystem Quick Reference
 
 ## SSH
-- Flash (Contabo): `ssh root@10.77.0.1` (WG only) | 12GB/6vCPU/200GB
-- Mac: `ssh mac` (10.77.0.2) nebo /mac/ (SSHFS)
-- WG: 10.77.0.0/24 (Flash=.1, Mac=.2)
+- Flash (Contabo): `ssh root@<vps-private-ip>` (WG only) | 12GB/6vCPU/200GB
+- Mac: `ssh mac` (<workstation-private-ip>) nebo ~/ (SSHFS)
+- WG: <private-subnet>/24 (Flash=.1, Mac=.2)
 - Alfa (Wedos): DISCONTINUED 2026-04-12 — nepoužívat
 
 ## Klíčové služby (vše na Flash)

@@ -211,7 +211,7 @@ Pokud žádný z výše uvedených postupů nefunguje do 15 minut:
 journalctl -u {service} --since "1 hour ago" > /tmp/{service}-forensic-$(date +%Y%m%d-%H%M).log
 
 # 2. ntfy alert
-curl -d "🚨 {service} - escalace po 15 min" https://ntfy.example.com/alerts
+curl -d "🚨 {service} - escalace po 15 min" https://ntfy.oneflow.cz/alerts
 
 # 3. Spusť /postmortem
 ```

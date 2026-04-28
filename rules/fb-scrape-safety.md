@@ -118,8 +118,8 @@ Nikdy nepokračuj jen proto, že "user řekl ok" — musí být přímý verbál
 - Quality-standard "boil the ocean" a full-autonomy skinu → agent šel do nejefektivnější cesty bez safety check
 
 ### Reference
-- Memory: `~/.claude/projects/-Users-filipdopita/memory/feedback_fb_account_safety.md`
-- Memory: `~/.claude/projects/-Users-filipdopita/memory/project_tereza_tulcova_fb_scrape.md`
+- Memory: `~/.claude/projects/<your-project-id>/memory/feedback_fb_account_safety.md`
+- Memory: `~/.claude/projects/<your-project-id>/memory/project_tereza_tulcova_fb_scrape.md`
 - Security hardening general: `~/.claude/rules/security-hardening.md`
 - Credential handling: `~/.claude/rules/security-hardening.md` (credentials, chmod 600, env files)
 

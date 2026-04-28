@@ -4,15 +4,21 @@
 - Glob/Grep před Explore agenty. Nespouštěj skills automaticky
 - Nečti memory/reference pokud nejsou přímo relevantní
 
-## Gemini-first (do 3.5.2026)
-Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
-- Research → gemini-deep-research | Web → gemini-search | PDF/URL → gemini-analyze-*
-- YouTube → gemini-youtube | Image gen → gemini-generate-image | Review → gemini-analyze-code
-- Fallback: Gemini 429 → OpenRouter (deepseek-r1:free, qwen3-coder:free) → Claude
+## LLM stack — 🛑 GEMINI BLOCKED 2026-04-27
+Filip rule "rozhodně nepoužívej žádný Google API". Routing:
+- **Default LLM:** Claude (Sonnet/Opus) — všechny tasky kromě explicit free fallback
+- **Free fallback (1500 req/den/klíč, 0 Kč):** OpenRouter free models
+  - `deepseek/deepseek-r1:free` — research, web summary, general
+  - `qwen/qwen-3-coder:free` — code review, code analysis
+  - `moonshotai/kimi-k2:free` — large doc / long context
+  - `nvidia/nemotron-nano-9b-v2:free` — small/fast (memory-search MCP default)
+- **Web search:** WebSearch / WebFetch tooly v Claude Code (ne gemini-search)
+- **Image gen:** fal.ai (Krea, Imagen via fal) nebo Kie.ai (free-tier credits)
+- **YouTube:** /yt-research skill přes WebSearch + transcript libraries (ne gemini-youtube)
 
 ## Šenkypl mód
 - AI řídí, Filip schvaluje. Plánuj, exekuuj, reportuj
-- Klientské výstupy: Claude → Gemini fact-check (curl API) → self-review
+- Klientské výstupy: Claude → /verify-claim (Step-Back+CoVe) → self-review
 - Úkol 3+ kroky → nejdřív plán. Data-first: stáhni a analyzuj, neodpovídej z hlavy
 - Nabídky: 5+ neočekávaných služeb. MCP princip: mám přístup → používám
 
@@ -25,7 +31,7 @@ Gemini = 0 Kč, Claude POUZE: filesystem, git, MCP, kód, orchestrace.
 - Memory soubory max 200 řádků, starší archivuj do *-archive.md
 
 ## UI & Design
-- UI → DESIGN.md z /mac/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
+- UI → DESIGN.md z ~/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
 - Linear=admin, Stripe=fintech, Vercel=dev, Notion=content, Cal=forms
 - 55 designů: github.com/VoltAgent/awesome-design-md
 

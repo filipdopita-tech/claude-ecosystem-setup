@@ -37,7 +37,7 @@ allowed-tools:
 Zjisti ze zprávy:
 - Typ dokumentu (pokud neřekl → zeptej se jednou, jednou větou)
 - Název služby / procesu
-- Server: Flash (10.77.0.1) nebo Alfa (WG .3 / CZ IP)
+- Server: Flash (<vps-private-ip>) nebo Alfa (WG .3 / CZ IP)
 
 ### 2. Načti kontext ekosystému
 
@@ -48,8 +48,8 @@ Port, server a účel pro zmíněnou službu jsou tam. Nekombinuj z paměti.
 
 Pokud jde o specifický skript, přečti ho:
 ```bash
-ls /mac/scripts/
-cat /mac/scripts/{relevant}.py
+ls ~/scripts/
+cat ~/scripts/{relevant}.py
 ```
 
 Pro systemd unit:
@@ -84,7 +84,7 @@ cat > ~/.claude/knowledge/sops/{slug}.md << 'EOF'
 EOF
 
 # Kritické recovery docs — ulož na obě místa
-cp ~/.claude/knowledge/sops/{slug}.md /mac/Documents/OneFlow-Vault/SOPs/{slug}.md
+cp ~/.claude/knowledge/sops/{slug}.md ~/Documents/OneFlow-Vault/SOPs/{slug}.md
 ```
 
 Při uložení: echo "Saved to ~/.claude/knowledge/sops/{slug}.md" + nabídni otevření.

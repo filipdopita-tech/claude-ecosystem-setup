@@ -27,7 +27,7 @@ ssh vps-alfa "uptime && df -h / && systemctl --failed --no-pager 2>/dev/null | h
 
 ### 2. Memory Health
 ```bash
-ls ~/.claude/projects/-Users-filipdopita/memory/*.md 2>/dev/null | wc -l
+ls ~/.claude/projects/<your-project-id>/memory/*.md 2>/dev/null | wc -l
 ```
 Přečti credential_expiry.md — varuj pokud něco expiruje.
 

@@ -9,18 +9,18 @@ topology:
   vps_flash:
     provider: Contabo
     ip_public: 173.212.220.67
-    ip_wg: 10.77.0.1
+    ip_wg: <vps-private-ip>
     specs:
       ram_gb: 12
       vcpu: 6
       ssd_gb: 200
     role: compute_engine_claude_code_orchestration
-    ssh: "ssh root@10.77.0.1  # VPN only"
+    ssh: "ssh root@<vps-private-ip>  # VPN only"
 
   vps_alfa:
     provider: Wedos
     ip_public: 89.221.212.203
-    ip_wg: 10.77.0.3
+    ip_wg: <host3-private-ip>
     specs:
       ram_gb: 5.8
       vcpu: 2
@@ -30,16 +30,16 @@ topology:
 
   mac:
     role: source_of_truth_mount_point
-    ip_wg: 10.77.0.2
-    mount: "/mac = /Users/filipdopita (SSHFS auto-reconnect)"
+    ip_wg: <workstation-private-ip>
+    mount: "/mac = ~ (SSHFS auto-reconnect)"
     access_from_flash: direct_fs
 
 wireguard:
-  subnet: 10.77.0.0/24
+  subnet: <private-subnet>/24
   peers:
-    flash: 10.77.0.1
-    mac: 10.77.0.2
-    alfa: 10.77.0.3
+    flash: <vps-private-ip>
+    mac: <workstation-private-ip>
+    alfa: <host3-private-ip>
   notes:
     - "2026-04-03 migrace z 10.0.0.0/24 kvuli LAN kolizi na Macu"
 
@@ -207,7 +207,7 @@ known_issues_resolved:
   - "config-backup cron"
   - "SSHFS /mac healthcheck"
   - "li-ghl-sync CPU leak disabled"
-  - "WG subnet 10.77.0.0/24"
+  - "WG subnet <private-subnet>/24"
   - "Alfa disk 53%"
   - "Postfix TLS Lets Encrypt"
   - "DMARC p=quarantine, SPF -all"
@@ -236,12 +236,12 @@ facts:
 # COMMANDS
 # =========================
 commands:
-  ssh_flash: "ssh root@10.77.0.1"
+  ssh_flash: "ssh root@<vps-private-ip>"
   ssh_alfa: "ssh root@89.221.212.203"
-  ssh_mac_from_flash: "ssh mac  # = 10.77.0.2"
+  ssh_mac_from_flash: "ssh mac  # = <workstation-private-ip>"
   mount_mac: "/mac  # automounted via SSHFS"
-  systemctl_restart: "ssh root@10.77.0.1 'systemctl restart {service}'"
-  monit_reload: "ssh root@10.77.0.1 'monit reload'"
+  systemctl_restart: "ssh root@<vps-private-ip> 'systemctl restart {service}'"
+  monit_reload: "ssh root@<vps-private-ip> 'monit reload'"
 
 # =========================
 # CROSS-REFERENCES

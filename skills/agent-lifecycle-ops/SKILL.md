@@ -23,8 +23,8 @@ Jeden bash skript pro ovládání všech autonomous agentů na Flash (Conductor,
 ## Instalace na Flash
 
 ```bash
-rtk scp ~/scripts/evolver-patterns/agent_lifecycle.sh root@10.77.0.1:/usr/local/bin/agent
-rtk ssh root@10.77.0.1 'chmod +x /usr/local/bin/agent'
+rtk scp ~/scripts/evolver-patterns/agent_lifecycle.sh root@<vps-private-ip>:/usr/local/bin/agent
+rtk ssh root@<vps-private-ip> 'chmod +x /usr/local/bin/agent'
 ```
 
 Pak `agent <service> <action>` funguje odkudkoli.

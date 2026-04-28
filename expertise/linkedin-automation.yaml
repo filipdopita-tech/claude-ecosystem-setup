@@ -185,7 +185,7 @@ throttle_logic:
 # =========================
 monitoring:
   ntfy:
-    url: "https://ntfy.example.com"
+    url: "https://ntfy.oneflow.cz"
     topic: "Filip"
     bearer: "[read from master.env: ntfy_bearer]"  # NIKDY hardcode
 
@@ -226,7 +226,7 @@ bridge_db:
 # API ENDPOINTS (BRIDGE)
 # =========================
 bridge_api:
-  base: "http://10.77.0.3:8200"  # Alfa WG IP — DEAD
+  base: "http://<host3-private-ip>:8200"  # Alfa WG IP — DEAD
   endpoints:
     connect: "POST /outreach/connect"
     message: "POST /outreach/message"

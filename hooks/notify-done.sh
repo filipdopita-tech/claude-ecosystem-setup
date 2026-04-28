@@ -3,8 +3,8 @@
 # Sends ntfy push notification after impactful tool completions.
 # NO Mac sounds (Filip doesn't want popups/sounds on Mac).
 
-NTFY_URL="${NTFY_URL:-https://ntfy.example.com/your-topic}"
-NTFY_TOKEN="${NTFY_TOKEN:-}"
+NTFY_URL="https://ntfy.oneflow.cz/Filip"
+NTFY_TOKEN="${NTFY_TOKEN:-}"  # configure in ~/.claude/mcp-keys.env
 
 # Read JSON from stdin (required so Claude Code doesn't hang)
 INPUT="$(cat)"

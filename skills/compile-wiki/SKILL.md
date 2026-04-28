@@ -17,16 +17,16 @@ Zpracuj nové soubory v `raw/` složce Obsidian vaultu do strukturované wiki.
 ## Workflow
 
 ### Režim: batch (bez argumentů)
-1. **Scan** — Přečti všechny soubory v `/mac/Documents/OneFlow-Vault/raw/` (ignoruj `_processed/`)
-2. **Přečti schema** — Načti `/mac/Documents/OneFlow-Vault/AGENTS.md`
+1. **Scan** — Přečti všechny soubory v `~/Documents/OneFlow-Vault/raw/` (ignoruj `_processed/`)
+2. **Přečti schema** — Načti `~/Documents/OneFlow-Vault/AGENTS.md`
 3. **Pro každý raw soubor** (zpracuj po jednom, ne batch):
    a. Extrahuj klíčové koncepty, fakta, taktiky
-   b. Zkontroluj existující wiki stránky v `/mac/Documents/OneFlow-Vault/wiki/`
+   b. Zkontroluj existující wiki stránky v `~/Documents/OneFlow-Vault/wiki/`
    c. Pokud wiki stránka existuje → aktualizuj (přidej nové poznatky, zachovej existující)
    d. Pokud neexistuje → vytvoř novou wiki stránku podle schema
    e. Přidej cross-references `[[wiki links]]` na související stránky
    f. Pokud raw soubor obsahuje obrázky/screenshoty → ulož je lokálně do `wiki/assets/`
-4. **Aktualizuj MOC** — Updatuj `/mac/Documents/OneFlow-Vault/wiki/_index.md`
+4. **Aktualizuj MOC** — Updatuj `~/Documents/OneFlow-Vault/wiki/_index.md`
 5. **Archivuj** — Přesuň zpracované raw soubory do `raw/_processed/`
 6. **Output loop** — pokud při zpracování vznikly nové insighty, zapiš je do příslušných wiki stránek
 
@@ -49,7 +49,7 @@ Zpracuj nové soubory v `raw/` složce Obsidian vaultu do strukturované wiki.
 ### Režim: URL clip (s URL argumentem)
 - `"/compile-wiki https://example.com/article"` — stáhne URL, uloží do raw/, zkompiluje do wiki
 - Použij WebFetch pro stažení obsahu → uloží do `raw/` jako markdown → zpracuje do wiki
-- Alternativně: `ssh mac "/Users/filipdopita/scripts/clip-to-wiki 'URL'"` a pak zpracuj
+- Alternativně: `ssh mac "~/scripts/clip-to-wiki 'URL'"` a pak zpracuj
 
 ## Příklady
 

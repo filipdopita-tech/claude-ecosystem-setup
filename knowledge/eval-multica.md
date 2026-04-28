@@ -32,7 +32,7 @@ Kompatibilní s: Claude Code, Codex, OpenClaw, OpenCode.
 
 ## Proč NEINSTALOCAT
 
-1. **Paseo na 10.77.0.1:6767** je funkční, $0 cost, custom-fit pro OneFlow pipelines
+1. **Paseo na <vps-private-ip>:6767** je funkční, $0 cost, custom-fit pro OneFlow pipelines
 2. **Conductor** je optimalizovaný pro async file-queue model (OneFlow use case)
 3. Multica přidává komplexitu (dashboard, DB, WebSocket) bez jasné výhody pro sólový workflow
 4. Apache-modified licence: "jen interní use, NE SaaS reselling" — limitující pokud OneFlow bude platformizovat

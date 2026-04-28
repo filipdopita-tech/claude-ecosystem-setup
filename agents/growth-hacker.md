@@ -2,6 +2,7 @@
 name: growth-hacker
 description: Growth strategist pro OneFlow. Navrhuje experimenty, optimalizuje funnely, hledá scalable growth channels. Používá reference/expertise-marketing.md pro taktiky a data.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "WebFetch", "WebSearch"]
+mcpServers: ["flywheel-memory", "graphiti-oneflow"]
 model: sonnet
 ---
 

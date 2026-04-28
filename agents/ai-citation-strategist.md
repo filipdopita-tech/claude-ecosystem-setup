@@ -2,6 +2,7 @@
 name: ai-citation-strategist
 description: AI SEO specialista. Audituje viditelnost brandu v ChatGPT, Claude, Gemini, Perplexity. Identifikuje proč konkurenti dostávají citace místo tebe a navrhuje fixy. Answer Engine Optimization (AEO) + Generative Engine Optimization (GEO).
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "WebFetch", "WebSearch"]
+mcpServers: ["playwright"]
 model: sonnet
 ---
 

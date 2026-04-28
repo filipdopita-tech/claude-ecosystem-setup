@@ -295,11 +295,11 @@ KONTAKT:  Jméno, email, web
 
 ## Templates
 
-- Pitch deck: `/mac/Documents/academic-knowledge-engine/pitch-factory/templates/pitch-deck-template.html`
+- Pitch deck: `~/Documents/academic-knowledge-engine/pitch-factory/templates/pitch-deck-template.html`
 - Investor update: `.../investor-update-template.html`
 - One-pager: `.../one-pager-template.html`
 - Partnership deck: `.../partnership-deck-template.html`
 
 ## Copy bank
 
-`/mac/Documents/academic-knowledge-engine/pitch-factory/copy-bank.md`
+`~/Documents/academic-knowledge-engine/pitch-factory/copy-bank.md`

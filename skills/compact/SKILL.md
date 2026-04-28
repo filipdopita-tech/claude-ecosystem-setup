@@ -63,7 +63,7 @@ Vypiš PŘESNĚ tohle, nic víc, nic míň:
 
 **Stav:**
 • [DONE] Stáhl 10 postů (8 reelů + 2 posty), transkribovány přes Whisper
-• [DONE] Report uložen: /Users/filipdopita/Documents/research/claude-code-ig-analysis-2026-04-09.md
+• [DONE] Report uložen: ~/Documents/research/claude-code-ig-analysis-2026-04-09.md
 • [DECIDED] COMPACT skill implementovat (missing piece mezi inline a session-handoff)
 • [DECIDED] CLAUDE.md rules diet = real win (1403 řádků loaded vždy)
 • [WIP] Caveman skill in progress
@@ -75,7 +75,7 @@ Vypiš PŘESNĚ tohle, nic víc, nic míň:
 - Blockery: Žádné
 
 **Pro nový chat:**
-Pokračuj v implementaci z reportu /Users/filipdopita/Documents/research/claude-code-ig-analysis-2026-04-09.md — zbývá caveman skill + rules tree audit.
+Pokračuj v implementaci z reportu ~/Documents/research/claude-code-ig-analysis-2026-04-09.md — zbývá caveman skill + rules tree audit.
 ```
 
 ## Anti-patterns (NEDĚLEJ)

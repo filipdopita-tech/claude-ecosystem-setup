@@ -107,4 +107,4 @@ Součást Jaymin West 3-priority rollout:
 - **P1B: Domain expertise YAML (toto)**
 - P1C: Forced delegation orchestrator agent
 
-Full kontext: `/mac/Documents/OneFlow-Vault/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md`
+Full kontext: `~/Documents/OneFlow-Vault/10-AI-Brain/Topics/Jaymin-West-Master-Synthesis.md`

@@ -30,7 +30,7 @@ Modul už je napsaný: `~/scripts/evolver-patterns/stagnation_detector.py`
 Deploy na Flash:
 
 ```bash
-rtk scp ~/scripts/evolver-patterns/stagnation_detector.py root@10.77.0.1:/opt/oneflow/lib/
+rtk scp ~/scripts/evolver-patterns/stagnation_detector.py root@<vps-private-ip>:/opt/oneflow/lib/
 ```
 
 Pak v každém agentu:

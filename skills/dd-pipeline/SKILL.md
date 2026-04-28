@@ -102,7 +102,7 @@ Po `/dd-pipeline`:
 ```
 PDF → pdftotext → TXT
   ↓ scp
-root@10.77.0.1:/tmp/dd_*.txt
+root@<vps-private-ip>:/tmp/dd_*.txt
   ↓ stdin
 /opt/conductor/bin/submit-coa-dd.py  (task_id)
   ↓
@@ -118,7 +118,7 @@ root@10.77.0.1:/tmp/dd_*.txt
 ~/Desktop/OneFlow/DD/DD_<basename>_<ts>.md
 ```
 
-A2A protokol je alternativa (pro external agenty): `http://10.77.0.1:9999/.well-known/agent-card.json`, skill_id `conductor_dd_coa`, podporuje metadata overrides (`query`, `chunk_tokens`, `manager_backend`, ...). Pro Mac použij `dd_pipeline.sh` (bez A2A SDK závislosti).
+A2A protokol je alternativa (pro external agenty): `http://<vps-private-ip>:9999/.well-known/agent-card.json`, skill_id `conductor_dd_coa`, podporuje metadata overrides (`query`, `chunk_tokens`, `manager_backend`, ...). Pro Mac použij `dd_pipeline.sh` (bez A2A SDK závislosti).
 
 ## Verified (2026-04-17)
 - VPS submit helper: `/opt/conductor/bin/submit-coa-dd.py`

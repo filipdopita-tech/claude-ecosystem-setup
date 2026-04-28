@@ -87,9 +87,32 @@ ares_api:
 # APOLLO.IO API
 # =========================
 apollo:
-  free_tier_credits: 75  # per month
+  free_tier_credits: 75  # per month (zmenseno z drivejsiho 50/mes po updatu Apollo pricing 2026-Q1)
   api_key_location: "/root/.credentials/master.env (APOLLO_API_KEY)"
   tracking: "/root/scraper/state/waterfall_usage.json"
+
+  # ========================================
+  # ⚠️ DEPRECATION 2026-09 (Skool intel insight 2026-04-28)
+  # ========================================
+  # Apollo zakázal third-party Apify scrapers (forced removal z Apify market).
+  # Apollo má teď official Apify scraper, ale za vysokou cenu.
+  # Pattern "Apify Apollo scraper" = DEAD jako default lead-gen.
+  #
+  # Source: skool-intel/chase-ai 2026-04-28
+  #   - "Cold Outreach Machine 3.0 (LinkedIn Scraper)"
+  #   - "n8n & Apollo Lead Gen Finally Solved"
+  #
+  # OneFlow alternativy (cost-zero):
+  #   1. ARES (CZ firmy IČO/data) — free, offline bulk export 10067 firem
+  #   2. LinkedIn Voyager API — ~/.claude/expertise/linkedin-automation.yaml
+  #   3. Hunter.io email finder — direct API, pevnější quota
+  #   4. Apollo direct API (TENTO YAML) — 75 credits/měsíc free, ne přes Apify
+  #   5. ARES bulk export → vlastní enrichment pipeline (/scraping-engine/)
+  #
+  # Pre-2026-09 Apify Apollo workflow status:
+  # - DOPORUČENO MIGROVAT na ARES + LinkedIn + Hunter waterfall
+  # - Apify scraper i kdyby existoval = unreliable (Apollo enforce)
+  # ========================================
 
   endpoints:
     people_search:
@@ -113,6 +136,8 @@ apollo:
     - "Prioritizovat firmy kde Hunter selhal"
     - "Overit SMTP pred ulozenim (smtp_verifier.py)"
     - "Nemazat profily — Apollo si pamatuje co uz jsme revealili"
+    - "NIKDY pres Apify (deprecated 2026-09) — vždy direct API call s API klíčem"
+    - "Pro CZ firmy preferuj ARES + LinkedIn (vyšší kvalita než Apollo na CZ)"
 
 # =========================
 # HUNTER.IO API

@@ -5,7 +5,7 @@ metadata:
   requires-env: GEMINI_API_KEY
   allowed-hosts:
     - instagram.com
-    - 10.77.0.1
+    - <vps-private-ip>
     - api.github.com
   version: "1.0"
 allowed-tools:
@@ -51,9 +51,9 @@ Mac (residential IP)              Flash (compute)
 ### Stage 1: Profile metadata fetch (Mac, ~2 min)
 ```bash
 USER="${1:-marc.kaz}"  # default
-WORK_DIR="/Users/filipdopita/Desktop/${USER}-analysis"
+WORK_DIR="~/Desktop/${USER}-analysis"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR"
-python3 /Users/filipdopita/scripts/social/ig_analyzer.py "$USER" \
+python3 ~/scripts/social/ig_analyzer.py "$USER" \
   --metadata-only --max-posts 100 --output-dir . > fetch.log 2>&1
 ```
 
@@ -147,7 +147,7 @@ with open('analysis.json') as f:
     d = sorted(json.load(f), key=lambda x: x.get('oneflow_fit_score',0), reverse=True)
 print(' '.join(f'\"https://www.instagram.com/reel/{e[\"shortcode\"]}/\"' for e in d[:3]))
 ")
-nohup /Users/filipdopita/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
+nohup ~/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
 ```
 
 ### Stage 7: Implement top picks (varies)
@@ -180,7 +180,7 @@ Generuj `REPORT.md` v `${WORK_DIR}/`:
 - Next steps offer
 
 ### Stage 10: Memory update
-Vytvoř `~/.claude/projects/-Users-filipdopita/memory/project_${USER}_ig_analysis_${DATE}.md`:
+Vytvoř `~/.claude/projects/<your-project-id>/memory/project_${USER}_ig_analysis_${DATE}.md`:
 - Implemented this session
 - Skipped + důvody
 - Klíčový insight z transcribce

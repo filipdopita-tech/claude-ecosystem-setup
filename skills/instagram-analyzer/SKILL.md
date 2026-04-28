@@ -6,7 +6,7 @@ metadata:
   requires-env: GOOGLE_SHEETS_SERVICE_ACCOUNT
   allowed-hosts:
     - instagram.com
-    - 10.77.0.1
+    - <vps-private-ip>
   version: "1.0"
 allowed-tools:
   - Bash
@@ -52,12 +52,12 @@ Analyzuj všechny kreátory z Google Sheets tab "IG Creators".
 Použij orchestrator wrapper (yt-dlp na Macu → scp mp4 → Flash worker → rsync výsledky):
 
 ```bash
-/Users/filipdopita/scripts/social/ig_transcribe_remote.sh "URL"
+~/scripts/social/ig_transcribe_remote.sh "URL"
 ```
 
 Podporuje multiple URLs:
 ```bash
-/Users/filipdopita/scripts/social/ig_transcribe_remote.sh "URL1" "URL2" "URL3"
+~/scripts/social/ig_transcribe_remote.sh "URL1" "URL2" "URL3"
 ```
 
 Výstup: `~/Desktop/ig_analysis/<shortcode>/{video.mp4, audio.mp3, transcript.txt, frames/}`
@@ -105,14 +105,14 @@ Pak **Přečti transkript** a **prohlédni frames** (Read tool na `.txt` a `.jpg
 
 1. **Spusť ig_analyzer.py z Macu** (VPS dostává 429):
 ```bash
-ssh mac "python3 /Users/filipdopita/scripts/social/ig_analyzer.py USERNAME --metadata-only --output-dir /tmp/ig_analysis"
+ssh mac "python3 ~/scripts/social/ig_analyzer.py USERNAME --metadata-only --output-dir /tmp/ig_analysis"
 ```
 
 2. **Přečti výstupy**:
 ```bash
-cat /mac/tmp/ig_analysis/USERNAME/profile.json
-cat /mac/tmp/ig_analysis/USERNAME/posts.json
-cat /mac/tmp/ig_analysis/USERNAME/stats.json
+cat ~/tmp/ig_analysis/USERNAME/profile.json
+cat ~/tmp/ig_analysis/USERNAME/posts.json
+cat ~/tmp/ig_analysis/USERNAME/stats.json
 ```
 
 3. **Analyzuj a prezentuj**:
@@ -150,17 +150,17 @@ cat /mac/tmp/ig_analysis/USERNAME/stats.json
 
 1. **Spusť bulk analyzer z Macu** (VPS nemá přístup ke Google API ani k IG):
 ```bash
-ssh mac "python3 /Users/filipdopita/scripts/social/ig_bulk_analyzer.py --max 10 --delay 5"
+ssh mac "python3 ~/scripts/social/ig_bulk_analyzer.py --max 10 --delay 5"
 ```
 
 Pro všechny PENDING kreátory (bez limitu):
 ```bash
-ssh mac "python3 /Users/filipdopita/scripts/social/ig_bulk_analyzer.py"
+ssh mac "python3 ~/scripts/social/ig_bulk_analyzer.py"
 ```
 
 Pro re-analýzu všech:
 ```bash
-ssh mac "python3 /Users/filipdopita/scripts/social/ig_bulk_analyzer.py --force"
+ssh mac "python3 ~/scripts/social/ig_bulk_analyzer.py --force"
 ```
 
 2. **Přečti výsledky**:
@@ -226,7 +226,7 @@ ssh mac "cat /tmp/ig_analysis/USERNAME/stats.json"
 | yt-dlp 429 (rate limit) | STOP. Instagram blokuje IP. Čekej 30 min, nebo zkus jinou session cookie |
 | yt-dlp login required | Obnov cookies: `yt-dlp --cookies-from-browser chrome` na Macu |
 | Whisper OOM na Flash | Zkontroluj `free -h`, sniž model na `small`, ověř semafor (max 2 parallel) |
-| scp/rsync timeout | Ověř WireGuard: `wg show`, ping 10.77.0.1 |
+| scp/rsync timeout | Ověř WireGuard: `wg show`, ping <vps-private-ip> |
 | Empty transcript | Zkontroluj audio: `ffprobe audio.mp3`. Pokud tiché/hudba, přeskoč transkripci |
 | Google Sheets 403 | Service account nemá přístup ke sheetu. Sdílej sheet s SA emailem |
 

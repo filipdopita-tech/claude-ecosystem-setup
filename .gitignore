@@ -55,3 +55,77 @@ logs/
 *.tmp
 *.bak
 .tmp/
+
+# Compiled binaries / build artifacts (regenerable, bloat repo)
+**/dist/
+**/.bun-build*
+**/build/
+**/.next/
+**/.cache/
+
+# Nested git repositories (each skill stays its own thing locally; we ship sources only)
+**/.git/
+!.git/
+
+# Code-review-graph local DB (regenerable)
+.code-review-graph/
+**/code-review-graph/*.db
+*.db
+
+# Large compiled gstack binaries (regenerable from sources)
+skills/gstack/bin/gstack-*
+skills/gstack/browse/dist/
+skills/gstack/design/dist/
+
+# Heavy instructional assets (>500KB images bloat repo, host externally if needed)
+**/*.jpeg
+**/*.jpg
+**/*.png
+!**/screenshots/*.png
+!docs/**/*.png
+
+# Auto-generated state / cache
+.session-state/
+.rate-limits/
+file-history/
+context-snapshots/
+contexts/
+metrics/
+backups/
+backup/
+ai-radar/
+ecosystem-radar/
+audits/
+audits-from-lukas/
+learnings/
+
+# Claude Code internals user shouldn't ship
+projects/
+.claude-plugin/
+plans/
+experiments/
+helpers/
+homunculus/
+ide/
+mcp-servers/
+output-styles/
+plugins/
+review-queue/
+scripts/automation/
+gsd-local-patches/
+get-shit-done/
+ci-templates/
+
+# IDE / VSCode workspace
+*.code-workspace
+
+# Heavy upstream / vendored skills — install from their own repos:
+#   skills/gstack       → https://github.com/gstack-team/gstack    (bun-compiled binaries, 232 MB)
+#   skills/koda-stack   → upstream repo (vendored)
+#   skills/last30days   → personal demo skill with image assets
+#   skills/marketingskills → vendored marketing skills bundle
+# These are tracked in MCP_INTEGRATIONS.md / TOP_SKILLS.md as references.
+skills/gstack/
+skills/koda-stack/
+skills/last30days/
+skills/marketingskills/

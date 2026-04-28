@@ -42,8 +42,8 @@ NEPOUŽÍVAT pro:
 ## Fáze 1: Kontext Gathering
 
 Přečti tyto soubory, pokud existují:
-1. `~/.claude/projects/-Users-filipdopita/memory/business_model.md`
-2. `~/.claude/projects/-Users-filipdopita/memory/session_handoff.md`
+1. `~/.claude/projects/<your-project-id>/memory/business_model.md`
+2. `~/.claude/projects/<your-project-id>/memory/session_handoff.md`
 3. `~/.claude/expertise/oneflow-brand.yaml` (voice, banned words)
 4. `~/.claude/rules/domains/investment.md` (pokud investment-related)
 5. `~/.claude/rules/domains/compliance.md` (pokud CNB/AML/GDPR)
@@ -217,7 +217,7 @@ Každý přístup:
 
 ## Fáze 6: Verdict
 
-Napiš strukturovaný verdikt do `~/.claude/projects/-Users-filipdopita/memory/diagnose_{slug}_{YYYYMMDD}.md`:
+Napiš strukturovaný verdikt do `~/.claude/projects/<your-project-id>/memory/diagnose_{slug}_{YYYYMMDD}.md`:
 
 ```markdown
 ---
@@ -279,8 +279,8 @@ Co Filip musí udělat TENTO TÝDEN jako první konkrétní krok.
 Po zápisu verdictu do memory souboru appendni jednořádkový záznam do run-logu pro SEED-002 trigger tracking:
 
 ```bash
-mkdir -p /Users/filipdopita/.planning/seeds
-printf '%s | %s | %s | conf=%s\n' "$(date +%Y-%m-%d)" "{VERDICT}" "{slug}" "{confidence}" >> /Users/filipdopita/.planning/seeds/.diagnose-runs.log
+mkdir -p ~/.planning/seeds
+printf '%s | %s | %s | conf=%s\n' "$(date +%Y-%m-%d)" "{VERDICT}" "{slug}" "{confidence}" >> ~/.planning/seeds/.diagnose-runs.log
 ```
 
 Kde:

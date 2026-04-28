@@ -182,7 +182,7 @@ startup_hook:
 # =========================
 import_state:
   memory_files_imported: 95
-  source: "/mac/.claude/projects/-Users-filipdopita/memory/"
+  source: "~/.claude/projects/<your-project-id>/memory/"
   import_date: "2026-04 (přesné datum neznámo)"
   note: "Import byl jednorázový — pro nové memory soubory použij graphiti_add manuálně nebo přidej do import skriptu"
 

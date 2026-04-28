@@ -74,7 +74,7 @@
 - "Top 10 % Čechů vlastní 68 % veškerého bohatství."
 - "V Česku je 33 900 dolarových milionářů."
 - "ČR má 4 unicorny, ale VC investice tvoří jen 0,07 % HDP."
-Viz /mac/Documents/academic-knowledge-engine/cz-market-data/content-ready-stats.md (55 statistik)
+Viz ~/Documents/academic-knowledge-engine/cz-market-data/content-ready-stats.md (55 statistik)
 
 ## Zdroje pro ověření/update
 - ČSÚ: czso.cz (HDP, inflace, mzdy, demografie)

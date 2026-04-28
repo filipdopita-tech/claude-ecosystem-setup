@@ -653,7 +653,7 @@ Pokud máš Claude Managed Agents access (header `managed-agents-2026-04-01`, pu
 - ACH matrix + Bayesian state lze persistovat přes runs (cross-session H queue)
 - Useful pro multi-day investigation (npr. red team review velkého systému)
 - Bez access: každý mythos run startuje fresh ACH (default behavior, žádný regression)
-- Setup: viz `~/.claude/projects/-Users-filipdopita/memory/reference_managed_agents_poc_plan_2026_04_21.md`
+- Setup: viz `~/.claude/projects/<your-project-id>/memory/reference_managed_agents_poc_plan_2026_04_21.md`
 
 ### Reálný Mythos access (reference only)
 

@@ -7,8 +7,8 @@
 PHASE="${1:-post}"  # pre or post
 
 # Detect environment: Mac vs VPS
-if [ -d "/Users/filipdopita/.claude/homunculus" ]; then
-  BASE="/Users/filipdopita/.claude/homunculus"
+if [ -d "~/.claude/homunculus" ]; then
+  BASE="~/.claude/homunculus"
 elif [ -d "/root/.claude/homunculus" ]; then
   BASE="/root/.claude/homunculus"
 else

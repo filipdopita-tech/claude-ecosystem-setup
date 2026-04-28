@@ -34,7 +34,7 @@ Dobří kandidáti:
 Modul: `~/scripts/evolver-patterns/evolution_event.py`
 
 ```bash
-rtk scp ~/scripts/evolver-patterns/evolution_event.py root@10.77.0.1:/opt/oneflow/lib/
+rtk scp ~/scripts/evolver-patterns/evolution_event.py root@<vps-private-ip>:/opt/oneflow/lib/
 ```
 
 Pak v agentu:

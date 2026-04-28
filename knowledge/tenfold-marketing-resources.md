@@ -59,7 +59,7 @@ Filip ollama orphan smazal 2026-04-25.
 - **GitHub:** https://github.com/kylezantos/design-motion-principles
 - **Co dělá:** Motion audits trénované na 3 top designerech (Linear, Stripe, Vercel)
 - **Install:** `npx skills add kylezantos/design-motion-principles`
-- **OneFlow fit:** Filip má design-systems Linear+Stripe+Vercel reference v `/mac/Documents/design-systems/`. Tohle skill formalizuje motion principles z těchto inspirací.
+- **OneFlow fit:** Filip má design-systems Linear+Stripe+Vercel reference v `~/Documents/design-systems/`. Tohle skill formalizuje motion principles z těchto inspirací.
 - **Verdict:** EVAL — useful pokud Filip začne přidávat motion/animations do OneFlow webů (terminal.oneflow.cz, oneflow.cz).
 
 ### EVAL-C: Frontend Design (Anthropic plugin)
@@ -126,7 +126,7 @@ Filip ollama orphan smazal 2026-04-25.
 
 ### Wiki System / Memory Obsidian
 - **Tenfold:** "Claude Code Wiki System" + "How to Give Claude Code a Memory (Obsidian)"
-- **Filip má:** `OneFlow-Vault` (Obsidian) + `flywheel-memory` MCP + `/compile-wiki` skill + `/lint-wiki` + auto-memory v `~/.claude/projects/-Users-filipdopita/memory/`
+- **Filip má:** `OneFlow-Vault` (Obsidian) + `flywheel-memory` MCP + `/compile-wiki` skill + `/lint-wiki` + auto-memory v `~/.claude/projects/<your-project-id>/memory/`
 - **Verdict:** Filipovo setup je o TŘI ŘÁDOVĚ sophisticated.
 
 ### Tenfold custom skills (/copy, /viral, /script, /spy)

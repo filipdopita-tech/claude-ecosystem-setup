@@ -21,5 +21,17 @@ Metrics: Saves > Shares > Comments > Profile visits > Reach
 ## Banned Words (CZ)
 inovativní→nový, revoluční, komplexní řešení, win-win, synergie, paradigma, disruptivní, v dnešní době→teď, závěrem lze konstatovat, s pozdravem→Dopita
 
+## Banned Outreach Openers (HARD — okamžitý spam-flag)
+"Dovoluji si", "Dovolte mi", "Rád bych Vám", "Ráda bych Vám", "Obracím se na Vás", "Navazuji na předchozí email" (thread už vidí), "Pokud Vás nabídka oslovila" (pasivní fade-out)
+
 ## AI Patterns to Remove
-Seznamy s přesně 5/10 položkami, "Furthermore"/"Moreover", uniform sentence length, em dash abuse
+Seznamy s přesně 5/10 položkami, "Furthermore"/"Moreover", uniform sentence length, em dash abuse, vykřičníky v B2B textu
+
+## Outreach CTA Rule (calibrated only)
+NIKDY ano-ne otázka v CTA. Aplikuj Voss calibrated:
+- "Co by muselo platit, abyste..." (forcing function)
+- "Jak by pro Vás dávalo smysl..." (open conversation)
+- "Bylo by mimo, kdyby..." (no-oriented, low risk)
+- "Co je nejdůležitější aby Vás přesvědčilo?" (reply trigger)
+
+Detail framework: `~/.claude/expertise/outbound-sales-science.yaml` § fbi_voss + mandatory_v4
