@@ -14,7 +14,7 @@
 # Override: COMPLETION_OVERRIDE=1 env var bypasses block (loguje override).
 
 LOG_FILE="$HOME/.claude/logs/completion-blocking-hook.log"
-VIOLATIONS_LOG="$HOME/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl"
+VIOLATIONS_LOG="$HOME/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl"
 mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null
 mkdir -p "$(dirname "$VIOLATIONS_LOG")" 2>/dev/null
 
@@ -229,7 +229,7 @@ ZAKÁZANÉ vzorce ve final outputu pro Filipa (Czech/Slovak/English):
 - scope reduction (X z N kde X/N < 50%) → flag s plánem pokrytí 100%
 
 Viz ~/.claude/rules/completion-mandate.md.
-Logged: ~/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl
+Logged: ~/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl
 Override (when legitimate): COMPLETION_OVERRIDE=1
 </system-reminder>
 EOF

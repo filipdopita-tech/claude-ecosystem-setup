@@ -1,4 +1,5 @@
 ---
+name: btw
 description: Polož rychlou otázku bez spotřebování context window — odpověď se nezapamatuje
 allowed-tools:
   - Edit

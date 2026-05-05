@@ -1,0 +1,49 @@
+{
+  "run_id": "2026-04-27T112353Z-brief-author",
+  "target": "brief-author",
+  "dataset": "evals/datasets/brief-author.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T112353Z",
+  "aggregate": {
+    "mean_score": 4.0,
+    "pass_count": 1,
+    "fail_count": 5,
+    "case_count": 6,
+    "pass_rate_pct": 16.6,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "brief-001",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "brief-002",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "brief-003",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "brief-004",
+      "score": 3,
+      "status": "FAIL"
+    },
+    {
+      "id": "brief-005",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "brief-006",
+      "score": 3,
+      "status": "FAIL"
+    }
+  ]
+}

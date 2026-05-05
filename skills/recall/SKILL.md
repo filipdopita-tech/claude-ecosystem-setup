@@ -26,9 +26,9 @@ Quickly find historical context bez bulk-loading whole memory directory. Cascade
 ### Layer 1 — Grep MEMORY index files (cheapest, ~50ms, 0 tokens)
 
 ```bash
-grep -i "<term>" ~/.claude/projects/<your-project-id>/memory/MEMORY.md \
-                ~/.claude/projects/<your-project-id>/memory/MEMORY-INDEX-EXTRA.md \
-                ~/.claude/projects/<your-project-id>/memory/MEMORY-AUTO-INDEX.md
+grep -i "<term>" ~/.claude/projects/-Users-filipdopita/memory/MEMORY.md \
+                ~/.claude/projects/-Users-filipdopita/memory/MEMORY-INDEX-EXTRA.md \
+                ~/.claude/projects/-Users-filipdopita/memory/MEMORY-AUTO-INDEX.md
 ```
 
 If hit → Read pointed file. **STOP** if quality match found.
@@ -36,7 +36,7 @@ If hit → Read pointed file. **STOP** if quality match found.
 ### Layer 2 — Grep memory directory (cheap, ~200ms)
 
 ```bash
-grep -ril "<term>" ~/.claude/projects/<your-project-id>/memory/ | head -10
+grep -ril "<term>" ~/.claude/projects/-Users-filipdopita/memory/ | head -10
 ```
 
 Read top hits with `Read` (offset+limit if >200 lines). **STOP** on quality match.
@@ -68,8 +68,8 @@ Use when query is relational ("kdo zná X", "vztah X→Y", "kdy proběhlo X").
 ### Layer 6 — Session history grep (last resort)
 
 ```bash
-grep -rli "<term>" ~/Documents/claude-history/ 2>/dev/null | head -5
-grep -rli "<term>" ~/Documents/OneFlow-Vault/10a-Claude-History/ 2>/dev/null | head -5
+grep -rli "<term>" /Users/filipdopita/Documents/claude-history/ 2>/dev/null | head -5
+grep -rli "<term>" /Users/filipdopita/Documents/OneFlow-Vault/10a-Claude-History/ 2>/dev/null | head -5
 ```
 
 ## Output format

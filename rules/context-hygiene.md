@@ -21,8 +21,8 @@
 - Pro multi-step: zapiš progress do .md, /clear, pokračuj z .md souboru
 - /compact po 10 zprávách jen jako fallback. Preferuj /clear + context file
 
-## Token Velocity (doplněk k CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50)
-- Auto-compact se spouští při 50% budget (env) — to je absolutní práh
+## Token Velocity (doplněk k CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=75)
+- Auto-compact se spouští při 75% budget (env) — to je absolutní práh
 - Velocity signal je jiný: pokud průměrný turn konzumuje >5k tokenů za 3+ turns po sobě → compact/clear preemptivně, nečekej na 50%
 - Příznaky high velocity: velké tool outputs (logy >200 řádků, git diff, JSON), mnoho paralelních agentů, rekurzivní čtení
 - Fix high velocity: RTK prefix pro Bash výstupy, Gemini pro batch/logy, offset+limit místo full file read

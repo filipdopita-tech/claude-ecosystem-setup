@@ -100,14 +100,14 @@ if estimated_cost > budget: halt + report
 
 ```bash
 for i in $(seq 1 N); do
-  ssh root@<vps-private-ip> "/opt/conductor/bin/submit-task.sh \
+  ssh root@10.77.0.1 "/opt/conductor/bin/submit-task.sh \
     --type codex \
     --prompt '$PROMPT' \
     --repo-path '$REPO' \
     --reasoning-effort high"
 done
 # Poll results
-ssh root@<vps-private-ip> "ls /opt/conductor/results/ | tail -N"
+ssh root@10.77.0.1 "ls /opt/conductor/results/ | tail -N"
 ```
 
 ### Codex direct CLI (inline, sync)
@@ -130,17 +130,17 @@ mcp__openspace__search_skills(query="dscr screener", source="local")
 ### Paseo agent spawn (long-running)
 
 ```bash
-ssh root@<vps-private-ip> "paseo run '<task description>'"
+ssh root@10.77.0.1 "paseo run '<task description>'"
 # Returns agent ID; poll:
-ssh root@<vps-private-ip> "paseo logs <agent-id>"
-ssh root@<vps-private-ip> "paseo ls"
+ssh root@10.77.0.1 "paseo logs <agent-id>"
+ssh root@10.77.0.1 "paseo ls"
 ```
 
 ### Conductor bulk LLM (OpenRouter free)
 
 ```bash
 for item in $items; do
-  ssh root@<vps-private-ip> "/opt/conductor/bin/submit-task.sh \
+  ssh root@10.77.0.1 "/opt/conductor/bin/submit-task.sh \
     --type research \
     --prompt 'Process: $item'"
 done
@@ -193,7 +193,7 @@ NEXT RECOMMENDED ACTION: <if applicable>
 Append to `/opt/conductor/state/orchestration-cost.jsonl`:
 
 ```bash
-ssh root@<vps-private-ip> "echo '{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"task\":\"$TASK_HASH\",\"cost\":$COST,\"workers\":$WORKERS_JSON,\"duration_s\":$DURATION,\"verdict\":\"$VERDICT\"}' >> /opt/conductor/state/orchestration-cost.jsonl"
+ssh root@10.77.0.1 "echo '{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"task\":\"$TASK_HASH\",\"cost\":$COST,\"workers\":$WORKERS_JSON,\"duration_s\":$DURATION,\"verdict\":\"$VERDICT\"}' >> /opt/conductor/state/orchestration-cost.jsonl"
 ```
 
 Daily cron summary via ntfy.
@@ -344,7 +344,7 @@ worker-codex.py:
 - NotebookLM briefing: `~/Documents/research/cloud-orchestrator/04-notebooklm-briefing.md`
 - Operator runbook: `~/Documents/OneFlow-Vault/02-Areas/AI-Tools/orchestrator-runbook.md`
 - NotebookLM URL: https://notebooklm.google.com/notebook/006e1424-6d76-4016-aec5-8a9783f67ec3
-- Conductor source: `/opt/conductor/` on VPS Flash (<vps-private-ip>)
+- Conductor source: `/opt/conductor/` on VPS Flash (10.77.0.1)
 - Paseo: `paseo run/ls/attach/logs/stop` on Flash via SSH
 - OpenSpace MCP: `mcp__openspace__execute_task` / `search_skills`
 - codex skill: `~/.claude/skills/codex/SKILL.md`

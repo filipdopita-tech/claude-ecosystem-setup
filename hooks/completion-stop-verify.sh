@@ -5,7 +5,7 @@
 # If detected → injects warning + logs violation. Does NOT block (advisory).
 
 LOG_FILE="$HOME/.claude/logs/completion-stop-hook.log"
-VIOLATIONS_LOG="$HOME/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl"
+VIOLATIONS_LOG="$HOME/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl"
 mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null
 mkdir -p "$(dirname "$VIOLATIONS_LOG")" 2>/dev/null
 
@@ -125,7 +125,7 @@ if [ "$HIT_COUNT" -gt 0 ]; then
 
   # ntfy alert (non-blocking, low priority — Filip gets review queue)
   NTFY_URL="https://ntfy.oneflow.cz/Filip"
-  NTFY_TOKEN="${NTFY_TOKEN:-}"  # configure in ~/.claude/mcp-keys.env
+  NTFY_TOKEN="tk_ahfvizbkyyj78turo1rmevsthimek"
   curl -s -X POST "$NTFY_URL" \
     -H "Authorization: Bearer $NTFY_TOKEN" \
     -H "Title: Completion Mandate Violation Detected" \

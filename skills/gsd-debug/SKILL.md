@@ -19,6 +19,7 @@ Debug issues using scientific method with subagent isolation.
 
 **Flags:**
 - `--diagnose` — Diagnose only. Find root cause without applying a fix. Returns a structured Root Cause Report. Use when you want to validate the diagnosis before committing to a fix.
+- `--forensics` — Post-mortem investigation for failed GSD workflows. Analyzes git history, `.planning/` artifacts, and state to detect anomalies. Read-only (no source modifications). Output: forensic report in `.planning/forensics/report-{timestamp}.md`. Use after a workflow stalls, crashes, or produces unexpected results — answers "what went wrong?", not "fix this bug." (folded from former `/gsd-forensics`)
 
 **Subcommands:**
 - `list` — List all active debug sessions
@@ -40,6 +41,7 @@ Parse subcommands and flags from $ARGUMENTS BEFORE the active-session check:
 - If $ARGUMENTS starts with "status ": SUBCMD=status, SLUG=remainder (trim whitespace)
 - If $ARGUMENTS starts with "continue ": SUBCMD=continue, SLUG=remainder (trim whitespace)
 - If $ARGUMENTS contains `--diagnose`: SUBCMD=debug, diagnose_only=true, strip `--diagnose` from description
+- If $ARGUMENTS contains `--forensics`: SUBCMD=forensics, strip `--forensics` from description (passed as PROBLEM)
 - Otherwise: SUBCMD=debug, diagnose_only=false
 
 Check for active sessions (used for non-list/status/continue flows):
@@ -169,7 +171,26 @@ specialist_dispatch_enabled: true
 
 Display the compact summary returned by the session manager.
 
-## 1d. Check Active Sessions (SUBCMD=debug)
+## 1d. FORENSICS subcommand
+
+When SUBCMD=forensics:
+
+Read and execute the forensics workflow from `@$HOME/.claude/get-shit-done/workflows/forensics.md` end-to-end.
+
+This is a post-mortem investigation (separate from active debug sessions):
+- Read-only analysis (no source modifications)
+- Data sources: `git log`, `git status/diff`, `.planning/STATE.md`, `.planning/ROADMAP.md`, `.planning/phases/*/`, `.planning/reports/SESSION_REPORT.md`
+- Output: forensic report saved to `.planning/forensics/report-{timestamp}.md`
+- Checks at least 4 anomaly types: stuck loop, missing artifacts, abandoned work, crash/interruption
+- Strips absolute paths, API keys, tokens from reports
+- Grounds every anomaly in specific commits, files, or state data
+- Offers GitHub issue creation if actionable findings exist
+
+PROBLEM (passed from $ARGUMENTS minus --forensics flag) is the optional problem description. If empty, ask user before starting investigation.
+
+STOP after forensics workflow completes. Do NOT proceed to debug session setup.
+
+## 1e. Check Active Sessions (SUBCMD=debug)
 
 When SUBCMD=debug:
 

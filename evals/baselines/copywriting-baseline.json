@@ -1,0 +1,69 @@
+{
+  "run_id": "2026-04-27T120540Z-copywriting",
+  "target": "copywriting",
+  "dataset": "evals/datasets/copywriting.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T120540Z",
+  "aggregate": {
+    "mean_score": 5.9,
+    "pass_count": 5,
+    "fail_count": 5,
+    "case_count": 10,
+    "pass_rate_pct": 50.0,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "copy-001",
+      "score": 5,
+      "status": "WARN"
+    },
+    {
+      "id": "copy-002",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "copy-003",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "copy-004",
+      "score": 5,
+      "status": "WARN"
+    },
+    {
+      "id": "copy-005",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "copy-006",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "copy-007",
+      "score": 5,
+      "status": "WARN"
+    },
+    {
+      "id": "copy-008",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "copy-009",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "copy-010",
+      "score": 8,
+      "status": "PASS"
+    }
+  ]
+}

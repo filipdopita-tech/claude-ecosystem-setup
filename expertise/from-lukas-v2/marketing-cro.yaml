@@ -1,0 +1,126 @@
+domain: marketing-cro
+keywords: [cro, conversion, copywriting, marketing, funnel, ab-test, landing-page, copy]
+last_updated: 2026-04-26
+confidence: high
+
+page_types:
+  homepage:
+    structure:
+      - hero: headline (job-to-be-done framed) + sub + single CTA
+      - social_proof_bar: logos or "trusted by X" immediately below fold
+      - problem_agitation: 3 pain points visitor recognizes
+      - solution_mechanism: HOW you solve it (not features — mechanism)
+      - proof: case study or transformation story
+      - objection_handling: FAQ or feature grid
+      - final_cta: restate outcome + CTA
+    notes: homepage = high intent range; don't optimize for one persona, stay broad
+  landing_page:
+    structure:
+      - hero: specific claim matching ad/traffic source (message match critical)
+      - above_fold_proof: star rating / notable client / media mention
+      - benefit_bullets: 3-5 outcomes (not features)
+      - how_it_works: 3-step visual (reduces perceived complexity)
+      - testimonials: specific results with numbers ("went from X to Y in Z weeks")
+      - risk_reversal: money-back, free trial, guarantee
+      - cta_section: repeated 2-3× on page
+    notes: remove navigation — leakage kills conversion; single exit = CTA only
+  pricing_page:
+    structure:
+      - anchor_high: show expensive plan first or most prominent (anchoring)
+      - recommended_badge: highlight mid-tier ("Most Popular")
+      - feature_comparison: progressive disclosure — show key rows, hide long tail
+      - per_unit_math: show $/seat or $/month clearly; hide annual math in small print
+      - faq: handle upgrade/cancel/enterprise questions here, not on landing
+  feature_page:
+    purpose: SEO + mid-funnel nurture; not primary conversion vehicle
+    structure: problem headline → solution demo (GIF/video) → benefit proof → soft CTA
+
+psychology_levers:
+  loss_aversion:
+    principle: losses hurt 2× more than gains feel good
+    copy_examples:
+      bad: "Get 20% more conversions"
+      good: "Stop losing 1 in 5 customers to slow load times"
+      good: "Every day without X costs you [quantified loss]"
+  social_proof:
+    principle: uncertainty → copy others' behavior
+    tiers:
+      weak: star ratings (no context)
+      medium: testimonial with name + company
+      strong: case study with specific metric ("$40K revenue in 30 days")
+      strongest: video testimonial or recognizable logo
+    notes: specificity is the variable — "works great!" = noise; "cut support tickets 62%" = signal
+  anchoring:
+    principle: first number seen becomes reference point
+    applications:
+      pricing: show original price before discount; show enterprise price before standard
+      value: "Agency would charge $5,000 for this — you pay $97"
+      effort: "Usually takes 6 months — done in a week"
+  scarcity_urgency:
+    principle: limited availability increases perceived value
+    authentic_uses: enrollment windows, cohort sizes, beta slots, event seats
+    fake_scarcity_risk: "Only 3 left!" for digital products destroys trust when caught
+    copy_example: "Beta closes Friday — locking in founding rate for life"
+
+funnel_stages:
+  tofu:
+    name: top of funnel
+    intent: problem-aware, not solution-aware
+    content: educational blog, how-to video, free tool, social content
+    cta: low friction — newsletter, free resource download, follow
+    copy_tone: empathetic, identifies pain; zero product pitch
+  mofu:
+    name: middle of funnel
+    intent: solution-aware, evaluating options
+    content: comparison posts, case studies, webinars, demos, email nurture
+    cta: medium friction — demo request, trial, email course
+    copy_tone: differentiation, mechanism explanation, proof
+  bofu:
+    name: bottom of funnel
+    intent: product-aware, ready to buy or close to it
+    content: pricing page, sales call, retargeting ads, trial-to-paid email
+    cta: high friction OK — purchase, upgrade, schedule call
+    copy_tone: urgency, risk removal, final objection handling
+
+ab_test_patterns:
+  sample_size_rules:
+    minimum: 1,000 conversions per variant (not sessions — conversions)
+    duration: minimum 2 weeks to capture weekly cycles; never stop on day 3 spike
+    calculator: use Evan Miller's sample size calculator; typical 80% power, 5% sig
+  statistical_significance:
+    threshold: 95% minimum; 99% for high-stakes pricing changes
+    pitfall: "peeking" — checking results daily inflates false positive rate
+    solution: set sample size before starting; don't look until reached
+  what_not_to_test:
+    - button color alone (effect size tiny; sig requires huge n)
+    - micro-copy with no value change (negligible)
+    - multiple elements simultaneously (can't attribute winner)
+  high_impact_tests:
+    - headline (biggest lever on landing page)
+    - offer structure (trial vs freemium vs demo)
+    - page length (long-form vs short)
+    - social proof placement (above vs below hero)
+    - CTA copy (outcome-framed vs action-framed)
+
+analytics_must_haves:
+  events:
+    critical:
+      - cta_click (with page + position context property)
+      - form_submit_success
+      - form_submit_error (with field name)
+      - scroll_depth_50 / scroll_depth_90
+      - video_play / video_25 / video_75 / video_complete
+    nice_to_have:
+      - pricing_plan_hover
+      - faq_expand
+      - exit_intent_shown
+  conversions:
+    primary: purchase / trial_start / demo_booked
+    micro: email_signup / content_download / pricing_view
+    notes: micro-conversions let you optimize TOFU/MOFU before enough bofu volume exists
+  attribution_windows:
+    last_click: default for most ad platforms; undervalues awareness
+    first_click: useful for measuring top-of-funnel channel ROI
+    7_day_click: standard for paid social (Meta default)
+    30_day: appropriate for high-consideration purchases ($500+)
+    notes: model choice changes which channels look good; pick one and stay consistent

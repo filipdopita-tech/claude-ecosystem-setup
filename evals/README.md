@@ -4,6 +4,46 @@ Measurable regression detection for skills and agents in this ecosystem. When yo
 
 ---
 
+## v2 Upgrade (2026-04-30)
+
+`runner/run-eval.sh` and `scorers/llm-judge.sh` upgraded to v2. v1 backups present as `*.v1.bak`.
+
+**New in v2:**
+- Retry with exponential backoff (default 5 attempts: 1s/2s/4s/8s/16s; cap 32s)
+- Configurable delay between cases (`--delay N`, default 2s, max 60s)
+- Multi-key rotation (round-robin across `OPENROUTER_API_KEY`, `_2`, `_3`, ... in `~/.claude/mcp-keys.env` and `~/.credentials/keys.env`)
+- Resume mode (`--resume` skips case IDs already in prior runs for this target)
+- Hard cap on cases per run (`--max-cases N`, default 200, sane max 1000)
+- Checkpoint write every N cases (`--checkpoint N`, default 5, 0 = end-only)
+- Tag filter (`--tag-filter <tag>` — only cases whose `.tags` contains it)
+- Stderr sanitization for log lines (sk-or-v1-... and Bearer tokens redacted)
+- Hard timeout per call (90s gen, 45s judge)
+- Backwards compatible with v1 datasets and run JSON
+
+**OpenRouter free models (verified live 2026-04-30):**
+- `sonnet`/`smart`/`reason` → `openai/gpt-oss-120b:free` (default reasoning)
+- `haiku`/`fast`/`small` → `openai/gpt-oss-20b:free`
+- `opus`/`deep`/`long` → `openai/gpt-oss-120b:free`
+- `code` → `qwen/qwen3-coder:free` (occasional 429, retry handles)
+- `llama` → `meta-llama/llama-3.3-70b-instruct:free`
+- `nemotron` → `nvidia/nemotron-3-super-120b-a12b:free`
+- `glm` → `z-ai/glm-4.5-air:free`
+- `minimax` → `minimax/minimax-m2.5:free`
+
+**Excluded:** Google Gemma `:free` models (per `~/.claude/rules/cost-zero-tolerance.md` HARDCORE no-Google rule).
+
+**Shared lib:** `runner/lib/openrouter-helpers.sh` — sourced by both `run-eval.sh` and `llm-judge.sh`. Provides:
+- `or_load_keys()`, `or_pick_key()`, `or_call_with_retry()`, `or_sleep_with_jitter()`
+- `or_sanitize_log()`, `or_validate_dependencies()`, `or_resolve_model_alias()`
+
+Self-test: `bash ~/.claude/evals/runner/lib/openrouter-helpers.sh`.
+
+**Logs:** `~/.claude/logs/eval-pipeline.log` (sanitized; 0 API keys leaked verified).
+
+**Slash command:** `/from-lukas:eval` (or `/eval`) updated to use `~/.claude/evals/...` paths and pass `--retries`/`--delay`/`--max-cases`/`--resume` through.
+
+---
+
 ## Core Concepts
 
 ### Test Case

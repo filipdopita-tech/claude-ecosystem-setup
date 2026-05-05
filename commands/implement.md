@@ -71,7 +71,7 @@ Vypiš:
 ## Poznámka k spec souboru
 
 Spec může být:
-- Absolutní cesta: `~/.claude/specs/SPEC-xxx.md`
+- Absolutní cesta: `/Users/filipdopita/.claude/specs/SPEC-xxx.md`
 - Relativní cesta: `.claude/specs/SPEC-xxx.md`
 - Krátké jméno: `SPEC-xxx` nebo `xxx` (dohledej v ~/.claude/specs/)
 

@@ -1,0 +1,69 @@
+{
+  "run_id": "2026-04-27T120544Z-storyboard",
+  "target": "storyboard",
+  "dataset": "evals/datasets/storyboard.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T120544Z",
+  "aggregate": {
+    "mean_score": 2.8,
+    "pass_count": 1,
+    "fail_count": 9,
+    "case_count": 10,
+    "pass_rate_pct": 10.0,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "story-001",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-002",
+      "score": 0,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-003",
+      "score": 3,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-004",
+      "score": 0,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-005",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-006",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-007",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-008",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "story-009",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "story-010",
+      "score": 4,
+      "status": "FAIL"
+    }
+  ]
+}

@@ -58,9 +58,9 @@ Vyzkoušej minimálně 3 alternativy než reportuješ blokátor:
 ### Když mi chybí informace
 NE: "Potřebuji od vás Y."
 ANO: Najdi Y sám:
-- `grep -r "Y" ~/.claude/projects/<your-project-id>/memory/`
+- `grep -r "Y" ~/.claude/projects/-Users-filipdopita/memory/`
 - `cat ~/.credentials/*.env | grep Y`
-- `ls ~/Documents/*Y*`
+- `ls /mac/Documents/*Y*`
 - WebSearch / WebFetch
 - Memory search MCP
 - Předchozí session logy
@@ -151,7 +151,7 @@ Otázka NIKDY na:
 ## VIOLATION LOG
 
 Každá detekovaná Tier 1/2/3 fráze ve final response → log do:
-`~/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl`
+`~/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl`
 
 Format: `{"ts": "ISO8601", "session": "id", "tier": 1|2|3, "phrase": "...", "context": "..."}`
 

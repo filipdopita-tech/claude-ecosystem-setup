@@ -40,7 +40,7 @@ NotebookLM je tak dobrý, jak dobré jsou jeho zdroje. Špatné zdroje = špatn�
 
 ### 2. Vytvoření notebooku
 ```bash
-python3 ~/Documents/Claude_NotebookLM/notebooklm_skill.py pipeline \
+python3 /Users/filipdopita/Documents/Claude_NotebookLM/notebooklm_skill.py pipeline \
   --name "[Téma] Research [YYYY-MM]" \
   --urls URL1 URL2 URL3 ... \
   --type report \

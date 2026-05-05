@@ -1,0 +1,59 @@
+{
+  "run_id": "2026-04-27T110217Z-lean-refactor",
+  "target": "lean-refactor",
+  "dataset": "evals/datasets/lean-refactor.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T110217Z",
+  "aggregate": {
+    "mean_score": 6.25,
+    "pass_count": 7,
+    "fail_count": 1,
+    "case_count": 8,
+    "pass_rate_pct": 87.5,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real run 2026-04-27. Previous placeholder baseline (avg 8.67) was synthetic. Ruby case (lean-006) is the weak point — skill misses nil-check and string interpolation patterns. Go idiom issue (err/scanErr) confirmed as miss. Regression threshold set to 1.0 (runner default).",
+  "cases": [
+    {
+      "id": "lean-001",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "lean-002",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "lean-003",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "lean-004",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "lean-005",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "lean-006",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "lean-007",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "lean-008",
+      "score": 7,
+      "status": "PASS"
+    }
+  ]
+}

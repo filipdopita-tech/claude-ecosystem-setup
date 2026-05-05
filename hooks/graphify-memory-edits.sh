@@ -54,7 +54,7 @@ print(json.dumps({
 
 # Fire-and-forget SSH (don't block on graphiti response)
 ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=3 \
-    root@<vps-private-ip> \
+    root@10.77.0.1 \
     "echo '${PAYLOAD}' >> /tmp/graphiti-edit-queue.jsonl 2>/dev/null && true" \
     >/dev/null 2>&1 &
 

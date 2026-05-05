@@ -169,11 +169,36 @@ Target: každý custom agent description ≤200 tokens, max 400.
 
 ---
 
+## SECTION 6 — Reuse Validation Checklist (AGENT-ZERO 2026-05-03)
+
+Synergie s Surgical Changes. Před vytvořením NOVÉHO souboru (agent / skill / rule / knowledge / memory entry) projdi:
+
+```
+□ Searched: [search terms použité — Grep/Glob] → found: [list existing files]
+□ Analyzed extension možnosti:
+  □ existing/file1.ext — Cannot extend: [specific technical reason, ne lazy "doesn't fit"]
+  □ existing/file2.ext — Cannot extend: [specific technical reason]
+□ Checked patterns: [project conventions, naming, structure]
+□ Justification: New file needed because [exhaustive reasoning]
+```
+
+**Anti-pattern**: vytvořit `agency-financial-analyst.md` aniž bych zkontroloval že existující `dd-emitent` skill nepokrývá scope. (Verified komplementární, ne duplikát.)
+
+**Application v Filipově ekosystému**:
+- Před `~/.claude/agents/*.md` — search existing agents
+- Před `~/.claude/skills/*` — check umbrellas
+- Před memory entry — `grep MEMORY*.md` před write
+- Před rule file — extend existing nebo append?
+- Před knowledge file — distill nebo new?
+
+**Source**: msitarzewski/AGENT-ZERO 200★ Four Sacred Rules. Detail: `~/.claude/knowledge/agent-zero-patterns.md` § Pattern 1.
+
 ## VZTAH K EXISTUJÍCÍM RULES
 
 - **context-hygiene.md**: file reading strategy (Grep nad cat, offset+limit) — LEAN jde o kód, context-hygiene o tokens při reading
 - **common/all-rules.md Surgical Changes**: neupravuj adjacent code — LEAN compaction platí jen na kód který MÁŠ upravovat
 - **core.md**: files 200-400 lines, <50 lines/function — LEAN poskytuje konkrétní patterns jak toho dosáhnout
 - **quality-standard.md (BtO)**: never sacrifice quality. Když compaction = horší výstup → revert
+- **knowledge/agent-zero-patterns.md**: 5 distilled patterns (Reuse Validation, State Machine, Continuous State Persistence, Stall Detection, Operational Log)
 
 Při konfliktu: quality > compaction. Completeness (prompt-completeness.md) > brevity.

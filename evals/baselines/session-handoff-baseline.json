@@ -1,0 +1,44 @@
+{
+  "run_id": "2026-04-27T111844Z-session-handoff",
+  "target": "session-handoff",
+  "dataset": "evals/datasets/session-handoff.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T111844Z",
+  "aggregate": {
+    "mean_score": 7.2,
+    "pass_count": 5,
+    "fail_count": 0,
+    "case_count": 5,
+    "pass_rate_pct": 100.0,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "handoff-001",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "handoff-002",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "handoff-003",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "handoff-004",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "handoff-005",
+      "score": 8,
+      "status": "PASS"
+    }
+  ]
+}

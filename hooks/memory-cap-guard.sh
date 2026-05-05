@@ -18,7 +18,7 @@ TOOL=$(printf '%s' "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin
 FILE_PATH=$(printf '%s' "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); ti=d.get('tool_input',{}); print(ti.get('file_path',''))" 2>/dev/null || echo "")
 
 # Only guard MEMORY.md (not auto-index, not extra-index)
-if [[ "$FILE_PATH" != *"/projects/<your-project-id>/memory/MEMORY.md" ]]; then
+if [[ "$FILE_PATH" != *"/projects/-Users-filipdopita/memory/MEMORY.md" ]]; then
   exit 0
 fi
 

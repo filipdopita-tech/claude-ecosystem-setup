@@ -68,7 +68,7 @@ Tubuly s nízkým flow → exponential decay (atrofují, mizí).
 
 - Report: `~/Documents/slime-mold-ecosystem/slime-mold-report.md`
 - DOT graph: `~/Documents/slime-mold-ecosystem/slime-mold-graph.dot`
-- Candidates: `~/.claude/projects/<your-project-id>/memory/_slime_mold_candidates/`
+- Candidates: `~/.claude/projects/-Users-filipdopita/memory/_slime_mold_candidates/`
 
 ## Run
 
@@ -97,7 +97,7 @@ Po dokončení nabídni:
 Doporučeno **měsíčně** — ekosystém se vyvíjí. Cron entry:
 
 ```cron
-0 9 1 * * /usr/bin/python3 ~/scripts/automation/slime_mold_ecosystem.py --apply-safe >> ~/.claude/logs/slime-mold.log 2>&1
+0 9 1 * * /usr/bin/python3 /Users/filipdopita/scripts/automation/slime_mold_ecosystem.py --apply-safe >> /Users/filipdopita/.claude/logs/slime-mold.log 2>&1
 ```
 
 (První den měsíce v 9:00.)

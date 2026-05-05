@@ -31,7 +31,7 @@ Filip rule "rozhodně nepoužívej žádný Google API". Routing:
 - Memory soubory max 200 řádků, starší archivuj do *-archive.md
 
 ## UI & Design
-- UI → DESIGN.md z ~/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
+- UI → DESIGN.md z /mac/Documents/design-systems/{linear,stripe,vercel,notion,cal}/
 - Linear=admin, Stripe=fintech, Vercel=dev, Notion=content, Cal=forms
 - 55 designů: github.com/VoltAgent/awesome-design-md
 

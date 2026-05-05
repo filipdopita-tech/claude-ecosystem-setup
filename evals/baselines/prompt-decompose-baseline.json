@@ -1,0 +1,59 @@
+{
+  "run_id": "2026-04-27T115700Z-prompt-decompose",
+  "target": "prompt-decompose",
+  "dataset": "evals/datasets/prompt-decompose.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T115700Z",
+  "aggregate": {
+    "mean_score": 6.0,
+    "pass_count": 5,
+    "fail_count": 3,
+    "case_count": 8,
+    "pass_rate_pct": 62.5,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "decomp-001",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "decomp-002",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "decomp-003",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "decomp-004",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "decomp-005",
+      "score": 5,
+      "status": "WARN"
+    },
+    {
+      "id": "decomp-006",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "decomp-007",
+      "score": 4,
+      "status": "FAIL"
+    },
+    {
+      "id": "decomp-008",
+      "score": 8,
+      "status": "PASS"
+    }
+  ]
+}

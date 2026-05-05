@@ -109,8 +109,56 @@ fetch_mcp() {
     --jq '.items | map({title: .full_name, url: .html_url, stars: .stargazers_count, desc: .description, created: .created_at, source: "mcp-new"})' > "$CACHE/${RUN_ID}-08-mcp.json" 2>/dev/null || echo "[]" > "$CACHE/${RUN_ID}-08-mcp.json"
 }
 
-# Fire all in parallel
-echo "[ai-radar] Scanning 8 sources for last ${DAYS} days (since ${SINCE_DATE})..." >&2
+# 9. Anthropic Cookbook commits (recipes / patterns library)
+# F-100 v3: signal pro nové Anthropic-official examples (high-fit, official-source boost)
+fetch_anthropic_cookbook() {
+  gh api repos/anthropics/anthropic-cookbook/commits \
+    -f per_page=15 \
+    --jq '.[] | select(.commit.author.date >= "'"${SINCE_DATE}"'") | {title: .commit.message, url: .html_url, date: .commit.author.date, source: "anthropic-cookbook"}' \
+    | jq -s '.' > "$CACHE/${RUN_ID}-09-cookbook.json" 2>/dev/null || echo "[]" > "$CACHE/${RUN_ID}-09-cookbook.json"
+}
+
+# 10. Claude Code Plugin Marketplace (search:topic claude-code-plugin)
+# F-101 v3: discover komunitních pluginů, navíc oficiální anthropics/claude-code-plugins (pokud existuje)
+fetch_cc_plugins() {
+  gh api -X GET search/repositories \
+    -f q="topic:claude-code-plugin OR topic:claude-skill created:>${SINCE_DATE}" \
+    -f sort=stars -f order=desc -f per_page=15 \
+    --jq '.items | map({title: .full_name, url: .html_url, stars: .stargazers_count, desc: .description, created: .created_at, source: "cc-plugins-trending"})' > "$CACHE/${RUN_ID}-10-cc-plugins.json" 2>/dev/null || echo "[]" > "$CACHE/${RUN_ID}-10-cc-plugins.json"
+}
+
+# 11. Awesome lists updates (awesome-claude-code, awesome-mcp-servers)
+# F-102 v3: track curated list updates jako proxy pro "co je v komunitě hot"
+fetch_awesome_lists() {
+  local AWESOME_FILE="$CACHE/${RUN_ID}-11-awesome.json"
+  echo "[]" > "$AWESOME_FILE"
+
+  for repo in "hesreallyhim/awesome-claude-code" "punkpeye/awesome-mcp-servers" "claude-code-collective/claude-code-collective"; do
+    local name=$(echo "$repo" | cut -d/ -f2)
+    gh api repos/$repo/commits -f per_page=10 \
+      --jq '.[] | select(.commit.author.date >= "'"${SINCE_DATE}"'") | {title: ("[" + "'"$name"'" + "] " + .commit.message), url: .html_url, date: .commit.author.date, source: "awesome-list"}' 2>/dev/null \
+      | jq -s '.' > "$AWESOME_FILE.tmp" || echo "[]" > "$AWESOME_FILE.tmp"
+    if [ -s "$AWESOME_FILE.tmp" ]; then
+      jq -s 'add' "$AWESOME_FILE" "$AWESOME_FILE.tmp" > "$AWESOME_FILE.merged" 2>/dev/null && mv "$AWESOME_FILE.merged" "$AWESOME_FILE"
+    fi
+    rm -f "$AWESOME_FILE.tmp" "$AWESOME_FILE.merged" 2>/dev/null
+  done
+}
+
+# 12. OpenRouter free models update (lists nové free models z openrouter.ai/models)
+# F-103 v3: kritické pro Filip cost-zero workflow (Gemini blocked, OpenRouter free je default fallback)
+fetch_openrouter_free() {
+  fetch_with_cache "https://openrouter.ai/api/v1/models" "$CACHE/${RUN_ID}-12-openrouter.json" "12-openrouter.json"
+  if [ -s "$CACHE/${RUN_ID}-12-openrouter.json" ]; then
+    # Extract jen free models, mapuj do common format
+    jq '[.data[] | select(.pricing.prompt == "0" or .pricing.prompt == 0) | {title: .name, url: ("https://openrouter.ai/models/" + .id), desc: .description, source: "openrouter-free", date: (.created // "" | tostring)}]' "$CACHE/${RUN_ID}-12-openrouter.json" > "$CACHE/${RUN_ID}-12-openrouter-parsed.json" 2>/dev/null || echo "[]" > "$CACHE/${RUN_ID}-12-openrouter-parsed.json"
+  else
+    echo "[]" > "$CACHE/${RUN_ID}-12-openrouter-parsed.json"
+  fi
+}
+
+# Fire all in parallel (12 zdrojů od v3)
+echo "[ai-radar] Scanning 12 sources for last ${DAYS} days (since ${SINCE_DATE})..." >&2
 fetch_anthropic &
 fetch_claude_code_releases &
 fetch_openai &
@@ -119,9 +167,13 @@ fetch_github_trending &
 fetch_hn &
 fetch_reddit &
 fetch_mcp &
+fetch_anthropic_cookbook &
+fetch_cc_plugins &
+fetch_awesome_lists &
+fetch_openrouter_free &
 wait
 
-# Combine JSON sources
+# Combine JSON sources (v3: +4 nové zdroje)
 jq -s 'add' \
   "$CACHE/${RUN_ID}-02-cc-releases.json" \
   "$CACHE/${RUN_ID}-05a-gh-llm.json" \
@@ -129,6 +181,10 @@ jq -s 'add' \
   "$CACHE/${RUN_ID}-06-hn.json" \
   "$CACHE/${RUN_ID}-07-reddit.json" \
   "$CACHE/${RUN_ID}-08-mcp.json" \
+  "$CACHE/${RUN_ID}-09-cookbook.json" \
+  "$CACHE/${RUN_ID}-10-cc-plugins.json" \
+  "$CACHE/${RUN_ID}-11-awesome.json" \
+  "$CACHE/${RUN_ID}-12-openrouter-parsed.json" \
   > "$CACHE/${RUN_ID}-combined.json" 2>/dev/null || echo "[]" > "$CACHE/${RUN_ID}-combined.json"
 
 # F-008 + F-009 + F-019: parse 4 RSS/MD/HTML zdrojů + dedupe + emit health.json

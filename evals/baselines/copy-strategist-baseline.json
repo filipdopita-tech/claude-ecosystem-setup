@@ -1,0 +1,9 @@
+{
+  "skill": "copy-strategist",
+  "baseline_run": "2026-04-26-first-run",
+  "baseline_avg": 9.0,
+  "baseline_pass_rate": "11/12",
+  "regression_threshold": 1.0,
+  "notes": "First baseline. Established 2026-04-26. One dataset rubric error (copy-002) flagged for correction in next eval cycle.",
+  "pending_fix": false
+}

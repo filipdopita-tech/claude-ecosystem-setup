@@ -1,0 +1,49 @@
+{
+  "run_id": "2026-04-27T112928Z-perf-auditor",
+  "target": "perf-auditor",
+  "dataset": "evals/datasets/perf-auditor.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T112928Z",
+  "aggregate": {
+    "mean_score": 3.83,
+    "pass_count": 3,
+    "fail_count": 3,
+    "case_count": 6,
+    "pass_rate_pct": 50.0,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "perf-001",
+      "score": 1,
+      "status": "FAIL"
+    },
+    {
+      "id": "perf-002",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "perf-003",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "perf-004",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "perf-005",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "perf-006",
+      "score": 1,
+      "status": "FAIL"
+    }
+  ]
+}

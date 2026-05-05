@@ -55,7 +55,7 @@ Otázka SMÍ projít, když akce odesílá zprávu třetí straně:
 - Logging do souborů, Obsidian append, memory write
 - Draft / save / queue (NEPOSLAT, jen příprava)
 
-**Reference:** `~/.claude/projects/<your-project-id>/memory/feedback_no_send_without_approval.md`
+**Reference:** `~/.claude/projects/-Users-filipdopita/memory/feedback_no_send_without_approval.md`
 
 ---
 
@@ -67,7 +67,7 @@ Otázka SMÍ projít, když akce může nevratně poškodit produkční data neb
 - TRUNCATE produkční tabulky
 - `git push --force` na main/master/prod branch (nebo `--force-with-lease` na sdílený branch)
 - `git reset --hard origin/X` které smaže lokální commity
-- `rm -rf` na produkční cesty (`/`, `/var`, `/etc`, `/root/.credentials`, `~/`, project root)
+- `rm -rf` na produkční cesty (`/`, `/var`, `/etc`, `/root/.credentials`, `/mac/`, project root)
 - `dd if=/dev/zero` nebo `mkfs` na používaný disk
 - Cloud resource delete (GCP project delete, AWS account close, DNS zone delete)
 - Permanent unlink production DNS, SSL revoke
@@ -143,7 +143,7 @@ Pokud Claude potřebuje explicit projít otázku mimo HARD-STOP (rare edge case)
 HARD_STOP_ASK=1 claude
 ```
 
-Override se LOGGUJE do `~/.claude/projects/<your-project-id>/memory/autonomy-violations.jsonl` jako `override:env` pro audit. Filip vidí v `/learn` review.
+Override se LOGGUJE do `~/.claude/projects/-Users-filipdopita/memory/autonomy-violations.jsonl` jako `override:env` pro audit. Filip vidí v `/learn` review.
 
 ---
 

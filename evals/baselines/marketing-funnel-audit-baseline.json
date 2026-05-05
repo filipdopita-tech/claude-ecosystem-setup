@@ -1,0 +1,59 @@
+{
+  "run_id": "2026-04-27T114852Z-marketing-funnel-audit",
+  "target": "marketing-funnel-audit",
+  "dataset": "evals/datasets/marketing-funnel-audit.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T114852Z",
+  "aggregate": {
+    "mean_score": 7.25,
+    "pass_count": 8,
+    "fail_count": 0,
+    "case_count": 8,
+    "pass_rate_pct": 100.0,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "funnel-001",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "funnel-002",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "funnel-003",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "funnel-004",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "funnel-005",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "funnel-006",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "funnel-007",
+      "score": 6,
+      "status": "WARN"
+    },
+    {
+      "id": "funnel-008",
+      "score": 8,
+      "status": "PASS"
+    }
+  ]
+}

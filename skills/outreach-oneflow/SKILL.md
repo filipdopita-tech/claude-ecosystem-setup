@@ -51,7 +51,7 @@ Než začneš psát, načti:
 1. `~/.claude/expertise/outbound-sales-science.yaml` § `mandatory_v4` + `fbi_voss` + `reply_handlers`
 2. `~/.claude/rules/domains/cold-email.md` (pre-send checklist 9 bodů + calibrated questions framework)
 3. `~/.claude/rules/oneflow-all.md` (banned outreach openers + voice rules)
-4. `~/.claude/projects/<your-project-id>/memory/copywriting_persona.md` (Filipův styl z 9550 WA zpráv)
+4. `~/.claude/projects/-Users-filipdopita/memory/copywriting_persona.md` (Filipův styl z 9550 WA zpráv)
 5. Relevantní memory podle kontaktu (např. `project_tereza_tulcova_*` pro Tereza pipeline)
 
 ## Generování (postup)

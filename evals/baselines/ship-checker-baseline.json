@@ -1,0 +1,49 @@
+{
+  "run_id": "2026-04-27T113457Z-ship-checker",
+  "target": "ship-checker",
+  "dataset": "evals/datasets/ship-checker.jsonl",
+  "judge_model": "haiku",
+  "model_under_test": "claude-haiku-4-5",
+  "timestamp": "2026-04-27T113457Z",
+  "aggregate": {
+    "mean_score": 5.5,
+    "pass_count": 4,
+    "fail_count": 2,
+    "case_count": 6,
+    "pass_rate_pct": 66.6,
+    "regression_threshold": 1.0
+  },
+  "notes": "First real baseline. Established 2026-04-27. Replaced synthetic placeholder (score=0).",
+  "cases": [
+    {
+      "id": "ship-001",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "ship-002",
+      "score": 7,
+      "status": "PASS"
+    },
+    {
+      "id": "ship-003",
+      "score": 8,
+      "status": "PASS"
+    },
+    {
+      "id": "ship-004",
+      "score": 1,
+      "status": "FAIL"
+    },
+    {
+      "id": "ship-005",
+      "score": 2,
+      "status": "FAIL"
+    },
+    {
+      "id": "ship-006",
+      "score": 8,
+      "status": "PASS"
+    }
+  ]
+}

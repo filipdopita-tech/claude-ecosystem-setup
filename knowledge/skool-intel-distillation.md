@@ -153,7 +153,7 @@ Filip's GSD framework matches (plan → execute paralelně → verify-phase). Co
 - REPORT.md: `~/Documents/skool-intel/_mac_session/output/REPORT.md` (35.6 KB master)
 - Per-community MD: `~/Documents/skool-intel/_mac_session/output/per_community_md/*.md` (5 files)
 - Enriched insights JSON: `~/Documents/skool-intel/_mac_session/output/insights/enriched_top.json` (48 insights)
-- VPS mirror: `ssh root@<vps-private-ip> "ls /root/workspace/skool-scraper/_synced/"`
+- VPS mirror: `ssh root@10.77.0.1 "ls /root/workspace/skool-scraper/_synced/"`
 
 ## Next Re-scrape
 

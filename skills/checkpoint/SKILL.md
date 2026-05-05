@@ -1,1 +1,0 @@
-/Users/filipdopita/.claude/skills/gstack/checkpoint/SKILL.md

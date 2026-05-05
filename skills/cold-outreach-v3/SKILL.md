@@ -256,6 +256,6 @@ ls ~/Documents/01_OneFlow/campaigns/test-q2-2026/
 ## Reference
 
 - Source: skool-intel/chase-ai "Cold Outreach Machine 3.0" + "n8n & Apollo Lead Gen Finally Solved"
-- OneFlow setup: `~/.claude/projects/<your-project-id>/memory/cold_email_setup.md`
-- Domain status: `~/.claude/projects/<your-project-id>/memory/deliverability_2026_04_26.md`
+- OneFlow setup: `~/.claude/projects/-Users-filipdopita/memory/cold_email_setup.md`
+- Domain status: `~/.claude/projects/-Users-filipdopita/memory/deliverability_2026_04_26.md`
 - ICP definitions: `~/.claude/expertise/outbound-sales-science.yaml` § ICP profiles

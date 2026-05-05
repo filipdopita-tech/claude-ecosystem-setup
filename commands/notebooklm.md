@@ -18,7 +18,7 @@ nlm query <notebook-id> "question"
 
 ### 3. Python Skill Script
 ```
-~/Documents/Claude_NotebookLM/notebooklm_skill.py
+/Users/filipdopita/Documents/Claude_NotebookLM/notebooklm_skill.py
 ```
 
 ## Script Actions
