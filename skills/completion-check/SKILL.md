@@ -36,7 +36,7 @@ esac
 
 ### 2. Source data
 
-- Violations log: `~/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl`
+- Violations log: `~/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl`
 - Hook logs:
   - `~/.claude/logs/completion-mandate-hook.log` (UserPromptSubmit injects)
   - `~/.claude/logs/completion-blocking-hook.log` (Write/Edit warnings + blocks)
@@ -45,7 +45,7 @@ esac
 ### 3. Parse + aggregate (Bash + jq)
 
 ```bash
-VIOLATIONS=~/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl
+VIOLATIONS=~/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl
 
 # Default 7d filter
 SINCE=$(date -u -v-7d +%Y-%m-%d)

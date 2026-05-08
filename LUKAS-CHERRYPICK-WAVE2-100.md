@@ -96,7 +96,7 @@ brief-author.jsonl, copywriting.jsonl, lean-refactor.jsonl, marketing-funnel-aud
 - `dd-emitent.jsonl` — 8 cases (corporate bonds, real estate, green bonds, crypto, fraud check)
 - `cold-email-cz.jsonl` — 8 cases (5-step sequence + re-activation + deliverability check)
 - `oneflow-diagnose.jsonl` — 6 cases (lead-magnets, pivots, content pillars, services)
-- `deep-post-ideas.jsonl` — 5 cases (extraction z reálných projektů: Tereza, GCP, Steakhouse, Lukáš)
+- `deep-post-ideas.jsonl` — 5 cases (extraction z reálných projektů: <klient>, GCP, <klient>, Lukáš)
 
 ---
 

@@ -29,7 +29,7 @@ Founder OneFlow (investice, dluhopisy, fundraising). Technicky zdatný, čas dra
 ## VPS architektura
 - VŠE na VPS, Mac = terminál. Dlouhé úlohy = screen/tmux
 - Flash = compute + Claude Code. Alfa = email + CZ IP
-- Vizuální výstupy -> Mac (~/)
+- Vizuální výstupy -> Mac (/Users/filipdopita/)
 
 ## Quality Standard (Boil the Ocean)
 Viz `quality-standard.md` — platí automaticky.

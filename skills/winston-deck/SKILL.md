@@ -16,9 +16,9 @@ allowed-tools:
 
 ## Kdy použít
 
-- **Pitch deck pro investora** (OneFlow fundraise, Patricny, ASR partneři)
+- **Pitch deck pro investora** (OneFlow fundraise, <projekt>, <klient> partneři)
 - **DD report prezentace** klientovi (executive summary)
-- **Klientská nabídka** (ASR retainer, custom DD)
+- **Klientská nabídka** (<klient> retainer, custom DD)
 - **Konference talk** (CZ fintech eventy, retailový investor day)
 - **Webinář** (lead magnet, podcast lead-in)
 - **Slide audit** existujícího decku (10 Winston Slide Crimes)
@@ -150,10 +150,10 @@ Pro **single** mode: aplikuj jen ten jeden prompt z knowledge file.
 
 Output: kompletní 12-slide deck s opening 60s, Star elements, VSNC structure, contributions close, speaker notes.
 
-### Příklad 2: Audit existujícího ASR pitch decku
+### Příklad 2: Audit existujícího <klient> pitch decku
 
 ```
-/winston audit "ASR retainer pitch — 12 slidů z minulého týdne"
+/winston audit "<klient> retainer pitch — 12 slidů z minulého týdne"
 ```
 
 Filip pošle screenshoty / popis slidů → Claude vrátí audit s 10 crimes checklist + per-slide fix.

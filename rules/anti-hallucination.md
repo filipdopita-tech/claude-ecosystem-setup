@@ -148,7 +148,7 @@ Patterns které se opakovaly + odpovídající fix:
 
 ### Trap 8: Smyšlené status služeb
 **Halucinace:** "Postfix běží OK"
-**Fix:** `ssh root@<vps-private-ip> systemctl status postfix` (real check)
+**Fix:** `ssh root@10.77.0.1 systemctl status postfix` (real check)
 
 ### Trap 9: Smyšlené test outcomes
 **Halucinace:** "Test prošel"

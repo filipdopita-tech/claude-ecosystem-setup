@@ -1,16 +1,18 @@
 #!/bin/bash
-# Hallucination Guard (PreToolUse Write|Edit)
+# Hallucination Guard (PreToolUse Write|Edit|Bash|Agent)
 # Created 2026-04-28 per Filip explicit rule "aby se nedělo to že budeš halucinovat".
-# Detekuje vysoce-rizikové halucinační patterns v final-output souborech.
+# Expanded 2026-04-30: přidáno Bash + Agent coverage.
+# Detekuje vysoce-rizikové halucinační patterns v final-output souborech i příkazech.
 # Behavior:
 #   Tier 1 (advisory): single hit → warning inject
 #   Tier 2 (block):    3+ patterns + content >800 chars + final-response file → exit 2
+#   Bash/Agent:        advisory-only (Tier 1), nikdy Tier 2 block (příliš mnoho false positives)
 # Override: HALLUCINATION_OVERRIDE=1
 #
 # Reference: ~/.claude/rules/anti-hallucination.md
 
 LOG_FILE="$HOME/.claude/logs/hallucination-guard.log"
-VIOLATIONS_LOG="$HOME/.claude/projects/<your-project-id>/memory/hallucination-violations.jsonl"
+VIOLATIONS_LOG="$HOME/.claude/projects/-Users-filipdopita/memory/hallucination-violations.jsonl"
 mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null
 mkdir -p "$(dirname "$VIOLATIONS_LOG")" 2>/dev/null
 
@@ -29,16 +31,21 @@ TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "unknown"' 2>/dev/null)
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-if [ "$TOOL_NAME" != "Write" ] && [ "$TOOL_NAME" != "Edit" ]; then
-  exit 0
-fi
-
+# Extract content based on tool type
 if [ "$TOOL_NAME" = "Write" ]; then
   CONTENT=$(echo "$INPUT" | jq -r '.tool_input.content // empty' 2>/dev/null)
   FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
-else
+elif [ "$TOOL_NAME" = "Edit" ]; then
   CONTENT=$(echo "$INPUT" | jq -r '.tool_input.new_string // empty' 2>/dev/null)
   FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+elif [ "$TOOL_NAME" = "Bash" ]; then
+  CONTENT=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+  FILE_PATH="[bash-command]"
+elif [ "$TOOL_NAME" = "Agent" ]; then
+  CONTENT=$(echo "$INPUT" | jq -r '(.tool_input.prompt // .tool_input.description // "")' 2>/dev/null)
+  FILE_PATH="[agent-prompt]"
+else
+  exit 0
 fi
 
 if [ -z "$CONTENT" ]; then
@@ -127,6 +134,11 @@ if [ "$EVIDENCE_MARKERS" -lt 1 ]; then
   fi
 fi
 
+# Bash and Agent: advisory-only, never block (too many false positives in short commands)
+if [ "$TOOL_NAME" = "Bash" ] || [ "$TOOL_NAME" = "Agent" ]; then
+  SHOULD_BLOCK=0
+fi
+
 if [ "$HIT_COUNT" -gt 0 ]; then
   log_event "DETECT" "tool=$TOOL_NAME file=$FILE_PATH hits=$HIT_COUNT len=$CONTENT_LEN [$HITS]"
   echo "{\"ts\":\"$TIMESTAMP\",\"session\":\"$SESSION_ID\",\"tool\":\"$TOOL_NAME\",\"file\":\"$FILE_PATH\",\"hits\":$HIT_COUNT,\"len\":$CONTENT_LEN,\"phrases\":\"$HITS\"}" >> "$VIOLATIONS_LOG" 2>/dev/null
@@ -161,7 +173,7 @@ OPRAV PŘED RE-WRITE:
 
 Reference: ~/.claude/rules/anti-hallucination.md
 Override: HALLUCINATION_OVERRIDE=1 (loguje se)
-Logged: ~/.claude/projects/<your-project-id>/memory/hallucination-violations.jsonl
+Logged: ~/.claude/projects/-Users-filipdopita/memory/hallucination-violations.jsonl
 EOF
     exit 2
   fi
@@ -192,7 +204,7 @@ Pokud ověřit nelze nebo je to expensive → flag s confidence:
   [VERIFIED], [LIKELY 80%+], [GUESS 50-70%], [UNCERTAIN]
 
 Reference: ~/.claude/rules/anti-hallucination.md
-Logged: ~/.claude/projects/<your-project-id>/memory/hallucination-violations.jsonl
+Logged: ~/.claude/projects/-Users-filipdopita/memory/hallucination-violations.jsonl
 </system-reminder>
 EOF
 fi

@@ -14,7 +14,7 @@
 | systems-api | 18850 (local+WG) | Systems Status API |
 | conductor | pidfile | Claude Code orchestrator |
 | oneflow-bot | - | Telegram bot |
-| beskyd-form | - | Form handler |
+| <klient>-form | - | Form handler |
 | fluent-bit | - | Log collector -> ntfy |
 | caddy | 80/443 | Reverse proxy |
 | openspace-mcp | 18860 (WG) | Self-evolving skills engine |
@@ -38,15 +38,15 @@ Docker: autoheal container
 | unsub-server | - | Unsubscribe handler |
 
 Crony: 43 entries (cold email 16x, dashboard 8x, scraping 8x, backup 5x, security 3x, social 1x)
-Screen: social-terminal, wa-bridge, sms-receiver, oneflow-bot, beskyd_form, httpserv
+Screen: social-terminal, wa-bridge, sms-receiver, oneflow-bot, <klient>_form, httpserv
 
 ## Mac CLI Tools
 gh, ffmpeg, vercel, playwright, stripe (1.40.3)
 
 ## Klíčové cesty
-- ~/Documents/ = Mac Documents (source of truth)
+- /mac/Documents/ = Mac Documents (source of truth)
 - /home/claude/knowledge-base/ = KB API data (Flash)
 - /home/claude/dubai-scraper/ = UAE lead scraper (Flash)
 
 ## Resolved Issues (2026-04-08)
-Caddy active, GEMINI_API_KEY in .env, backup cron 4:00, SSHFS fixed, li-ghl-sync disabled+masked, WG <private-subnet>/24, Alfa disk 53%, Postfix LE cert (exp 2026-07-07), SN expired+disabled, Cloudflare token saved, WEDOS WAPI fixed, DMARC quarantine+SPF -all
+Caddy active, GEMINI_API_KEY in .env, backup cron 4:00, SSHFS fixed, li-ghl-sync disabled+masked, WG 10.77.0.0/24, Alfa disk 53%, Postfix LE cert (exp 2026-07-07), SN expired+disabled, Cloudflare token saved, WEDOS WAPI fixed, DMARC quarantine+SPF -all

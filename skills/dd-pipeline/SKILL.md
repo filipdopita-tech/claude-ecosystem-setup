@@ -59,7 +59,7 @@ OPEN_DD=1 ~/scripts/automation/dd_pipeline.sh prospekt.pdf
 |---|---|---|
 | `COA_CHUNK_TOKENS` | 8000 | Velikost chunku. Nižší = víc worker calls, jemnější attention. |
 | `COA_MANAGER_BACKEND` | gemini | `claude` = final syntéza přes Claude CLI (Max subscription) |
-| `COA_MANAGER_MODEL` | gemini-2.5-flash | `sonnet` při backend=claude |
+| `COA_MANAGER_MODEL` | claude-sonnet-4-6 | `sonnet` při backend=claude |
 | `COA_WORKER_BACKEND` | gemini | Stejně jako manager (málokdy se mění) |
 | `COA_TIMEOUT` | 3600 | Max doba zpracování v queue |
 | `OPEN_DD` | — | `1` = automatické otevření výsledného MD po dokončení |
@@ -102,7 +102,7 @@ Po `/dd-pipeline`:
 ```
 PDF → pdftotext → TXT
   ↓ scp
-root@<vps-private-ip>:/tmp/dd_*.txt
+root@10.77.0.1:/tmp/dd_*.txt
   ↓ stdin
 /opt/conductor/bin/submit-coa-dd.py  (task_id)
   ↓
@@ -118,7 +118,7 @@ root@<vps-private-ip>:/tmp/dd_*.txt
 ~/Desktop/OneFlow/DD/DD_<basename>_<ts>.md
 ```
 
-A2A protokol je alternativa (pro external agenty): `http://<vps-private-ip>:9999/.well-known/agent-card.json`, skill_id `conductor_dd_coa`, podporuje metadata overrides (`query`, `chunk_tokens`, `manager_backend`, ...). Pro Mac použij `dd_pipeline.sh` (bez A2A SDK závislosti).
+A2A protokol je alternativa (pro external agenty): `http://10.77.0.1:9999/.well-known/agent-card.json`, skill_id `conductor_dd_coa`, podporuje metadata overrides (`query`, `chunk_tokens`, `manager_backend`, ...). Pro Mac použij `dd_pipeline.sh` (bez A2A SDK závislosti).
 
 ## Verified (2026-04-17)
 - VPS submit helper: `/opt/conductor/bin/submit-coa-dd.py`

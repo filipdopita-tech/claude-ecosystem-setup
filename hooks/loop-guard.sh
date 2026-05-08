@@ -4,7 +4,7 @@
 # Fails OPEN (exit 0) on any internal error — never block user on bug.
 # Kill switch: touch ~/.claude/.loop_guard_off
 
-MAX=50
+MAX=120
 WINDOW=60
 RATE_FILE="${HOME}/.claude/.tool_rate_window"
 KILL_SWITCH="${HOME}/.claude/.loop_guard_off"

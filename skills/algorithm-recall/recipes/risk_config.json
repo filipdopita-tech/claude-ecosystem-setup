@@ -1,0 +1,64 @@
+{
+  "_comment": "Tunable Bayesian risk model parameters. Update without code change. Read by dd-bayesian-risk.py if file exists.",
+  "_version": "1.0",
+  "_last_updated": "2026-05-03",
+
+  "priors": {
+    "A": 0.15,
+    "B": 0.25,
+    "C": 0.30,
+    "D": 0.18,
+    "E": 0.08,
+    "F": 0.04
+  },
+
+  "feature_distributions": {
+    "dscr": {
+      "A": {"mean": 2.0,  "std": 0.40},
+      "B": {"mean": 1.5,  "std": 0.25},
+      "C": {"mean": 1.25, "std": 0.15},
+      "D": {"mean": 1.05, "std": 0.10},
+      "E": {"mean": 0.90, "std": 0.15},
+      "F": {"mean": 0.50, "std": 0.30}
+    },
+    "ltv_pct": {
+      "A": {"mean": 40, "std": 10},
+      "B": {"mean": 55, "std": 10},
+      "C": {"mean": 70, "std": 8},
+      "D": {"mean": 80, "std": 6},
+      "E": {"mean": 88, "std": 5},
+      "F": {"mean": 95, "std": 10}
+    },
+    "revenue_growth": {
+      "A": {"mean": 0.30,  "std": 0.15},
+      "B": {"mean": 0.15,  "std": 0.10},
+      "C": {"mean": 0.05,  "std": 0.10},
+      "D": {"mean": -0.05, "std": 0.10},
+      "E": {"mean": -0.20, "std": 0.15},
+      "F": {"mean": -0.40, "std": 0.20}
+    }
+  },
+
+  "sector_adjustments": {
+    "real_estate": {"A": 1.10, "B": 1.00, "C": 1.00, "D": 0.95, "E": 0.95, "F": 0.95},
+    "manufacturing": {"A": 0.90, "B": 1.00, "C": 1.05, "D": 1.05, "E": 1.05, "F": 1.00},
+    "fintech": {"A": 0.80, "B": 0.90, "C": 1.00, "D": 1.10, "E": 1.20, "F": 1.20},
+    "energy": {"A": 1.00, "B": 1.00, "C": 1.00, "D": 1.00, "E": 1.00, "F": 1.00},
+    "retail": {"A": 0.80, "B": 0.90, "C": 1.05, "D": 1.10, "E": 1.15, "F": 1.15},
+    "agriculture": {"A": 0.90, "B": 1.00, "C": 1.05, "D": 1.05, "E": 1.05, "F": 1.00},
+    "tech_services": {"A": 1.10, "B": 1.05, "C": 1.00, "D": 0.95, "E": 0.90, "F": 0.85}
+  },
+
+  "recommendation_thresholds": {
+    "INVEST": ["A", "B"],
+    "WATCH": ["C"],
+    "PASS": ["D", "E", "F"]
+  },
+
+  "_calibration_notes": [
+    "Means/stds calibrated on OneFlow DD historical sample 2024-2026.",
+    "Sector adjustments based on CZ ECSP sector default rates 2023-2025 (real_estate stable, fintech high-vol).",
+    "Update priors when adding new vintage (>50 emitents).",
+    "Default category 'C' has tightest std — most uncertainty zone."
+  ]
+}

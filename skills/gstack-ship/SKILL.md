@@ -1,0 +1,1 @@
+/Users/filipdopita/.claude/skills/gstack/ship/SKILL.md

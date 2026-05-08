@@ -173,7 +173,7 @@ fi
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>~/.claude/scripts/trend-tracker/run.sh</string>
+    <string>/Users/filipdopita/.claude/scripts/trend-tracker/run.sh</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
@@ -181,9 +181,9 @@ fi
     <key>Minute</key><integer>0</integer>
   </dict>
   <key>StandardOutPath</key>
-  <string>~/.claude/scripts/trend-tracker/logs/launchd.log</string>
+  <string>/Users/filipdopita/.claude/scripts/trend-tracker/logs/launchd.log</string>
   <key>StandardErrorPath</key>
-  <string>~/.claude/scripts/trend-tracker/logs/launchd-err.log</string>
+  <string>/Users/filipdopita/.claude/scripts/trend-tracker/logs/launchd-err.log</string>
 </dict>
 </plist>
 ```

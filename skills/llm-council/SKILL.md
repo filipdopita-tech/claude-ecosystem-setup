@@ -1,10 +1,37 @@
 ---
 name: llm-council
-description: 5-advisor debate framework with peer review for strategic decisions. Use for DD verdikt, big-bet investice, architektonická rozhodnutí, pivoty, kontroverzní hires, kde stakes jsou vysoké a chceš adversarial perspektivy před commitnutím. Adapted from tenfoldmarc/llm-council-skill (https://github.com/tenfoldmarc/llm-council-skill).
+description: "5-advisor debate framework with peer review for strategic decisions. Use for DD verdikt, big-bet investice, architektonická rozhodnutí, pivoty, kontroverzní hires, kde stakes jsou vysoké a chceš adversarial perspektivy před commitnutím. MANDATORY TRIGGERS (always invoke): 'council this', 'run the council', 'war room this', 'pressure-test this', 'stress-test this', 'debate this', 'rozcupuj radou', 'svolej radu'. STRONG TRIGGERS (invoke if combined with real decision/tradeoff): 'should I X or Y', 'A nebo B', 'pivot or persevere', 'GO/NO-GO', 'mám se zaměřit na', 'is this the right move', 'validate this', 'co byste udělali', 'I'm torn between'. SKIP TRIGGERS (do NOT invoke): trivial yes/no, factual lookups, casual 'should I' bez stakes (e.g. 'should I use markdown'), implementation details, tooling choices. Adapted from tenfoldmarc/llm-council-skill + Karpathy methodology + onlinemama enhancements."
 allowed-tools: Read, Write, Edit, Grep, Glob, WebFetch, WebSearch, Bash
 ---
 
 # LLM Council — 5-Advisor Strategic Debate
+
+## Trigger Sensitivity (when to invoke vs skip)
+
+### MANDATORY (vždy invoke)
+- "council this: ..."
+- "run the council on ..."
+- "war room this"
+- "pressure-test this", "stress-test this"
+- "debate this"
+- "rozcupuj radou", "svolej radu"
+
+### STRONG (invoke jen pokud je real decision/tradeoff/stakes)
+- "should I X or Y", "A nebo B"
+- "pivot or persevere"
+- "GO/NO-GO"
+- "mám se zaměřit na", "co byste udělali"
+- "is this the right move", "validate this"
+- "I'm torn between", "nemůžu se rozhodnout"
+
+### SKIP (NIKDY auto-invoke)
+- Trivial yes/no questions ("should I use markdown for this readme?")
+- Factual lookups ("what's the capital of France?")
+- Implementation details ("which font?", "kam soubor?")
+- Tooling choices ("Vercel vs Netlify pro tento landing?")
+- Casual exploration without commit ("co bych mohl udělat s X?")
+
+**Disambiguator**: skutečné council otázky mají (1) genuine uncertainty, (2) high-cost-of-being-wrong, (3) multiple polarizing options. Pokud chybí byť 1 → není to council otázka.
 
 ## Kdy použít
 
@@ -63,15 +90,39 @@ allowed-tools: Read, Write, Edit, Grep, Glob, WebFetch, WebSearch, Bash
 
 ## Workflow
 
+### Phase 0: Workspace Context Scan (MANDATORY pre-framing, max 30s)
+
+PŘED frame-ováním otázky proveď rychlý kontext scan. Filipovy `~/Documents/`, `~/.claude/projects/-Users-filipdopita-Desktop-Codex/memory/`, OneFlow Vault, project CLAUDE.md jsou plné dat která dělají rozdíl mezi generic radou a grounded radou.
+
+**Quick scan checklist (under 30s):**
+1. **CLAUDE.md** v project root + global → business context, constraints, preferences
+2. **MEMORY.md** index → past decisions, recent project context, feedback patterns
+3. **`memory/feedback_*.md` + `memory/project_*.md`** matching topic keywords → relevant prior decisions
+4. **OneFlow Vault** (`~/Documents/OneFlow-Vault/`) — if topic financial/investor/dluhopisový
+5. **Recent council transcripts** v project's `active/` directory — avoid re-counciling
+6. **Files Filip explicitly attached/referenced** — primary source
+
+**Tools**: Glob + quick Read calls. Cap 5 file reads. **Don't go deeper than 30s** — scan, not research.
+
+**Output of Phase 0**: list of 2-3 files which give advisors specific grounding. Inject as "CONTEXT" v Phase 1 framing.
+
 ### Phase 1: Question Framing
 Filip pošle: `council this: [otázka/rozhodnutí]`
 
-Já transform na:
+Já transform na (s data z Phase 0 scan):
 ```
 DECISION: [konkrétní volba]
-CONTEXT: [stakes, deadline, alternatives, constraints — z OneFlow knowledge]
+CONTEXT: [stakes, deadline, alternatives, constraints — z OneFlow knowledge + Phase 0 grounding]
+WORKSPACE GROUNDING:
+  - [file 1: relevant fact]
+  - [file 2: relevant fact]
+  - [file 3: relevant fact]
 DESIRED OUTPUT: [verdikt? plán? eliminace alternativ?]
 ```
+
+Don't add own opinion. Don't steer. But DO ground each advisor with specific facts (revenue numbers, prior launch results, audience signals, deadline reality) so they give SPECIFIC advice, not generic.
+
+**Vague question handling**: pokud otázka je vague ("council this: my OneFlow strategy"), zeptej se EXACTLY 1 clarifying question, pak proceed.
 
 ### Phase 2: Independent Advisor Responses
 
@@ -99,9 +150,18 @@ Každý advisor odpovídá NEZÁVISLE (pretend ostatní neexistují):
 ... (Monday morning plan jako primary output)
 ```
 
-### Phase 3: Peer Review (cross-advisor)
+### Phase 3: Anonymized Peer Review (cross-advisor)
 
-Po fázi 2 každý advisor čte ostatní 4 a odpovídá na 3 questions:
+**Klíčový krok** — what makes the council > "ask 5 times". Karpathy's core insight.
+
+**Anonymizace JE povinná** (eliminuje positional bias):
+1. Collect all 5 advisor responses from Phase 2
+2. **Randomly map** Contrarian/FirstPrinciples/Expansionist/Outsider/Executor → Response A/B/C/D/E (random shuffle each council session)
+3. Show reviewers ONLY anonymized A-E labels, NEVER advisor names
+
+Bez anonymizace = reviewers defer k thinking styles co cení (e.g. always rate Contrarian = strongest because Filip values skepticism). Anonymizace = evaluation on reasoning merit.
+
+Po anonymizaci každý advisor čte ostatních 4 (jako A-E) a odpovídá na 3 questions:
 
 ```markdown
 ## PEER REVIEW
@@ -195,10 +255,41 @@ VERDICT: PIVOT-TO-Y (weekly newsletter, ne daily) + keep podcast pro Tier 1 emis
 
 ## Output formatting
 
+- **Markdown v chatu, NIKDY HTML, NIKDY samostatný file** (defaultně) — Filip čte to v conversation
 - Markdown tables/sections, ne plain text
 - Emoji per advisor pro rychlou navigaci (🛡️🧱🚀👶⚡)
 - Verdict bold + colored (GO=green, NO-GO=red, WAIT=yellow)
 - Confidence vždy as %, ne "high/med/low" (calibrated)
+
+## In-chat verdict format (FINAL OUTPUT, povinné)
+
+Po Phase 4 synthesis prezentuj final verdict v chatu (ne soubor) v této struktuře:
+
+```markdown
+## 🎯 Council Verdict: {short topic}
+
+### 🛡️🧱🚀👶⚡ Where the Council Agrees
+{points multiple advisors converged on independently}
+
+### ⚔️ Where the Council Clashes
+{genuine disagreements, both sides s reasons}
+
+### 🔍 Blind Spots the Council Caught
+{things that emerged in peer review only}
+
+### ✅ The Recommendation
+{clear, direct, no hedging — A real answer}
+**Action**: GO / NO-GO / WAIT-FOR-X / PIVOT-TO-Y
+**Confidence**: XX% (calibrated)
+
+### ⚡ The One Thing to Do First
+{single concrete next step, ne list}
+{includes deadline pokud time-sensitive}
+```
+
+**Optional transcript save**: Pokud Filip explicit požádá ("ulož transcript", "save council session") nebo je rozhodnutí epic stakes (>500k Kč nebo strategický pivot), ulož full transcript do `council-transcript-YYYY-MM-DD-HHMM.md` v project's `active/` directory.
+
+Defaultně transcript NEZAPISUJ — verdict je in-chat.
 
 ## Integration s OneFlow
 

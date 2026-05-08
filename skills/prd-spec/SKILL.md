@@ -257,6 +257,6 @@ cat ~/Documents/saas-projects/oneflow-ares-lookup-tool/PRD.md
 ## Reference
 
 - Source: skool-intel/chase-ai "PRD section" + "Custom GPT for PRD generation"
-- OneFlow patterns: `~/.claude/projects/<your-project-id>/memory/project_oneflow_nabidky_workflow.md`
+- OneFlow patterns: `~/.claude/projects/-Users-filipdopita/memory/project_oneflow_nabidky_workflow.md`
 - Stack defaults: `~/.claude/expertise/frontend-ui.yaml`
 - Brand: `~/.claude/expertise/oneflow-brand.yaml`

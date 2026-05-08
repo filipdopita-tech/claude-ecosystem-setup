@@ -1,0 +1,188 @@
+# Knowledge Router (on-demand loading)
+
+NIKDY nepreloaduj. Načti JEN když task vyžaduje doménu.
+
+## Lukáš v2 (2026-04-28 import) — load-on-demand pointers
+
+| Task obsahuje | Načti |
+|---|---|
+| Sequential Thinking, multi-step reasoning chain, mythos-grade analysis, falsification chain, structured tree-of-thought, complex reasoning chain | MCP: `sequential-thinking` (Anthropic official, installed 2026-05-02) — chain s skills mythos/challenge/godmode |
+| Real-time library docs (npm/pypi/crates), API syntax verification, anti-halluci pre-write check, "co je správně syntax pro X library v aktuální verzi" | MCP: `context7` (Upstash @upstash/context7-mcp@2.2.3, installed 2026-05-02 W6) — `mcp__context7__query-docs` / `resolve-library-id` chain před každým code write s knihovnou |
+| Time awareness, "kolik je hodin", časová zóna, "kolik dní zbývá do X", relative date parsing, scheduling math | MCP: `time` (time-mcp@1.0.6, installed 2026-05-02 W6) — chain s skills schedule/loop |
+| Brand voice extraction, banned words audit, OneFlow voice rules systemic | expertise/from-lukas-v2/brand-voice-system.yaml + skill: brand-dna-extractor |
+| Campaign planning multi-channel (IG/FB/TT/YT), content calendar | expertise/from-lukas-v2/campaign-planning.yaml + knowledge/from-lukas-v2/ads-mastery.md |
+| IG algorithm 2026, reach optimization, save/share metrics | expertise/from-lukas-v2/instagram-algorithm-2026.yaml |
+| TikTok distribution, FYP optimization, hook patterns | expertise/from-lukas-v2/tiktok-distribution-2026.yaml |
+| YouTube Shorts strategy, retention curves, CTR | expertise/from-lukas-v2/youtube-shorts-strategy.yaml |
+| Marketing CRO, funnel optimization, conversion uplift | expertise/from-lukas-v2/marketing-cro.yaml + skill: marketing-funnel-audit + knowledge/from-lukas-v2/product-ux-cro-megabase.md |
+| Ads mastery (Meta/Google/TT/LI), creative testing, ROAS optimization | knowledge/from-lukas-v2/ads-mastery.md + ads-sales-megabase.md + skills: paid-ads, ad-creative |
+| CZ B2B outbound, ARES/Apollo enrichment, CZ market specific | knowledge/from-lukas-v2/czech-b2b-outbound.md + skill: cold-outreach-v3 |
+| OneFlow positioning, fundraising narrative, founder story | knowledge/from-lukas-v2/oneflow-and-raising.md |
+| Sales psychology Cialdini/Voss/Schwartz/Sandler frameworks | knowledge/from-lukas-v2/sales-psychology-frameworks.md + expertise/outbound-sales-science.yaml |
+| Writing style system, voice consistency, copy patterns | knowledge/from-lukas-v2/writing-style-system.md |
+| Anthropic official patterns, prompt engineering Anthropic-recommended | knowledge/from-lukas-v2/anthropic-official-patterns.md + anthropic-courses-distilled.md |
+| AI/ML applied engineering, LLM stack patterns | knowledge/from-lukas-v2/ai-ml-applied-engineering.md |
+| Self-learning systems, agent self-improvement, eval feedback loops | knowledge/from-lukas-v2/self-learning-systems.md |
+| Billing incident postmortems, cost discipline lessons | knowledge/from-lukas-v2/billing-incidents-postmortem.md + rules/cost-zero-tolerance.md |
+| Multi-agent debate, decision adversarial review | skill: multi-agent-debate |
+| Prompt decomposition, multi-bod prompt unpacking | skill: prompt-decompose |
+| Generate optimized prompt pro AI tool (Claude/Cursor/Midjourney/image AI/video AI/coding agents), tool routing, prompt for X | skill: prompt-master (nidhinjs/prompt-master, 2026-04-30) |
+| Cost-aware research, web research budget guard | skill: cost-aware-research |
+| Semantic recall, session-recall, past-session context | skills: semantic-recall + session-recall |
+| Lean refactor, dead code, bloat removal | skill: lean-refactor + rule: lean-engine |
+| Landing page patterns 2026, hero/CTA/social proof patterns | skill: landing-patterns-2026 |
+| Skill freshness audit, stale skill detection | skill: skill-freshness-check |
+| Competitor screenshot, multi-viewport landing capture | skill: competitor-screenshot |
+| Playwright content QA, visual regression, a11y check | skill: playwright-content-qa |
+| PostHog analytics, funnel events, feature flags | skill: posthog-analytics |
+| Clarity heatmaps, session recordings, UX behavior data | skill: clarity-heatmaps |
+| A/B test design, experiment power calc, sample size | skill: ab-test-design |
+| Rule violation: anti-sycophancy enforcement | knowledge/imported-patterns/from-lukas/anti-sycophancy.md |
+| Rule violation: plan-first discipline (no-code-without-plan) | knowledge/imported-patterns/from-lukas/plan-first.md |
+| Peer ecosystem comparison, downstream/upstream cherry-pick | agent: peer-comparator + from-lukas-top/COLLABORATION.md + PEER_PROMPT.md |
+| Harness optimization, agent action space tuning | agent: harness-optimizer + skill: agent-harness-construction |
+| Code review as agent (not skill), structural diff review | agent: code-reviewer (use mcp__code-review-graph too) |
+| AI citation strategist, AEO/GEO optimization for AI engines | agent: ai-citation-strategist + skill: ai-seo |
+
+## Expertise YAML (preferovaný, structured)
+| Task obsahuje | Načti |
+|---|---|
+| IG/social content | expertise/content-creation.yaml + oneflow-brand.yaml |
+| Investor/outreach/DD | expertise/investor-outreach.yaml + oneflow-brand.yaml |
+| Deploy/VPS/systemd | expertise/vps-infra.yaml |
+| Kód/refactor/testing | expertise/code-patterns.yaml |
+| OneFlow brand/voice | expertise/oneflow-brand.yaml |
+| HTML, CSS, design, brand manuál, vizuál, web, landing page, nabídka, UI | expertise/design-visual.yaml + expertise/oneflow-brand.yaml + knowledge/lazy-rules/design-workflow.md |
+| React, Next.js, shadcn, Tailwind, mapcn, component library, web app, frontend | expertise/frontend-ui.yaml |
+| GitHub repo hodnocení, je to good library, podívej se na repo, GitHub URL | expertise/frontend-ui.yaml + knowledge/code/github-recon.md |
+| CNB, ECSP, dluhopisy, AML, emise, regulace, zákon, compliance, GDPR | expertise/czech-regulatory.yaml |
+| Deliverability, spam, SPF, DKIM, DMARC, Proofpoint, blacklist, MX, bounce | expertise/email-deliverability.yaml |
+| GHL, GoHighLevel, CRM, pipeline, tagy, webhook, kontakty, lead | expertise/crm-ghl.yaml |
+| ARES, Apollo, Hunter, scraper, enrichment, SMTP verify, ISIR, CUZK, email waterfall | expertise/data-enrichment.yaml |
+| Cold email, sekvence, reply psychology, Cialdini, A/B test outreach, Schwartz | expertise/outbound-sales-science.yaml |
+| LinkedIn, Voyager API, Playwright, Dubai pipeline, bridge, automation | expertise/linkedin-automation.yaml |
+| Graphiti, KG, knowledge graph, graphiti_search, graphiti_add, KuzuDB, temporal | expertise/knowledge-graph-ops.yaml |
+| prompt engineering, prompt design, cache optimization, eval-driven, falsification, anti-sycophancy, calibrated confidence, Anthropic cache, multi-turn agent | expertise/prompt-engineering.yaml |
+| Konkurence, competitor, scrape IG profil, hook pattern, co dělá X, inspirace pro hook | skill: competitor-intel |
+| SEO, AEO, GEO, AI citace, Perplexity, ChatGPT visibility, schema markup, E-E-A-T, structured data | skill: seo-audit |
+| obsidian, OneFlow-Vault, vault, search note, create note, find tag, .canvas, .base | skill: obsidian-cli + obsidian-markdown + obsidian-bases + json-canvas |
+| **vault search hybrid (BM25+vector+LLM rerank), QMD, najdi v 18k md souborech, smart search**, Karpathy wiki query, full-text 4GB vault | **skill: qmd** (CLI `qmd query "..."`) — 3 models cached, vectors indexed 2026-04-28, hybrid mode active |
+| **Lazy Obsidian Method**, Karpathy LLM wiki, raw → wiki pipeline, PARA folders, MOC hubs, daily ingest summary, nightly vault dashboard, wiki orphan/stale lint | memory/project_lazy_obsidian_method_2026_04_28.md + skill: compile-wiki + 5 hubs in `00-Claude-Dashboard/Vault-OS-Hub.md` (entry point) |
+| Vault stats, "kolik mám souborů", folder size, cron health, dashboard refresh | `~/Documents/OneFlow-Vault/00-Claude-Dashboard/Vault-Stats.md` (auto cron 03:00) |
+| Daily ingest, "co přišlo dnes do vaultu", nové komunikace summary | `~/Documents/OneFlow-Vault/08-Daily-Notes/{date}-Ingest-Summary.md` (auto cron 22:30) |
+| Skool intel patterns, top insights z Skool komunit, cross-community distillation, Mr Kattani, Charles cc-strategic | knowledge/skool-intel-distillation.md + memory/project_skool_intel_implementation_2026_04_28.md |
+| n8n, Zapier, Make, Pipedream, "buduji workflow", "automation pipeline", "stack rozhodnutí pro workflow" | knowledge/imported-patterns/n8n-vs-claude-code.md + memory/project_conductor.md |
+| agent loop, investigate review pickup, decomposition subagentu, multi-step debugging s reviewem, chain of agents pro DD/refactor/outreach | skill: agent-loop + expertise/agent-loop-engineering.yaml |
+| NotebookLM research, YouTube research, zero-RAG agent, prospekt PDF + YT research, podcast prep, market intel přes NotebookLM | skill: notebooklm-research + knowledge/research-via-notebooklm.md |
+| research paper pipeline, scholarly paper fetch + analysis, DOI lookup, arxiv paper k implementaci, paper to code, academic citation v DD/podcast/content, paper-search/paper-deep topic research, ověření claimu vědeckým zdrojem, sektor trend academic source | skills: `research-paper` (fetch cascade) → `paper2code` (arxiv minimal impl) → `notebooklm-research` (citation Q&A) → `qmd` (vault cross-link); cache `~/Documents/research-cache/metadata.jsonl`; memory `project_research_pipeline_2026_04_30.md` |
+| site builder, landing page z business name, emitent landing, klient nabídka stránka, programmatic SEO pages, ARES + Vercel deploy | skill: site-builder |
+| trend tracker, daily content nápady, YT+X+Reddit+web monitoring, denní investiční trendy CZ, content pipeline pro IG/LinkedIn | skill: trend-tracker |
+| browser network tab access, Chrome DevTools MCP, scrape přes network introspekce, ARES via traffic analysis | mcp: chrome-devtools (npx chrome-devtools-mcp@latest) |
+| Apollo Apify deprecated, lead-gen scraper alternatives, Apollo official scraper paid | expertise/data-enrichment.yaml § apollo (po 2026-09 DEPRECATION block) + knowledge/skool-intel-distillation.md § Pattern 8 |
+| batch DD, 50+ emitenti najednou, agentic RAG nad SQL, halucinace v DD finanční metriky, portfolio review, sector benchmarking | skill: dd-batch-sql + memory/project_scraping_engine.md |
+| productize workflow do SaaS, n8n → Next.js + Stripe, Conductor automation → klikací app, OneFlow internal tool → recurring revenue | skill: saas-from-workflow + expertise/prd-driven-saas.yaml |
+| PRD, product requirements document, spec dokument, "napiš PRD pro X", before implementation | skill: prd-spec + expertise/prd-driven-saas.yaml |
+| OneFlow cold outreach kampaň 100-1000 leadů, ARES + LinkedIn + Hunter waterfall, Cialdini Voss CTA, Apollo direct (ne Apify), CZ ICP | skill: cold-outreach-v3 (NOT cold-email which is generic English) |
+| AI employees mental model, pipeline + parallel + sub agents archetypes, "hire" Claude pro task, agent team architecture | expertise/agent-employees.yaml + skill: dispatching-parallel-agents |
+| AI agent business lifecycle (klient zakázka), 5-fázový proces plan→build→deploy→price→sell, klient chce AI agenta, naceň agent service, sales call AI agent, klient nerozumí agent value, ROI calc pro agenta, deploy klientovi, agent client onboarding | skill: agent-business-lifecycle + expertise/agent-business-lifecycle.yaml (CZ pricing 30-300k Kč build, 15-300k Kč/měs retainer, Voss closes, OneFlow brand voice) |
+| macOS screen capture, automated screenshots, visual QA pro AI agents, vision question answering nad screenshots | CLI: peekaboo (brew install steipete/tap/peekaboo, /opt/homebrew/bin/peekaboo) |
+| shadcn, shadcn/ui, component, registry, button, card, dialog, theming | skill: shadcn |
+| Next.js, Vercel, React, server components, app router, performance, RSC | skill: vercel-react-best-practices + nextjs-app-router-patterns + vercel-composition-patterns |
+| Google Sheets, gws-sheets, append row, read spreadsheet, VPS Dashboard | skill: gws-sheets-read + gws-sheets-append + sheets-automation |
+| Google Calendar, scheduling, meeting prep, agenda, attendees | skill: gws-workflow-meeting-prep + calendar-automation |
+| email-to-task, gmail to tasks, convert email | skill: gws-workflow-email-to-task |
+| Playwright, flaky test, page object model, browser test | skill: playwright-best-practices + e2e-testing-patterns |
+| pytest, fixtures, mocking, Python testing | skill: python-testing-patterns |
+| TypeScript types, generics, conditional types, mapped types, template literal | skill: typescript-advanced-types |
+| Temporal, workflow orchestration, saga pattern, distributed system | skill: workflow-orchestration-patterns |
+| web scraping, anti-bot, undocumented API, scraping pipeline | skill: web-scraping |
+| pentest, penetration test, web app vulnerability scan, OWASP Top 10 audit, najdi zranitelnosti, real exploit test, pre-deploy security gate, klientský pentest, "audit oneflow.cz security", DD pro tech-heavy emitenta | skill: `shannon` + agent: `shannon-pentester` + `~/scripts/automation/shannon-scan.sh` (Flash VPS, KeygraphHQ Shannon AGPL-3.0, AI-driven white-box pentester, REAL exploits — auth gate na non-OneFlow targets) |
+| investment memo, VC memo, PE memo, investment thesis, DD memorandum | skill: investment-memo (chain s dd-emitent) |
+| pdf table extraction, pdfplumber, prospekt parsing | skill: pdf-extraction |
+| data analysis, Excel insights, CSV visualization, spreadsheet report | skill: data-analysis |
+| **Data Science / ML / MLOps** — DD risk model, emitent scoring, ML pipeline, feature engineering, hyperparameter tuning, anomaly detection, fraud signals, Bayesian inference, causal inference, time series forecasting, survival analysis, MLflow, DVC, Optuna, SHAP, LightGBM, XGBoost, scikit-learn, Polars, DuckDB, Statsmodels, PyMC, sentence-transformers, HDBSCAN, Streamlit dashboard, explainable AI | knowledge/data-science-curated.md + Obsidian MOC `06-Knowledge/Data-Science-Hub.md` (curated z academic/awesome-datascience 30k★) |
+| Polars vs Pandas, "100k+ rows DataFrame", in-process SQL OLAP, fast tabular | knowledge/data-science-curated.md § Tier 1 (Polars/DuckDB defaults) |
+| explainable ML, SHAP/LIME, "proč model říká X", DD reasoning model | knowledge/data-science-curated.md § Tier 2 + expertise-finance.yaml |
+| Bayesian DSCR/LTV, confidence intervals, probabilistic finance | knowledge/data-science-curated.md § Tier 2 (PyMC3/PyStan) + expertise-finance.yaml |
+| CZ NLP cold email/IG, spaCy CZ, sentence-transformers multilingual | knowledge/data-science-curated.md § NLP + expertise/email-deliverability.yaml |
+| awesome-datascience, awesome-ml, awesome-public-datasets, "co je top tool pro X v DS" | knowledge/data-science-curated.md § Other Awesome Lists (downstream loading) |
+| Remotion, video v Reactu, programmatic video | skill: remotion-best-practices |
+| design audit, motion design, interaction polish, Emil Kowalski | skill: design-motion-principles + impeccable |
+| HTML hi-fi prototype, slide deck (HTML+PPTX export), animace HTML→MP4/GIF (25/60fps + 6 BGM), design variants (Tweaks live params), 5-philosophy advisor, 5-dim expert review, app prototype Playwright validated, AppPhone state container, cinematic motion patterns | skill: huashu-design (auto-loads OneFlow brand z `~/.claude/memory/personal-asset-index.json` + templates v `~/Documents/huashu-design-templates/`) |
+| defuddle, web clipper, clean markdown z webu | skill: defuddle |
+| Hermes Agent (Nous Research self-improving), multi-platform gateway (Telegram/Discord/Slack/WA/Signal/Email), cron natural-language scheduler, OpenRouter/NVIDIA NIM model routing, agentskills.io standard, OpenClaw migration | memory/project_hermes_agent_2026_04_30.md (INSTALLED on Flash, /usr/local/bin/hermes, OpenRouter free configured) |
+| KARIMO (opensesh) Claude Code plugin, PRD-driven orchestration, wave-ordered parallelism, semantic loop detection, /karimo:research /karimo:plan /karimo:run /karimo:merge /karimo:dashboard | memory/project_karimo_install_2026_04_30.md (INSTALLED via plugin marketplace v9.9.1) |
+| beads (gastownhall) Dolt-powered task graph for AI agents, distributed issue tracker, dependency-aware, hierarchical IDs, stealth mode, MCP integration | memory/reference_beads_chibisafe_plunk_2026_04_30.md § beads (SHOULD CONSIDER, brew install beads) |
+| chibisafe self-hosted file vault TS, file.oneflow.cz alternative pro Google Drive klientské deliverables | memory/reference_beads_chibisafe_plunk_2026_04_30.md § chibisafe (SHOULD CONSIDER, future deploy) |
+| Plunk transactional email AGPL self-host (1k/mo free), credentials saved | memory/reference_beads_chibisafe_plunk_2026_04_30.md § Plunk (SHOULD CONSIDER, ~/.credentials/plunk_email.env) |
+| GlitchTip self-hosted Sentry alternative AGPL, error tracking pro Conductor/scrapers/Telegram/Meta Ads CLI, errors.oneflow.cz subdoména | memory/reference_beads_chibisafe_plunk_2026_04_30.md § GlitchTip (SHOULD CONSIDER, replaces bugsink license risk) |
+| opensesh org repos: KARIMO, DESIGN-OPS (MONITOR), OS_design-directory (29★ 150+ design tools), linktree-alternative (template) | memory/reference_opensesh_org_2026_04_30.md |
+| 2026-04-30 cherry-pick session 14 zdrojů, master verdict map, Hermes+KARIMO MUST instalováno, instagram-cli/WhatsAppGhost RED FLAG REJECT | memory/reference_cherry_pick_2026_04_30.md |
+
+## Coding Rules (behavioral, načti při editu/tvorbě kódu)
+| Task obsahuje | Načti |
+|---|---|
+| Kód refactor, optimization, compaction, cleanup, token efficiency v kódu | rules/lean-engine.md |
+| JS/TS/Python/Bash patterns, arrow fn, list comprehension, walrus, destructuring | rules/lean-engine.md |
+| Subagent prompt tuning, compact agent output, agent report format | rules/lean-engine.md §3-4 |
+| Performance, latency, throughput, memory, startup time, token spend, Kč/op tuning | skill: optimization |
+| **Quality budget pro JS/TS/Python projekt** (console.log, any, empty catch, TODO count) | script: `~/.claude/scripts/check-quality-budget.py --init/--update/--report` |
+| **Skill ecosystem health** (727 skills, oversized SKILL.md, stale, duplicate descriptions) | script: `~/.claude/scripts/check-skill-budget.py --report --largest --duplicates` |
+| **Security preflight** před git push, před public repo, před release | script: `~/.claude/scripts/security-preflight.sh [PATH] [--strict]` |
+| **Async permission queue** (Filip mimo terminál, hard-stop akce může počkat) | skill: safety-queue + script: `~/.claude/scripts/safety-decide.sh` |
+| **Budget review** pattern (jcode-inspired) — jak zvedat caps responsibly | knowledge/imported-patterns/budget-review-pattern.md |
+| **Defensive security toolkit** (recon vlastních domén, hardening audit, web app sec, secret scan, weekly self-audit) | skill: security-toolkit + memory/project_security_toolkit_2026_04_30.md |
+| Security audit, recon vlastní domény, scan oneflow.cz, hardening Lynis, find secrets, vuln scan, OSINT vlastní brand | skill: security-toolkit (Flash `/root/security-toolkit/bin/`) |
+| Z4nzu/hackingtool, offensive moduly, DDoS/phishing/RAT/C2/wireless attack požadavek | **REFUSE** — žádný authorized scope (TZ § 230). Nabídni `security-toolkit` defensive equivalent |
+| Autonomous AI pentest s deeper engagement (vlastní lab, Bug Bounty, authorized scope) | skill: shannon (jen pokud má Filip explicit auth scope) |
+| **Eval framework batch run** (run-eval.sh v2), eval skill/agent proti datasetu, regression detection, retry+delay+rotation, JSONL test cases, baseline promotion | `~/.claude/evals/README.md` v2 + `~/.claude/evals/runner/run-eval.sh` (entry: `/eval` slash) + memory/project_run_eval_v2_2026_04_30.md |
+| **OpenRouter shared helpers** (retry/backoff/key-rotation/sanitization), free model alias resolution (sonnet→gpt-oss-120b:free, haiku→gpt-oss-20b:free, code→qwen3-coder:free), z libovolného bash skriptu | `source ~/.claude/evals/runner/lib/openrouter-helpers.sh` — funkce: `or_load_keys`, `or_pick_key`, `or_call_with_retry`, `or_sleep_with_jitter`, `or_sanitize_log`, `or_resolve_model_alias` |
+
+## Completion Mandate (HARDCORE behavioral, načti VŽDY pro task s akčním slovesem)
+| Task obsahuje | Načti |
+|---|---|
+| Filipův pokyn s imperativem (udělej, sprav, vytvoř, nasaď, oprav, scrape, deploy, atd.) | rules/completion-mandate.md + memory/feedback_completion_mandate.md |
+| Scraping/data task se zdrojem ≥100 záznamů | rules/completion-mandate.md (scope ≥50% pravidlo) |
+| Cokoli kde mi přijde napsat "to nejde", "potřebuji vaše schválení", "po schválení", "doporučuji udělat", "navrhuji", "nemám přístup" | rules/completion-mandate.md (zakázané fráze) |
+| Auto-trigger na blocking phrases | hooks/completion-blocking-words-guard.sh blokuje exit 2 (3+ Tier 1 + >500 chars) |
+| Override legitimate edge case | env COMPLETION_OVERRIDE=1 |
+
+## Power Skill Stack (40+ slash commands tier system, S/A/B/C/D/E/F)
+| Task obsahuje | Načti |
+|---|---|
+| High-stakes výstup (DD report, investor memo, klientský deliverable >50k Kč, ad creative >5k Kč budget) | knowledge/lazy-rules/power-skills-stack.md + skills/chains/CHAINS.md |
+| Filip phrase: "fakt důležité", "kritické", "rozcupuj", "tear apart", "stuck", "deep dive", "max detail", "viral", "ghostwrite" | knowledge/lazy-rules/power-skills-stack.md (auto-trigger mapping) |
+| Strategic decision (pivot, big bet, new service, hiring) | skills/chains/CHAINS.md → STRATEGIC-DECISION recipe |
+| Cold email/DM na c-suite/celebrity/podcast guest | skills/chains/CHAINS.md → COLD-EMAIL-MAX recipe |
+| Content pillar launch / hero post / viral attempt | skills/chains/CHAINS.md → CONTENT-VIRAL recipe |
+| Investor pitch / podcast outreach / sales letter high-stakes | skills/chains/CHAINS.md → INVESTOR-PITCH recipe |
+| Comprehensive research / market intel / competitive map | skills/chains/CHAINS.md → DEEP-RESEARCH recipe |
+| Pre-deploy / pre-send final gate | skills/chains/CHAINS.md → SHIP-GATE recipe |
+
+## CARL Domain Rules (behavioral constraints, načti SPOLU s YAML)
+| Task obsahuje | Načti |
+|---|---|
+| DD, emitent, DSCR, LTV, portfolio, investiční analýza | knowledge/lazy-rules/domains/investment.md |
+| Cold email, outbound sekvence, warm-up, deliverability, bounce | knowledge/lazy-rules/domains/cold-email.md |
+| CNB, ECSP, AML, GDPR, compliance, regulace, zákon | knowledge/lazy-rules/domains/compliance.md |
+
+CARL = behaviorální pravidla (mandatory checks, red lines). YAML = znalostní obsah. Používej oboje.
+
+## Knowledge MD (fallback)
+sales-psychology, programming, design, frontier-tech, pitch-deck-factory, ai-ml, marketing, finance, filip-style-clone, legal-compliance, competitive-intel, cz-market-data, dopita-standards
+
+## Code Standards (knowledge/code/)
+agents, code-review, coding-style, development-workflow, git-workflow, github-recon, hooks, patterns, performance, python-rules, security, testing
+
+Cesty: `~/.claude/expertise/*.yaml` a `~/.claude/knowledge/*.md`
+YAML > MD při konfliktu.
+
+## MONITORING — Technologie ke sledování (Q3/Q4 2026)
+
+| Technologie | Status | Akce |
+|---|---|---|
+| Claude Managed Agents | beta (header `anthropic-beta: managed-agents-2026-04-01`) | Eval jako Conductor replacement Q3 2026 |
+| A2A Protocol (Google) | spec Q4 2026 | Až finální → update MCP servery (`handle_task_delegation()`) |
+| Computer Use v Claude Code | ~3 měsíce do prod | Relevantní pro IG Analyzer workflow |
+| Hermes Agent (self-improving) | experimental | Eval pro Paseo daemon integration |
+| Mistral Medium 3 | open weights, EU compliance | Conductor LLM pool candidate (GDPR) |

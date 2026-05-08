@@ -1,5 +1,16 @@
-# Doc examples — explicit placeholder/mock tokens used in tutorials
-skills/_archived/api-design-2/SKILL.md:generic-api-key:306
-skills/playwright-best-practices/advanced/authentication-flows.md:generic-api-key:54
-# Educational red-team example finding — placeholder string sk-prod-abc123def456 inside a mock vulnerability report
+# False positives — documented examples and mock tokens, not real secrets
+# Verified 2026-05-08
+
+# Security teaching: example of how a hardcoded token would look in a vuln report
 agents/teams-from-lukas/security-redteam.md:generic-api-key:91
+
+# API design documentation: Bearer token format example
+skills/_archived/api-design-2/SKILL.md:generic-api-key:306
+
+# Heygen integration docs: curl examples with `YOUR_API_KEY` placeholder
+skills/marketingskills/tools/integrations/heygen.md:curl-auth-header:50
+skills/marketingskills/tools/integrations/heygen.md:curl-auth-header:76
+skills/marketingskills/tools/integrations/heygen.md:curl-auth-header:83
+
+# Playwright test: explicit mock token in test fixture
+skills/playwright-best-practices/advanced/authentication-flows.md:generic-api-key:54

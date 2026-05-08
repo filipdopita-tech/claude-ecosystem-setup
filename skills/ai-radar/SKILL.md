@@ -1,14 +1,19 @@
 ---
 name: ai-radar
-description: Skenuj AI ekosystém (Anthropic, OpenAI, GitHub trending, HN, Reddit, MCP registry, arxiv) za X dní, filtruj na OneFlow stack, skóruj, auto-implementuj trivialitu, zbytek pošli do review-queue. Default = týdenní scan. Používá gh + curl + Gemini (batch >80K tokenů) pro 0 nákladů.
+description: Unified AI & Ecosystem Radar v4. Skenuje (a) cizí AI ekosystém z 13 zdrojů včetně creative/content AI, (b) vlastní Claude Code stack v 9 dimenzích včetně security CVE/cert/DMARC, (c) project-aware scoring z aktivních Codex handoffů a memories, a (d) cross-reference engine s 5 kategoriemi. Mythos-grade audit (Bayesian falsification + ACH + calibrated confidence + source quality boost + learning loop + project boost). Default report začíná top 3 next actions. Auto-implementuje triviálně bezpečné změny do reálných souborů (watchlist, memory references, knowledge-router lines, hook chmod, watchlist prune), zbytek do review-queue pro /apply-improvements. 0 Kč (gh + curl + lokální bash; volitelně OpenRouter free pro batch).
 triggers:
   - ai radar
-  - skenuj AI
-  - co je nového v AI
-  - novinky AI
-  - ecosystem scan
+  - ekosystem audit
+  - skenuj ai
+  - skenuj ekosystem
+  - skenuj systém
+  - skenuj skills
+  - co je nového v ai
+  - novinky ai
   - tech radar
-argument-hint: "[--days=7] [--dry] [--focus=claude-code|agents|scraping|cold-email|content|all]"
+  - ecosystem scan
+  - radar
+argument-hint: "[--scope=external|internal|all] [--days=7] [--focus=claude-code|agents|scraping|cold-email|content|creative|frontend|all] [--explain <finding-id>] [--dry] [--no-cross-ref] [--full-effort] [--skip-auto] [--lite] [--max-auto=N]"
 allowed-tools:
   - Bash
   - Read
@@ -21,413 +26,341 @@ allowed-tools:
 user-invocable: true
 ---
 
-# /ai-radar — AI ekosystém audit pro OneFlow
+# /ai-radar — Unified AI & Ecosystem Radar v4
 
-## Účel
+> **One radar. Five life dimensions. One action header. Real implementation engine.**
+> External (13 zdrojů) + Internal (9 dim) + Project context + Cross-reference engine (5 kategorií) + REAL auto-implement (6 action types). Mythos-grade reasoning. Zero cost.
 
-Rychlý filtrovaný přehled novinek ze světa AI/dev tools za posledních N dní (default 7), auditem proti OneFlow stacku, auto-implementací nízkorizikové triviality a review-queue pro ostatní. **Není to generic research** (na to je `/last30days`). Tohle je **kurátor + auditor + implementátor** pro Filipův ekosystém.
+## Co je nového v v4 (2026-05-07)
 
-## Kdy to použít
+| Co | Předtím (v3) | Nyní (v4) |
+|---|---|---|
+| **Creative radar** | NULL | `scan-creative.sh` sleduje creative/content AI, social automation, Krea/Runway/FAL-like signals |
+| **Project relevance** | Global OneFlow fit only | `project-context.py` boostuje +5 findings matchující aktivní Codex/handoff/memory projekty |
+| **Security** | Credentials expiry only | `security-feeds.sh` přidává NVD/GHSA, cert expiry pro OneFlow domény, DMARC drift |
+| **Report header** | TL;DR first | Top 3 next actions first, TL;DR second |
+| **Cache** | 1h shared cache | Same-day 12h default TTL, per-source overrides |
+| **Explainability** | Raw audit JSON | `--explain <finding-id>` formats score, boosts, falsification, routing |
+| **Hygiene** | Manual rotation/prune | decisions rotation hook + old `.bak.*` cleanup |
 
-- Pondělí ráno (po víkendu, chytit releases)
-- Po dokončení velkého projektu (chceš vědět co se mezitím stalo)
-- Před rozhodnutím "máme na to nástroj?"
-- Když Filip řekne: "co je nového v AI", "skenuj novinky", "ai radar"
+## Co je nového v v3 (2026-05-03)
 
-## NIKDY
+| Co | Předtím (v2) | Nyní (v3) |
+|---|---|---|
+| **External zdroje** | 9 (oficiální + GH + HN + Reddit) | **12** — přidáno: Anthropic Cookbook commits, CC Plugin Marketplace, Awesome Lists, OpenRouter free models |
+| **Cross-ref kategorie** | 4 | **5** — přidáno NEW_MCP_AVAILABLE (real gap-fill detection pro chybějící MCPs co matchují OneFlow stack need) |
+| **Auto-implement** | 1 typ (jen append do tool watchlistu) | **6 action types** s self-eval gate per item: APPEND_TOOL_WATCHLIST, CREATE_REFERENCE_MEMORY, APPEND_KR_LINE, CHMOD_HOOK, PRUNE_WATCHLIST, UPDATE_TOOL_REFERENCE |
+| **Score modifiers** | Jen cross-ref boost | + **source quality** (Anthropic-official +3, curated registries +2, low-signal Reddit -2) + **learning loop boost** (na základě Filip historie z decisions.jsonl) |
+| **Watchlist hygiene** | Žádný auto-prune (rostl 340KB) | **prune-watchlist.sh** archive >60d, hard-cap 80KB, recursive prune když přesáhne |
+| **Decisions log** | Žádný (decisions.jsonl byl 0B) | Aktivní zápis do `~/.claude/ai-radar/decisions.jsonl` per akce, plumbed do audit-engine.py learning loop |
+| **OneFlow stack matrix** | 9 oblastí, no Codex/Hermes/KARIMO | + Codex Bridge + Hermes Agent + KARIMO + 1M Opus + OpenRouter free + Plunk + chibisafe + GlitchTip |
+| **Cron** | Mismatch (legacy crontab + nový launchd weekly) | Konsolidováno: launchd Mon 08:00 (full) + launchd Daily 03:35 (lite) + legacy crontab odstraněn |
 
-- Nespouštěj automaticky přes cron (Filip musí spustit — review gate)
-- Neinstaluj / nedeployuj NIC bez explicitního "auto-implement" pokynu v triviálním řádku
-- Negeneruj náklady (Google API = zero tolerance, viz cost-zero-tolerance.md)
-- Neodesílej emaily / zprávy (obecné pravidlo)
+**Důvod (Filip mandate 2026-05-03):** "udělej kompletní update a nejlepší možný setup, optimalizaci tohoto skillu /ai-radar který by měl v sobě mít AI radar a NÁSLEDNOU IMPLEMENTACI ekosystému".
 
-## Architektura (4 fáze)
+v3 přesně to dělá: skenuje + skóruje + **reálně implementuje** (ne jen "append do watchlistu") to, co projde self-eval gate.
+
+## Kdy spustit
+
+| Scénář | Příkaz |
+|---|---|
+| Pondělí ráno (after weekend releases) | `/ai-radar` |
+| Po dokončení velkého projektu (chytit drift) | `/ai-radar --scope=internal` |
+| "Co je nového v AI?" (rychlý external skim) | `/ai-radar --scope=external --days=3` |
+| Před rozhodnutím "máme na to nástroj?" | `/ai-radar --scope=external --focus=X` |
+| Health check daily-lite (cron 03:35) | `/ai-radar --scope=internal --lite` |
+| Před deploy (sanity gate) | `/ai-radar --scope=internal` |
+| Filip explicit "audit ekosystem" | `/ai-radar --full-effort` |
+| Watchlist roste — manuální prune | `bash scripts/prune-watchlist.sh` |
+| Auto-implement plan z external JSON | `bash scripts/auto-implement.sh --plan plan.json` |
+| Explain recent finding score | `bash scripts/explain.sh "<finding-id-or-title>"` |
+| v4 smoke validation | `bash scripts/smoke-test.sh` |
+
+## NIKDY (HARD CONSTRAINTS)
+
+- Nespouštěj automaticky přes cron pokud cron není přihlašován do logu. Cron daily-lite = výjimka, beze auto-implement (jen scan + ntfy alert).
+- Neinstaluj/nedeployuj NIC bez explicitního AUTO_IMPLEMENT routing decision (max 5 položek/run, viz Self-eval gate)
+- Negeneruj náklady (Google API = zero tolerance, viz `~/.claude/rules/cost-zero-tolerance.md`). Gemini je BLOCKED 2026-04-27. Použij OpenRouter free pro batch.
+- Neodesílej emaily / zprávy
+- Nemodifikuj CLAUDE.md ani aktivní rules/*.md mid-session (cache protection)
+- AUTO_IMPLEMENT NIKDY nevolá: npm/pip/brew install, mcp.json modifikace, skill creation, rule modifikace, cron změny, credential rotace, Anthropic SDK upgrades
+
+---
+
+## Architektura (5 vrstev, mythos-grade, v4 enhanced)
 
 ```
-FÁZE 1: Discover      → paralelní sken 8 zdrojů (gh + curl + WebFetch)
-FÁZE 2: Filter        → OneFlow relevance (Claude Code stack, Flash VPS, lead-gen, content)
-FÁZE 3: Audit         → 4-dimension skóre per finding (Fit/Novelty/Effort/Impact)
-FÁZE 4: Route         → auto-implement | review-queue | watchlist archive | skip
+┌─────────────────────────────────────────────────────────────────────┐
+│ VRSTVA 1 — DISCOVER (paralelní fetch)                                │
+│   ├─ EXTERNAL: 13 zdrojů (v4: +creative/content AI dimension)        │
+│   ├─ PROJECT: active Codex handoffs + project memories + git roots   │
+│   └─ INTERNAL: 9 dimenzí (services, evals, credentials, memory,      │
+│                skills, hooks, MCPs, knowledge-router, security)      │
+├─────────────────────────────────────────────────────────────────────┤
+│ VRSTVA 2 — FILTER (relevance gates)                                  │
+│   ├─ EXTERNAL: OneFlow stack matrix (9 oblastí keyword match)        │
+│   └─ INTERNAL: thresholds per dim (drift, expiry, decay, orphans)    │
+├─────────────────────────────────────────────────────────────────────┤
+│ VRSTVA 3 — CROSS-REFERENCE ENGINE (5 kategorií)                      │
+│   ├─ ALREADY_HAVE       — máš podobnou věc, no-op nebo upgrade flag  │
+│   ├─ DEPRECATED_PATTERN — venku nová verze, ty starou → REVIEW       │
+│   ├─ COVERAGE_GAP       — internal broken/missing → external má fix  │
+│   ├─ DECAY_SIGNAL       — máš to ale stale (>90d) + venku trending   │
+│   └─ NEW_MCP_AVAILABLE  — MCP chybí ale matchuje OneFlow stack need  │
+├─────────────────────────────────────────────────────────────────────┤
+│ VRSTVA 4 — AUDIT (mythos-grade scoring per finding)                  │
+│   ├─ EXTERNAL: 4-dim (Fit/Novelty/Effort/Impact) max 45              │
+│   ├─ + source_quality_boost (Anthropic +3, registries +2, RedditClick -2)│
+│   ├─ + learning_loop_boost (decisions.jsonl history)                 │
+│   ├─ + project_relevance_boost / project_decay_penalty               │
+│   ├─ INTERNAL: composite per dim (0-100) + delta vs baseline         │
+│   ├─ Bayesian falsification: "Why might this be wrong?"              │
+│   ├─ ACH (Analysis of Competing Hypotheses) pro top findings         │
+│   └─ Calibrated confidence: [VERIFIED]/[LIKELY]/[GUESS]/[UNCERTAIN]  │
+├─────────────────────────────────────────────────────────────────────┤
+│ VRSTVA 5 — ROUTE + IMPLEMENT (REAL engine v4)                        │
+│   ├─ AUTO_IMPLEMENT (max 5/run) → auto-implement.sh:                 │
+│   │   • APPEND_TOOL_WATCHLIST   (idempotent grep-check)              │
+│   │   • CREATE_REFERENCE_MEMORY (jen Anthropic-official + ≥38 score) │
+│   │   • APPEND_KR_LINE          (knowledge-router MONITORING table)  │
+│   │   • CHMOD_HOOK              (hook chmod +x fix)                  │
+│   │   • PRUNE_WATCHLIST         (auto-archive když >80KB)            │
+│   │   • UPDATE_TOOL_REFERENCE   (append do existing reference_*.md)  │
+│   ├─ REVIEW_QUEUE (single batch file, oba scopes)                    │
+│   ├─ WATCHLIST (30-day re-check, auto-pruned)                        │
+│   ├─ ARCHIVE (SKIP)                                                  │
+│   ├─ NTFY DIGEST (composite + delta + counts)                        │
+│   └─ DECISIONS.JSONL log per akce (feeds learning loop next run)     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## FÁZE 1 — Discover (paralelní scan)
+## Routing (lazy-load reference docs)
 
-Všech 8 zdrojů spouštěj v **jednom message jako parallel Bash calls**. Default window = posledních 7 dní (`--days=N` override).
+| Phase | Reference file |
+|---|---|
+| Vrstva 1A external scan, 1B internal scan, 2 filter | `reference/scan.md` |
+| Vrstva 3 cross-reference engine + 4 audit scoring | `reference/audit.md` |
+| Vrstva 5 routing, AUTO_IMPLEMENT engine, REVIEW_QUEUE, flags, examples, storage, hooks, cron | `reference/route.md` |
 
-### Zdroje (zero-cost, žádné API klíče)
+## Execution flow (pro Claude který tento skill spouští)
 
-| # | Zdroj | Endpoint / CLI | Filter |
-|---|---|---|---|
-| 1 | Anthropic release notes | `curl -sL https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md` + `curl -sL https://docs.anthropic.com/en/release-notes/api` | last 7 days (ověřeno 2026-04-21: docs.claude.com redirectuje na GitHub) |
-| 2 | Claude Code releases | `gh api repos/anthropics/claude-code/releases --jq '.[0:5]'` | top 5 |
-| 3 | OpenAI blog | `curl -s https://openai.com/news/rss.xml` | last 7 days |
-| 4 | Google AI blog | `curl -s https://blog.google/technology/ai/rss/` | last 7 days |
-| 5 | GitHub trending (AI/ML) | `gh api search/repositories -X GET -f q='topic:llm created:>$(date -v-7d +%Y-%m-%d) stars:>50' -f sort=stars -f per_page=20` | >50 stars, posledních 7 dní |
-| 6 | Hacker News AI | `curl -s "https://hn.algolia.com/api/v1/search?tags=front_page&query=AI&hitsPerPage=30"` | front page, last 7 days, AI |
-| 7 | Reddit (Claude/LLM komunita) | `curl -s -H "User-Agent: ai-radar/1.0" "https://www.reddit.com/r/ClaudeAI+LocalLLaMA+ChatGPTCoding/top.json?t=week&limit=30"` | top týdne, 3 subreddity |
-| 8 | MCP registry | `gh api repos/modelcontextprotocol/servers/commits --jq '.[0:10]'` + `gh api search/repositories -X GET -f q='topic:mcp created:>$(date -v-7d +%Y-%m-%d)'` | nové MCP servery |
+1. **Parse arguments** (default scope=all, days=7, focus=all, dry=false, full-effort=false, max-auto=5)
+2. **TodoWrite** s 5 vrstvami jako pending todos
+3. **Vrstva 1A — External discover**: `bash scripts/scan.sh $DAYS` paralelně s
+4. **Vrstva 1B — Internal discover**: `bash scripts/scan-internal.sh [--lite]`
+   (oba běží paralelně via `&` + `wait`)
+5. **Vrstva 2 — Filter**: apply OneFlow stack matrix (external) + thresholds (internal)
+6. **Vrstva 3 — Cross-reference**: `python3 scripts/cross-reference.py` (skip pokud `--no-cross-ref`)
+7. **Vrstva 4 — Audit**: `python3 scripts/audit-engine.py --top-n 5 [--top-n 10 s --full-effort]`
+8. **Vrstva 5 — Route + Implement**: `bash scripts/unified-router.sh` agreguje, přidá top 3 next actions header + volá `auto-implement.sh` pro AUTO actions
+9. **Update baselines** (`internal-baseline.json` for delta next run)
+10. **NTFY digest** (pokud not `--no-ntfy`)
+11. **Close-out re-read** — ověř všechny argumenty respektovány
+12. **Output Filipovi** — TL;DR (max 200 slov) + path k full reportu + path k decisions.jsonl
 
-### Batch processing velkých výstupů
+---
 
-Pokud kombinovaný výstup > 80K tokenů → **Gemini 2.5 Flash** (free tier, do 1500 req/den):
+## Self-eval gate (per AUTO_IMPLEMENT item, povinné)
 
-```bash
-echo "$COMBINED_OUTPUT" | gemini --model gemini-2.5-flash --prompt "SYSTEM: Jsi JSON API extractor. Output JE POUZE validní JSON array. ŽÁDNÝ preamble, postamble, markdown code fences, natural language text. Pokud nemůžeš extrahovat validní JSON → output přesně: []
+```
+Maintenance actions (CHMOD_HOOK, PRUNE_WATCHLIST, UPDATE_TOOL_REFERENCE):
+  [ ] Per-run AUTO count < MAX_ACTIONS (default 5)
 
-SCHEMA (každý item):
+External-finding actions (APPEND_TOOL_WATCHLIST, CREATE_REFERENCE_MEMORY, APPEND_KR_LINE):
+  [ ] Confidence != UNCERTAIN
+  [ ] Score ≥ {30 / 35 / 38} (per type minimum)
+  [ ] CREATE_REFERENCE_MEMORY: confidence == VERIFIED | LIKELY
+  [ ] APPEND_KR_LINE: confidence == VERIFIED
+  [ ] Idempotent (URL/target file not already present)
+  [ ] Per-run AUTO count < MAX_ACTIONS (default 5)
+  [ ] Žádný side-effect mimo ~/.claude/, ~/.claude/projects/-Users-filipdopita-Desktop-Codex/memory/
+  [ ] Cross-ref kategorie != DEPRECATED_PATTERN (jen pro REVIEW)
+```
+
+Selhala jakákoli? → REVIEW_QUEUE.
+
+---
+
+## Auto-implement engine (v3 NEW)
+
+`scripts/auto-implement.sh` přijímá JSON action plan (stdin nebo `--plan FILE`):
+
+```json
 {
-  \"title\": string (max 200 chars, původní titulek),
-  \"url\": string (valid http(s) URL, přesná kopie, bez modifikace),
-  \"source\": string (anthropic-cc|anthropic-api|openai|google-ai|github|hn|reddit|mcp|cc-releases),
-  \"summary\": string (1 věta, max 150 chars, česky nebo anglicky dle vstupu),
-  \"date\": string (ISO8601 formát YYYY-MM-DD nebo empty string pokud neznámé),
-  \"tags\": string[] (1-5 keywords z: llm|agent|claude-code|mcp|scraping|cold-email|deliverability|content|vps|frontend|knowledge-graph|dd|security)
+  "max_actions": 5,
+  "dry": false,
+  "actions": [
+    {
+      "id": "auto-001",
+      "type": "APPEND_TOOL_WATCHLIST",
+      "title": "...",
+      "url": "...",
+      "score": 38,
+      "confidence": "VERIFIED",
+      "evidence": "...",
+      "source": "anthropic-cookbook"
+    }
+  ]
 }
-
-CONSTRAINTS:
-- Max 50 items (priorita: nejvyšší engagement signals — stars, points, upvotes)
-- Dedupe na url field (hash matching, first occurrence wins)
-- Skip items bez title NEBO bez url
-- Scope: AI/LLM/dev-tools only (skip gaming, crypto, meme, generic business)
-- NIKDY neinvent URL — pokud chybí, skip item
-- NIKDY nepřidávej pole mimo schema"
 ```
 
-Cost guard: `~/.claude/mcp-keys.env` má `GEMINI_API_KEY`. Pokud Gemini 429 → fallback OpenRouter `google/gemini-2.5-flash` (viz filip-autopilot.md). NIKDY Vertex AI (cost-zero-tolerance).
-
-### Výstup fáze 1
-
-JSON pole `findings[]` uložené do `~/.claude/ai-radar/cache/raw-$(date +%Y-%m-%d).json`:
-
+**Output:**
 ```json
-[
-  {"title": "...", "url": "...", "source": "anthropic|oai|github|hn|reddit|mcp", "date": "2026-04-20", "summary": "...", "tags": ["agents","tool-use"]}
-]
+{
+  "executed": [...],
+  "skipped": [...],   // SELF_EVAL_GATE / DUPLICATE / missing-target
+  "errors": [...],
+  "count_executed": N
+}
 ```
+
+**Side-effects:**
+- Každá akce → log do `~/.claude/ai-radar/decisions.jsonl`
+- Idempotency check before action (no duplicate writes)
+- Reverzibilní — `git revert` nebo `rm <artifact>` vrátí stav
+
+**Action types detail:**
+
+| Type | Co dělá | Score min | Conf min | Idempotency |
+|---|---|---|---|---|
+| `APPEND_TOOL_WATCHLIST` | append řádek do `~/.claude/ai-radar/watchlist.md` | 30 | LIKELY | grep -F URL |
+| `CREATE_REFERENCE_MEMORY` | vytvoř `memory/reference_<slug>_<date>.md` (full structured doc) | 35 | LIKELY | file exists? |
+| `APPEND_KR_LINE` | append line do `rules/knowledge-router.md` MONITORING section | 38 | VERIFIED | grep -F URL |
+| `CHMOD_HOOK` | `chmod +x <hook_path>` pokud NOT_EXEC | n/a | n/a | already-exec check |
+| `PRUNE_WATCHLIST` | `bash prune-watchlist.sh` | n/a | n/a | size threshold |
+| `UPDATE_TOOL_REFERENCE` | append nového paragrafu do existing `reference_*.md` | n/a | n/a | grep -F update_text |
 
 ---
 
-## FÁZE 2 — Filter (OneFlow relevance)
+## Watchlist pruning (v3 NEW)
 
-### Stack matrix (co Filip už používá)
-
-| Oblast | Aktivní nástroje | Keywords pro match |
-|---|---|---|
-| **Claude Code** | sub-agents, hooks, MCP, skills, 1M context, prompt cache | claude-code, claude-opus, claude-sonnet, claude-haiku, subagent, hook, skill, MCP, anthropic-beta |
-| **Agent orchestrace** | Conductor, Paseo, Claude-Flow, Jaymin West pattern | agent, orchestration, workflow, multi-agent, a2a, swarm |
-| **Scraping / enrichment** | Apollo, Hunter, ARES, ISIR, CUZK, Apify, Firecrawl | scraping, enrichment, email verify, b2b data, ARES, ISIR |
-| **Cold email** | Postfix, Proofpoint, SPF/DKIM/DMARC, 5 domén | deliverability, SPF, DKIM, warm-up, Proofpoint, Postmaster |
-| **Content pipeline** | Social Publisher, IG, LinkedIn, Stitch, Canva | content pipeline, carousel, reel, scheduler, brand |
-| **VPS / infra** | Flash Contabo, systemd, WG, SSHFS, Caddy | systemd, monit, WireGuard, SSH, VPS, Contabo |
-| **Knowledge graph** | Graphiti, KuzuDB, temporal KG, MCP | knowledge graph, Graphiti, embeddings, KuzuDB, temporal |
-| **DD / finance** | DSCR, LTV, prospekty, ISIR | due diligence, DSCR, financial analysis, prospekt |
-| **Frontend stack** | Next.js, shadcn/ui, Tailwind v4, mapcn, MapLibre | shadcn, tailwind v4, Next.js 15, Radix, MapLibre |
-
-### Filter pravidla
-
-1. **HARD EXCLUDE** (skip bez auditu):
-   - Pouze visual (graphic design tools neOneFlow-brand)
-   - Gaming, crypto trading, meme coins
-   - Vertical který Filip nedělá (healthcare, edu, legal-tech pro US market)
-   - Tool vyžadující paid SaaS > $20/měsíc bez free tier
-
-2. **SOFT INCLUDE** (projde do auditu, default):
-   - Match >=1 keyword z stack matrixu
-   - Meta-věci o Claude Code / Anthropic ecosystému
-   - Nové LLM modely (Opus/Sonnet/Haiku updates, GPT-X, Gemini-X, open-source s EU compliance)
-   - Bezpečnost / deliverability / anti-detection (relevance cold email + scraping)
-
-3. **AUTO INCLUDE** (skip filter, vždy audituj):
-   - Anthropic official release (vše)
-   - Claude Code feature / beta header
-   - MCP protocol update
-   - Tool Filip již watchlistuje (`reference_tool_watchlist.md`)
-
-### Výstup fáze 2
-
-Přes Gemini (pokud velký pool) nebo inline v Claude:
-
-```json
-[
-  {"...finding fields...", "stack_matches": ["Claude Code", "agents"], "filter_verdict": "SOFT_INCLUDE"}
-]
-```
-
----
-
-## FÁZE 3 — Audit (4-dimenzní skóre)
-
-**Per filtered finding**, skóruj 4 dimenze na škále 1-5:
-
-| Dimenze | Otázka | Váha |
-|---|---|---|
-| **Fit** | Jak dobře zapadá do OneFlow stacku? (1=okrajově, 5=přímo nahrazuje/rozšiřuje existující komponentu) | ×3 |
-| **Novelty** | Je to skutečná novinka, nebo iterace něčeho co už řešíš? (1=duplicita, 5=nový capability) | ×1 |
-| **Effort** | Jak rychlé nasazení? Skórování **1=15min** (rychlé), **5=1+den** (pomalé). Formula: `(6-Effort)×2` — nižší effort bonus vyšší. Váha ×2 | ×2 |
-| **Impact** | Časová úspora / kvalita / nové schopnosti (1=nice-to-have, 5=game-changer) | ×3 |
-
-**Total = (Fit×3) + (Novelty×1) + ((6-Effort)×2) + (Impact×3)** — max 45.
-
-### Povinné pole auditu
-
-```markdown
-### [Název]
-- **URL**: ...
-- **Source**: ...
-- **Co to je**: 1 věta
-- **Stack match**: [Claude Code / agents / scraping / ...]
-- **Fit** (1-5): X — odůvodnění
-- **Novelty** (1-5): X — co přináší oproti existujícímu
-- **Effort** (1-5): X — **1=15min, 2=1h, 3=0.5d, 4=1d, 5=1+d** (nižší číslo = lepší pro auto-impl routing)
-- **Impact** (1-5): X — co to Filipovi dá
-- **Total skóre**: XX/45
-- **Risk flags**: [cost / secret-requirement / breaking-change / vendor-lock / none]
-- **Doporučení**: AUTO_IMPLEMENT / REVIEW / WATCHLIST / SKIP
-```
-
-### Audit engine
-
-Pro <=10 findings: inline v Claude (Sonnet).
-Pro >10 findings: **batch přes Gemini 2.5 Flash** s rubrikou v promptu.
-
----
-
-## FÁZE 4 — Route (trojcestný gate)
-
-### Rozhodovací strom (F-005: conservative boundary zones)
-
-```
-Total skóre → Routing (s ±2bod bufferem přes každou boundary)
-─────────────────────────────────────────────────────────────
-skóre >= 38                  → AUTO_IMPLEMENT (if risk=none + reverzibilní + per-run cap OK)
-skóre 33-37  [BOUNDARY]      → REVIEW (conservative — buffer proti score drift)
-skóre 28-32                  → REVIEW (queue)
-skóre 23-27  [BOUNDARY]      → WATCHLIST (conservative — buffer)
-skóre 18-22                  → WATCHLIST (30-day re-check)
-skóre 13-17  [BOUNDARY]      → SKIP (conservative — buffer)
-skóre <= 12                  → SKIP (archive only)
-```
-
-**Proč boundary zones**: Audit scoring má ±3bod drift mezi runy (subjective Fit/Impact). Bez bufferů by finding se skóre 35 někdy šel AUTO, někdy REVIEW — inkonzistentní routing. Buffery garantují deterministic behavior.
-
-```
-POZOR: AUTO_IMPLEMENT blokuje (F-003: rozšířeno):
-- Jakýkoli paid API klíč (Vertex, OpenAI paid, atd.)
-- Destruktivní změny (drop tabulek, rm -rf, force push)
-- Systemové změny mimo ~/.claude/ a ~/scripts/
-- Cokoli vyžadující odeslání zprávy / platby
-- **Nové rules v ~/.claude/rules/domains/** → vždy REVIEW (orphan risk bez knowledge-router integrace)
-- **Per-run cap: max 5 AUTO_IMPLEMENT položek**; 6+ kandidátů → zbylé přesunout do REVIEW (anti-noise guardrail)
-```
-
-### AUTO_IMPLEMENT akce (bezpečné zóny)
-
-- Nový expertise YAML v `~/.claude/expertise/` (read-only knowledge, bez behaviorálního vlivu bez routing entry)
-- Update MEMORY.md (přidání záznamu — jen index line, ne obsah memory)
-- Vytvoření `memory/reference_*.md` (referenční materiál, bez behaviorálního vlivu)
-- Update `reference_tool_watchlist.md` (append řádku)
-
-~~Přidání nové rule do `~/.claude/rules/domains/`~~ → **blokováno** (F-003 — orphan risk, vyžaduje knowledge-router update = 2 soubory mimo blast radius)
-~~Update knowledge-router.md~~ → **blokováno** (behaviorální vliv na všechny session)
-~~Vytvoření `memory/feedback_*.md`~~ → **blokováno** (behaviorální vliv — feedback ovlivňuje budoucí chování)
-~~Nový skill~~ → **blokováno** (nové user-invocable commands vyžadují Filipovu review)
-
-Pro cokoli jiného (včetně ~~cross-offs~~ nahoře) → **REVIEW_QUEUE** (Filip schválí přes `/apply-improvements`).
-
-**Per-run cap aplikace**: Pokud po auditu máš 6+ kandidátů na AUTO_IMPLEMENT, seřaď sestupně podle skóre a prvních 5 → AUTO, zbylé → REVIEW s flagem `rate_limit_overflow`.
-
-### REVIEW_QUEUE formát
-
-Zapiš do `~/.claude/review-queue/ai-radar-$(date +%Y-%m-%d).md`:
-
-```markdown
----
-name: AI Radar Weekly (2026-04-21)
-type: batch-review
-source: ai-radar
-scan_window: 7 days
-findings_count: N
----
-
-# AI Radar — Review Queue (2026-04-21)
-
-## HIGH (skóre 30+) — N položek
-
-### [Název] (skóre 38/45)
-[plný audit]
-
-**Navrhovaná akce**: [konkrétní kroky]
-**Rollback**: [jak vrátit]
-
----
-
-## MEDIUM (skóre 25-29) — N položek
-...
-
-## Navrhovaný batch
-- [ ] Položka 1: AUTO_IMPLEMENT (po schválení)
-- [ ] Položka 2: manuální eval Filipem
-- [ ] ...
-```
-
-### WATCHLIST
-
-Položky 15-24 skóre → append do `~/.claude/ai-radar/watchlist.md` (primary; self-contained). Pokud existuje Obsidian vault a je writable, **zrcadli** i do `~/Documents/OneFlow-Vault/02-Reference/ai-radar-watchlist.md`. **POVINNĚ** `mkdir -p` parent dir před Write operací (ověřeno 2026-04-21: OneFlow-Vault/02-Reference neexistuje při první instalaci). Re-check za 30 dní.
-
-### SKIP
-
-Archive jen v `~/.claude/ai-radar/archive/YYYY-MM-DD/`.
-
----
-
-## Výstup Filipovi (stručně, max 200 slov úvod)
-
-```markdown
-# AI Radar — {date}, window {N} days
-
-**Scan**: 8 zdrojů, {total} findings, {filtered} po OneFlow filteru, {audited} auditováno.
-
-## Shrnutí
-
-**Auto-implementováno ({n})**:
-- [Název + 1 věta]
-
-**Do review-queue ({n})**: → `/apply-improvements`
-- [Název + skóre + 1 věta]
-
-**Watchlist ({n})**: 30-day re-check
-- [Název]
-
-**Skóre top 3**:
-1. ...
-2. ...
-3. ...
-
-## Risk flags
-{list, nebo "Žádné"}
-
-## Next
-{konkrétní doporučení — co otevřít, co spustit, co ignorovat}
-```
-
----
-
-## Storage
-
-```
-~/.claude/ai-radar/
-├── runs/              # každý běh = 1 .md file (2026-04-21.md)
-├── cache/             # raw JSON z discover fáze (cleanup 30+ dní)
-└── archive/           # SKIP položky (cleanup 90+ dní)
-
-~/.claude/review-queue/
-└── ai-radar-YYYY-MM-DD.md    # pending Filip approval
-
-~/.claude/ai-radar/
-└── watchlist.md              # 30-day re-check položky (primary, self-contained)
-
-~/Documents/OneFlow-Vault/02-Reference/    # optional mirror, vyžaduje mkdir -p před write
-└── ai-radar-watchlist.md
-```
-
----
-
-## Argument flags
-
-| Flag | Default | Popis |
-|---|---|---|
-| `--days=N` | 7 | Okno scanu |
-| `--dry` | off | Simulace, žádný zápis ani auto-implement |
-| `--focus=X` | all | `claude-code` / `agents` / `scraping` / `cold-email` / `content` / `frontend` / `all` |
-| `--skip-auto` | off | Vše pošli do review-queue (i HIGH skóre) — když Filip chce review všechno |
-| `--gemini-off` | off | Nepoužívej Gemini batch (jen inline) — debug mode |
-
----
-
-## Spuštění
-
-**Příklady:**
-
-```
-/ai-radar                           # default: 7 dní, all focus
-/ai-radar --days=14                 # 14-day scan
-/ai-radar --focus=claude-code       # jen Claude Code ecosystem
-/ai-radar --dry                     # simulace
-/ai-radar --days=30 --skip-auto     # měsíční review, vše ručně
-```
-
----
-
-## Execution protokol (pro Claude který skill spouští)
-
-1. Parse arguments (default days=7, focus=all, dry=false)
-2. **TodoWrite** — 4 fáze jako samostatné todos
-3. **FÁZE 1** — paralelní Bash calls (8 zdrojů v jednom message)
-4. Pokud raw output > 80K tokenů → Gemini deduplication+normalize
-5. **FÁZE 2** — apply filter matrix → filtered array
-6. **FÁZE 3** — audit per finding (inline nebo Gemini batch)
-7. **FÁZE 4** — route (auto / review / watchlist / skip)
-8. Write run file `~/.claude/ai-radar/runs/{date}.md`
-9. Zapiš review-queue file pokud jsou REVIEW položky
-10. Zapiš watchlist append pokud jsou WATCHLIST položky
-11. Execute AUTO_IMPLEMENT položky (pokud nejsou --dry a --skip-auto)
-12. **Close-out re-read**: projdi původní prompt — všechny flagy respektovány?
-13. Output Filipovi (shrnutí + next steps)
-
-## Self-eval gate (před AUTO_IMPLEMENT)
-
-Pro každou AUTO_IMPLEMENT položku ověř **VŠECHNY** 5 podmínek:
-
-```
-[ ] Reverzibilní (git revert nebo rm daný soubor vrátí stav)
-[ ] Blast radius ≤ 2 soubory v ~/.claude/ nebo ~/Documents/OneFlow-Vault/
-[ ] Žádný nový API klíč / paid service
-[ ] Žádná modifikace CLAUDE.md ani aktivních rules/*.md (cache protection)
-[ ] Žádný cron / systemd hook
-```
-
-Selhala jakákoli? → přesunout do REVIEW_QUEUE místo auto-implementu.
-
-## Rollback
-
-Každý run má commit hash v run file. Rollback:
+`scripts/prune-watchlist.sh` archivuje H2 sekce s datem `YYYY-MM-DD` starší než 60 dní:
 
 ```bash
-cat ~/.claude/ai-radar/runs/$(ls -t ~/.claude/ai-radar/runs/ | head -1) | grep "commit:"
-git -C ~/.claude/ revert <hash>
+# Smoke test (no changes)
+bash scripts/prune-watchlist.sh --dry --max-days=60
+
+# Real prune
+bash scripts/prune-watchlist.sh --max-days=60 --max-kb=80
 ```
 
----
-
-## Integrace s existujícím ekosystémem
-
-- **`/apply-improvements`** — čte `~/.claude/review-queue/` včetně ai-radar výstupů
-- **`reference_tool_watchlist.md`** — source pro Filter fáze (AUTO INCLUDE pokud tool je na watchlistu)
-- **`daily-self-improve.sh` (cron 03:00)** — NEZPŮSOBUJE spuštění ai-radar (ai-radar = on-demand jen)
-- **`MEMORY.md`** — nová runs se loggují jako reference memory pokud Filip schválí
-- **`/status`** skill — show pending review-queue count (existující funkce)
-
-## Známé limity
-
-- Reddit bez auth → jen veřejné top.json (some subs blokují user-agent → fallback na HN)
-- X/Twitter explicitně NEpoužito (vyžaduje cookies, duplikuje `/last30days`)
-- arxiv SKIP (signál-noise ratio nízký pro OneFlow scope; re-add pokud Filip požádá)
-- GitHub trending API má rate limity — použij `gh` CLI s autentizací (už máš)
+**Hard cap 80KB** — pokud po prune stále >80KB, recursive prune se 30d cutoff.
+Backup před každým prune do `~/.claude/ai-radar/watchlist.md.bak.<ts>`.
+Archive do `~/.claude/ai-radar/archive/watchlist-pruned-<date>.md`.
 
 ---
 
 ## Anti-patterny (NIKDY)
 
-1. **Nespouštěj v --dry mode pak stejně zapiš soubory** (dry = read-only, hard).
-2. **Nezapisuj findings s URL které ses nepodíval ověřit** (zero hallucination rule).
-3. **Neroutuj do AUTO_IMPLEMENT cokoli s keywordem "deploy" / "install" / "pip install" / "npm install"** (implementace vyžadující externí side-effect = REVIEW).
-4. **Nikdy neupdateuj CLAUDE.md ani rules/*.md mid-session** (prompt cache protection).
-5. **Nespouštěj skill 2× ve stejný den bez `--days=N` override** (zbytečné tokeny).
+| Anti-pattern | Důvod |
+|---|---|
+| Spustit `--scope=external --dry` a stejně zapsat soubory | --dry je hard read-only, nikdy bypass |
+| Zapsat finding bez ověření URL | Zero hallucination rule (CLAUDE.md TOP RULE 1) |
+| AUTO_IMPLEMENT pro keyword "deploy"/"install"/"npm i"/"pip install" | External side-effect = REVIEW only |
+| AUTO_IMPLEMENT cross-ref kategorie DEPRECATED_PATTERN | Breaking change risk = always REVIEW |
+| Update CLAUDE.md / aktivní rules mid-session | Prompt cache protection (5min TTL) |
+| 2× run bez `--days=N` ve stejný den | Zbytečné token burn (cache hit ale stejně cycle) |
+| AUTO_IMPLEMENT >5 položek/run | Anti-noise guardrail (per-run cap) |
+| Použít Gemini API (paid OR free) | BLOCKED 2026-04-27, použij OpenRouter free |
+| Skip mythos audit na findings ≥38 | Ztrácíš signal (top findings = největší hodnota = most reasoning) |
+| Otázka Filipovi mimo HARD-STOP zónu | autonomy-guard.sh exit 2, viz hard-stop-zone.md |
+| Auto-install MCP server | Vyžaduje user explicit approval |
+| Modifikovat skill/agent/hook automaticky | Vyžaduje human craftsmanship → REVIEW |
 
 ---
 
-## Licence
+## Migration v3 → v4
 
-Interní OneFlow skill. Zdroje: public RSS/API feeds, žádné scraping proti ToS.
+Žádná breaking change. Upgrade je in-place:
+- Existing scanner contracts zachovány; v4 přidává creative source a security dim
+- Existing audit-engine.py output schema zachován; `scores` má navíc project boost/penalty
+- Existing unified-router.sh interface zachován; report frontmatter má `next_actions`
+- Nové scripts: `scan-creative.sh`, `security-feeds.sh`, `project-context.py`, `explain.sh`, `smoke-test.sh`
+
+---
+
+## Rollback
+
+Každý run zapisuje commit hash do report file. Rollback:
+
+```bash
+RECENT=$(ls -t ~/.claude/ai-radar/runs/ | head -1)
+HASH=$(grep "commit:" ~/.claude/ai-radar/runs/$RECENT | awk '{print $2}')
+git -C ~/.claude/ revert "$HASH"
+```
+
+Per-action rollback:
+```bash
+# Last decisions
+tail -10 ~/.claude/ai-radar/decisions.jsonl
+
+# Rollback specific OK action (e.g., reference memory file)
+rm ~/.claude/projects/-Users-filipdopita-Desktop-Codex/memory/reference_<slug>_<date>.md
+# Or revert tool watchlist append
+git -C ~/.claude/ai-radar/ checkout watchlist.md
+```
+
+---
+
+## Známé limity
+
+- Reddit bez auth → public top.json (some subs blokují user-agent → fallback HN)
+- X/Twitter NEpoužito (vyžaduje cookies, duplikuje `/last30days`)
+- arxiv SKIP (signál-noise nízký pro OneFlow scope; re-add na request)
+- Cross-reference engine vyžaduje grep nad ~/.claude/ — pomalé pro >5000 souborů (timeout 10s)
+- Internal `mcps` dim není perfect (hard checkne jen mcp.json parse, ne live connectivity bez --full-effort)
+- Auto-implement nezvládá: install MCP, modify rule, create skill (hard rules → REVIEW)
+- Learning loop boost vyžaduje 5+ decisions na tag pro signal (cold-start effect)
+- prune-watchlist.sh vyžaduje H2 nadpisy s `YYYY-MM-DD` formátem; H2 bez data se zachovají
+
+---
+
+## Vztah k ostatním skillům
+
+| Skill | Co dělá | Co /ai-radar dělá navíc |
+|---|---|---|
+| `/audit-self` | One-shot snapshot harness | Versioned + auto-fix gate + cross-ref + REAL implement |
+| `/slime-mold` | Pruning candidates (skill graph) | External signal + internal scan unified |
+| `/apply-improvements` | Pasivní queue processor | Active queue populator (writes do queue + auto-implement triviálních) |
+| `/last30days` | Generic deep research | Filtered na OneFlow stack + audit + auto-archive |
+| `/health` | Code quality dashboard | Ekosystem-wide (skills/hooks/MCPs/memory) |
+| `/cso` | Security audit VPS | Capability/skill audit (NE infra security) |
+| `/recall` | Memory cascade search | Forward-looking (radar) vs backward (recall) |
+
+---
+
+## Čas execution (rough)
+
+| Mode | Čas | Token cost |
+|---|---|---|
+| `--lite` (internal P0) | 5-10s | ~500 |
+| `--scope=external --days=3` | 30-60s | ~3000 |
+| `--scope=internal` (full 8 dim) | 30-90s | ~2000 |
+| `--scope=all` (default, v4 first run) | 60-150s | ~5000 |
+| `--scope=all` (v4 same-day cache hit) | 5-15s | ~2000 |
+| `--full-effort` | 90-180s | ~10000 |
+| `auto-implement.sh` (5 actions) | <2s | ~50 |
+| `prune-watchlist.sh` | <3s | 0 |
+
+Cost je ZERO Kč na infra (gh + curl + bash). Token cost je v rámci Claude Max subscription.
+
+---
+
+## Licence & integrita
+
+Interní OneFlow skill. Všechny zdroje: public RSS / API / GitHub / official docs / OpenRouter API. Žádné scraping proti ToS. Cross-reference engine je striktně lokální (žádná data nikam nelítají).
+
+**Version table**
+
+| Version | Date | Tags | Summary |
+|---|---:|---|---|
+| v1 | 2026-04 | F-001..F-099 | baseline radar |
+| v3 | 2026-05-03 | F-100..F-129 | Cookbook, Plugin MP, Awesome, OpenRouter, NEW_MCP_AVAILABLE, auto-implement |
+| v3 wave 5 | 2026-05-06 | F-130..F-147 | sustained 100/100, source ceilings, launchd/trajectory hygiene |
+| v4 | 2026-05-07 | F-200..F-220 | creative dimension, project-aware scoring, security feeds, next actions, same-day cache, explain mode, hygiene |
+
+**Author:** Filip Dopita / OneFlow ecosystem.
+**Version:** v4.0 (life radar + project/security/creative) — 2026-05-07
+**Replaces:** ai-radar v3.0 (real auto-implement engine) — 2026-05-03

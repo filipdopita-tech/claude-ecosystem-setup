@@ -1,0 +1,15 @@
+{
+  "_comment": "Sample emitent for dd-financial.py --screen flow",
+  "noi": 1500000,
+  "debt_service": 800000,
+  "loan": 5000000,
+  "asset_value": 8000000,
+  "discount_rate": 0.08,
+  "cashflows": [-5000000, 1100000, 1100000, 1100000, 1100000, 1100000],
+  "_metadata": {
+    "emitent": "Sample s.r.o.",
+    "ico": "12345678",
+    "sector": "real_estate",
+    "vintage": "2026-Q2"
+  }
+}

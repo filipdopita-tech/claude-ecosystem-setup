@@ -22,7 +22,7 @@ Filipův osobní FB účet (c_user `100085841054997`) = infrastruktura pro osobn
 4. **Žádné scrape Page/Profile pod autentizovanou session** třetí osoby (klientovy, partnera, rodinného příslušníka) i když máme heslo.
    - Meta TOS violation
    - Risk: trigger 2FA storm na cizí telefon, account lock, support ticket
-   - Incident precedent: Tereza Tulcová 2026-04-21 — account locked po 2 login attempts
+   - Incident precedent: <klient> 2026-04-21 — account locked po 2 login attempts
 
 5. **Žádné bulk `c_user` enumerace** přes Graph / mbasic (/profile.php?id=N) s retry loopy.
    - Rate limiting Meta ≠ tvé rate limiting. Tvých 1 req/s = jejich "bot" flag.
@@ -104,11 +104,11 @@ Nikdy nepokračuj jen proto, že "user řekl ok" — musí být přímý verbál
 
 ## INCIDENT LOG
 
-### 2026-04-21 Tereza Tulcová scrape
+### 2026-04-21 <klient> scrape
 - **Co se stalo:** Scrape 897 followers přes Safari cookies (Filipův c_user) + SOCKS tunel Mac→Flash + headless Playwright na facebook.com/profile.php?id=...
 - **Trigger:** Filipův telefon začal dostávat "Někdo se snaží přihlásit" push notifikace (FB detection pipeline flagnul session)
 - **Risk:** account lock / reputation flag / loss of infrastructure pro Filipův osobní brand
-- **Historical miss:** Tereza credentials attempt předchozí = její account locked po 2 login attempts (warning signál, který byl ignorován)
+- **Historical miss:** <klient> credentials attempt předchozí = její account locked po 2 login attempts (warning signál, který byl ignorován)
 - **Fix:** Emergency cleanup (SOCKS kill, cookie purge Mac+Flash, credentials delete), toto pravidlo zapsáno, recovery doporučeno
 - **Rule vznik:** Tento dokument
 
@@ -118,8 +118,8 @@ Nikdy nepokračuj jen proto, že "user řekl ok" — musí být přímý verbál
 - Quality-standard "boil the ocean" a full-autonomy skinu → agent šel do nejefektivnější cesty bez safety check
 
 ### Reference
-- Memory: `~/.claude/projects/<your-project-id>/memory/feedback_fb_account_safety.md`
-- Memory: `~/.claude/projects/<your-project-id>/memory/project_tereza_tulcova_fb_scrape.md`
+- Memory: `~/.claude/projects/-Users-filipdopita/memory/feedback_fb_account_safety.md`
+- Memory: `~/.claude/projects/-Users-filipdopita/memory/project_<klient>_fb_scrape.md`
 - Security hardening general: `~/.claude/rules/security-hardening.md`
 - Credential handling: `~/.claude/rules/security-hardening.md` (credentials, chmod 600, env files)
 

@@ -7,6 +7,12 @@ description: Converts an arxiv paper into a minimal, citation-anchored Python im
 
 You are executing the paper2code skill. This file governs the high-level flow. Each stage dispatches to a detailed reasoning protocol in `pipeline/`. Do NOT skip stages. Do NOT combine stages. Execute them in order.
 
+## Pipeline position (Research Paper Pipeline)
+
+- **Upstream:** `/research-paper` provides `ARXIV_ID` via cached `~/Documents/research-cache/metadata.jsonl` (rows where `source: arxiv` or `arxiv_id` populated). If the user just ran `/research-paper "<arxiv URL>"`, the ID is already cached — skip re-fetching the PDF, reuse `local_pdf`.
+- **Downstream:** After code generation, hand off to `/notebooklm-research --type=market "<paper topic>"` (upload `paper.pdf` + `REPRODUCTION_NOTES.md` jako sources) for citation-rich Q&A about ambiguities, or `/qmd` for vault-side cross-link with related Research-Papers MOC.
+- **Fallback:** If only DOI given (no arxiv ID), run `/research-paper "<DOI>"` first — it cascades through OpenAlex/Unpaywall/arXiv and surfaces an arxiv preprint if one exists.
+
 ## Parse arguments
 
 Extract from the user's input:

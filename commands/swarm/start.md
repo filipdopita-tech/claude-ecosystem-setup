@@ -11,7 +11,7 @@ Defaults: topic="general-audit", partner="partner", rounds=6
 
 ## Hub cesta
 Hub je sdilena iCloud slozka: `~/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
-Na VPS pristupna pres: `~/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
+Na VPS pristupna pres: `/mac/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
 Pokud neexistuje, vytvor ji.
 
 ## Kroky

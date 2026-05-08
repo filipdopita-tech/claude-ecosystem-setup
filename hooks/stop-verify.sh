@@ -5,7 +5,7 @@
 # 3. Sends ntfy summary with usage stats
 
 NTFY_URL="https://ntfy.oneflow.cz/Filip"
-NTFY_TOKEN="${NTFY_TOKEN:-}"  # configure in ~/.claude/mcp-keys.env
+NTFY_TOKEN="${NTFY_TOKEN:-<set-in-env>}"
 USAGE_LOG="$HOME/.claude/metrics/usage.jsonl"
 
 # --- Usage stats from today's log ---

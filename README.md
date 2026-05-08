@@ -1,8 +1,39 @@
 # Claude Code Ecosystem Setup
 
-A complete, production-ready Claude Code configuration that transforms Claude into a domain-aware autonomous assistant. Install once, get 313 skills, 68 automation hooks, 38 behavioral rule files (incl. Iron Rules + Lukas-wisdom cherry-pick + Power Skills Stack), 21 expertise YAMLs, 17 MCP server integrations, 56 custom agents, 217 slash commands, full VPS compute architecture, **EVAL infrastructure with 16 datasets, EXPERIMENT runner with statistical A/B testing, plugin packaging, output styles, memory + doc templates, CI workflows, and routines**.
+Filip's complete, production-ready Claude Code configuration — domain-aware autonomous assistant, battle-tested on a real Czech fintech operation.
 
-> **Latest sync (2026-04-28)**: +15 skills (agent-loop, chains, dd-batch-sql, ecosystem-radar, leadgen, meta-ads, notebooklm-research, orchestrate, outreach-oneflow, prd-spec, recall, saas-from-workflow, site-builder, slime-mold, trend-tracker), +17 hooks (Iron Rules enforcement: hallucination-guard, completion-mandate-inject, completion-stop-verify, memory-cap-guard, memory-secret-scan, weekly-audit-gate), +15 rules (anti-hallucination, completion-mandate, hard-stop-zone, power-skills-stack + 8× from-lukas + 1× from-best-practice), +5 expertise YAMLs (agent-employees, agent-loop-engineering, claude-code-cost-ops, prd-driven-saas), commands/ directory pushed for the first time (190 slash commands). See [CHANGELOG entry below](#changelog).
+## ⚠️ Disclaimer (read this first)
+
+This is **a snapshot, not a plug-and-play install pack**. Shared with friends and the Claude Code community for inspiration and cherry-picking.
+
+- ✅ **Zero credentials, API keys, or personal memory in this repo** — verified by `gitleaks` (0 leaks, see `.gitleaksignore` for false-positive entries that are documentation examples / mock test tokens).
+- ✅ **Klient names, contacts, phone numbers, internal emails are redacted** (`<klient>`, `<projekt>`, `<email>`, `<phone>` placeholders).
+- ⚠️ **Hooks and skripts may reference local paths** (`/Users/filipdopita/...`, `~/Desktop/Codex/...`) — adjust before using.
+- ⚠️ **Memory layer** (`~/.claude/projects/.../memory/`) is private and **never synced** to this repo.
+- ⚠️ **VPS infra references** (Flash 10.77.0.1, oneflow.cz domains) — replace with your own.
+- 📜 **Use at your own risk, no warranty.** This is shared in the spirit of "Show your work."
+
+## Snapshot — 2026-05-08
+
+| Component | Count | Notes |
+|---|---|---|
+| Skills | 436 | security-toolkit, scrapling, algorithm-recall, agency-*, dd-emitent, /codex, /evalopt, /mythos, /triad. **gstack/ excluded** — install separately from upstream (it's vendored binaries, large). |
+| Agents | 77 | incl. 14 agency-* (financial-analyst, investment-researcher, reality-checker, ...) |
+| Hooks | 84 | Iron Rules enforcement (anti-hallucination, completion-mandate, hard-stop-zone, codex-bridge nudge) |
+| Rules | 29 | behavioral; load-on-demand via knowledge-router |
+| Expertise YAMLs | 23 | structured domain knowledge (CZ regulatory, sales, design, code, scraping, ...) |
+| Knowledge docs | 37 | curated reference material |
+| Slash commands | 201 | high-leverage chains: `/cso`, `/dd-emitent`, `/evalopt`, `/mythos`, `/triad`, `/codex` |
+| Output styles | 6 | |
+
+**Major additions since 2026-05-05 push:**
+- **gstack 0.17 integration** — 45 namespaced skills (browse, qa, design-html, scrape, ship, canary, ...). Not bundled in repo (60MB+ Bun binaries). Install separately: see [gstack upstream](https://gstack.dev) or `npx gstack-installer`.
+- **agency-* agents** — financial-analyst, investment-researcher, reality-checker, incident-commander, compliance-auditor, paid-media-* (creative+tracking), discovery-coach, proposal-strategist, evidence-collector, feedback-synthesizer, legal-document-review, email-intelligence, codebase-onboarding, chief-of-staff
+- **Codex bridge** — full Claude/Codex orchestration (claude = strategy, codex = repo work) with telemetry, dashboard, weekly retro
+- **Anthropic financial-services** patterns mirrored — Pitch Agent, Earnings Reviewer, Model Builder DCF/LBO/comps, KYC Screener
+- **Cherry-picks** — `holaOS` (`/agents-md`, `/evolve-scan`, blocker-aggregator), `vercel-labs/skills` (deploy-to-vercel, view-transitions, web-design-guidelines), `maigret` (OSINT username search), `Mercury` (memory-decay)
+- **Iron Rules v2** — anti-hallucination (verify-before-claim with `[VERIFIED]/[LIKELY]/[GUESS]/[UNCERTAIN]` markers), completion-mandate (no "to nejde", 3 alternatives before blocker), hard-stop-zone (5 explicit zones: payments/sends/destruction/FB-login/strategic-100k+)
+- **Cost discipline** — Google API total ban after 3× billing incidents (Apr 17, Apr 24, Apr 27 2026); pivot to OpenRouter free models (DeepSeek R1, Qwen 3 Coder, Kimi K2, Nemotron Nano) — see `COST_DISCIPLINE.md`
 
 **Production-grade. Battle-tested.** Drives a real fintech operation (OneFlow.cz) — investor outreach, due diligence, content publishing, deliverability, CZ regulatory compliance.
 

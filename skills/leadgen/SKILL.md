@@ -39,7 +39,7 @@ Flash: leadgen_router.py
   ├── Enrich: hlidac_enricher (gov contracts, subsidies, risk flags)
   ├── Enrich: justice_scraper (jednatele z ARES VR)
   ├── Score: emitent_pipeline scoring (0-100, tier A-D)
-  └── Export: Branded Excel → ~/Documents/OneFlow-Vault/leadgen-exports/
+  └── Export: Branded Excel → /mac/Documents/OneFlow-Vault/leadgen-exports/
 ```
 
 ## Použití
@@ -92,19 +92,19 @@ Z user inputu extrahuj:
   "min_score": 60,
   "limit": 200,
   "enrich": true,
-  "output_dir": "~/Documents/OneFlow-Vault/leadgen-exports/"
+  "output_dir": "/mac/Documents/OneFlow-Vault/leadgen-exports/"
 }
 ```
 
 **KROK 3 — Trigger Flash run**
 ```bash
-ssh root@<vps-private-ip> "cd /root/oneflow-engine && python3 leadgen_router.py \
+ssh root@10.77.0.1 "cd /root/oneflow-engine && python3 leadgen_router.py \
   --sector real_estate_dev \
   --region Praha \
   --min-revenue 50000000 \
   --min-score 60 \
   --limit 200 \
-  --output ~/Documents/OneFlow-Vault/leadgen-exports/"
+  --output /mac/Documents/OneFlow-Vault/leadgen-exports/"
 ```
 
 **KROK 4 — Monitor progress**
@@ -154,7 +154,7 @@ Tabs:
 - `Scoring Breakdown` — per-dimension scores explained
 
 ## Historie a learnings
-Po každém runu appendnout do `~/Documents/OneFlow-Vault/leadgen-runs.md`:
+Po každém runu appendnout do `/mac/Documents/OneFlow-Vault/leadgen-runs.md`:
 - Datum, query, počet results, tier distribution, manual validation notes
 
 ## Troubleshooting
@@ -172,4 +172,4 @@ Po každém runu appendnout do `~/Documents/OneFlow-Vault/leadgen-runs.md`:
 
 **Autor:** Dopita + Claude Opus 4.7
 **Verze:** 0.1 MVP (2026-04-16)
-**Související proposal:** `~/Desktop/leadgen-research/00-PROPOSAL.md`
+**Související proposal:** `/Users/filipdopita/Desktop/leadgen-research/00-PROPOSAL.md`

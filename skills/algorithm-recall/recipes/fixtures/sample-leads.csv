@@ -1,0 +1,21 @@
+email,name,company
+jan.novak@example.cz,Jan Novák,ABC s.r.o.
+petr.svoboda@example.cz,Petr Svoboda,XYZ a.s.
+jan.novak@example.cz,Jan Novák,ABC s.r.o.
+JAN.NOVAK@EXAMPLE.CZ,Jan Novák Sr.,ABC s.r.o.
+jan.nоvak@example.cz,Jan Novak,ABC sro
+jna.novak@example.cz,Jan Novak,ABC
+marie.dvorakova@example.cz,Marie Dvořáková,DEF spol. s r.o.
+karel.cerny@example.cz,Karel Černý,GHI s.r.o.
+maria.dvorakova+work@gmail.com,Marie Dvořáková,DEF
+maria.dvorakova@gmail.com,Marie Dvořáková,DEF
+maria.dvorakova@googlemail.com,Marie Dvořáková,DEF
+pavel.horak@example.cz,Pavel Horák,JKL a.s.
+eva.veselá@example.cz,Eva Veselá,MNO s.r.o.
+eva.vesela@example.cz,Eva Veselá,MNO s.r.o.
+tomas.kral@example.cz,Tomáš Král,PQR s.r.o.
+lukas.maly@example.cz,Lukáš Malý,STU s.r.o.
+,Empty Email,XYZ
+karel.cerny@example.cz,Karel Černý Jr.,GHI s.r.o.
+zdenek.stary@example.cz,Zdeněk Starý,VWX a.s.
+honza.jiri@example.cz,Honza Jiří,YZA s.r.o.

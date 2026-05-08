@@ -1,0 +1,132 @@
+domain: youtube-shorts-strategy
+keywords: [youtube, shorts, long-form, channel-growth, monetization, algorithm, seo]
+last_updated: 2026-04-26
+confidence: high
+
+shorts_specs:
+  max_duration: 60s
+  # Note: YouTube announced 3-minute Shorts in late 2024 for eligible creators; 60s remains the
+  # standard distribution-maximizing limit as 3-min Shorts have significantly lower reach as of Q1 2026
+  recommended_duration: "30-45s"
+  aspect_ratio: "9:16 (vertical); 1:1 square accepted but gets minimal Shorts Shelf placement"
+  resolution: "1080x1920 minimum; 1080x1920 or 1920x1080 both processed correctly"
+  frame_rate: "24-60fps; 30fps standard"
+  file_format: "MP4 (H.264); MOV accepted"
+  audio: "Stereo AAC; YouTube normalizes loudness to -14 LUFS"
+  title_length: "max 100 chars; first 50 show in Shorts Shelf tooltip — front-load keyword"
+  description: "First 3 lines visible without expand; include primary keyword naturally in line 1"
+  hashtag_shorts: "#Shorts tag is no longer required as of 2024 — YouTube detects vertical video automatically"
+
+discovery_mechanics:
+  shorts_shelf:
+    placement: "Dedicated Shorts row on YouTube homepage and mobile app; separate from main feed"
+    algorithm_signals:
+      - "Swipe-away rate (early negative signal if high — equivalent to skip)"
+      - "Watch percentage (% of short watched)"
+      - "Like-to-view ratio"
+      - "Comments per 1,000 views"
+      - "Subscriber conversion rate (non-subs who sub after viewing)"
+    note: "Shorts Shelf operates as a separate recommender from main YouTube. A Short viral in the Shelf doesn't
+      automatically push related long-form — explicit crossover strategy required."
+  suggested_algorithm:
+    placement: "Up next / sidebar on desktop; suggested after video on mobile"
+    note: "Shorts appear in suggested for viewers who watched similar content. Topic clustering matters."
+  channel_feed_contribution:
+    short_vs_long: "Shorts do NOT count toward watch time for YPP (4,000 watch hours threshold)"
+    # This is a critical monetization nuance — Shorts views are siloed
+    subscriber_credit: "Subscribers gained via Shorts DO count toward YPP 1,000-sub threshold"
+    channel_topic_signal: "Shorts uploads contribute to channel topic classification — post off-brand Shorts and it confuses recommendation engine"
+
+crossover_strategy:
+  short_as_hook_for_long_form:
+    mechanism: >
+      Create a Short that presents the problem or teaser of a long-form video. Include verbal CTA
+      ("full breakdown in the link") and a pinned comment with long-form link. YouTube's internal
+      study (2023) showed 12-18% of Shorts viewers who tap through to channel page watch a long-form
+      within the same session.
+    best_content_types:
+      - "Best 60-second moment clipped from long-form"
+      - "Question raised in Short; answer only in long-form"
+      - "Before/after hook with 'how I did it' pointing to long-form"
+  end_screen_limitation: "End screens and cards do NOT display on Shorts — CTA must be verbal or in description/pinned comment"
+  channel_tab_layout: "Pin 1-2 long-form videos on channel home tab to capture Shorts-driven profile visits"
+  playlist_bridge: "Create a playlist that starts with Short-adjacent content — profile visitors who click playlists convert to session watches"
+
+analytics_metrics:
+  rpm_vs_long_form:
+    shorts_rpm: "$0.03-0.07 per 1,000 views (typical range 2026)"
+    long_form_rpm: "$1.50-8.00 per 1,000 views (varies by niche; finance/business at high end)"
+    # Shorts RPM is ~10-100× lower than long-form — monetization strategy must account for this
+    implication: "1M Short views ≈ $30-70. 1M long-form views ≈ $1,500-8,000. Shorts are audience builders, not revenue drivers."
+  cpm_math:
+    formula: "CPM is what advertisers pay per 1,000 impressions; RPM is what creators earn (CPM × revenue share ~45%)"
+    shorts_cpm: "$0.06-0.15 (ads shown between swipes; low per-impression value)"
+    long_form_cpm: "$3-18 depending on niche, geography, seasonality"
+  sub_conversion_rate_from_shorts:
+    benchmark: "0.5-3% of Shorts viewers subscribe (lower than long-form which is 2-8%)"
+    best_practices:
+      - "Verbal CTA: 'subscribe for more of [specific value]' at end of Short"
+      - "Consistent posting so suggested Shorts algorithm has more inventory to serve the same viewer"
+      - "Channel icon/name consistency so brand is recognizable across multiple Short impressions"
+
+thumbnail_for_long:
+  shorts_auto_thumb:
+    behavior: "YouTube selects a frame from the Short; no custom thumbnail option for Shorts"
+    workaround: "Select the best frame manually during upload via 'Choose a thumbnail' (3 auto-generated options)"
+  long_form_custom_thumbnail:
+    importance: "Custom thumbnail is the highest-leverage optimization for long-form CTR"
+    patterns_that_work:
+      - "Face with exaggerated expression + high-contrast text overlay (tested: +30-45% CTR vs. no-face)"
+      - "Before/after split frame"
+      - "Numbered list with large digit (e.g., '7 mistakes' with '7' dominating the frame)"
+      - "Curiosity gap — partial reveal with missing element (blurred section, question mark)"
+      - "Color contrast against YouTube's white/dark UI (reds, oranges, yellows outperform blues)"
+    specs: "1280x720 minimum; 16:9; JPG/PNG/GIF; max 2MB; no nudity/violent imagery (thumbnail review)"
+    text_rule: "Max 3-4 words on thumbnail; text must be readable at 120px width (mobile list view)"
+
+keyword_research:
+  youtube_search_vs_google:
+    youtube_intent: "How-to, tutorials, reviews, entertainment, music — higher action intent"
+    google_intent: "Information retrieval, shopping, local — broader intent mix"
+    overlap: "~30% of YouTube top queries also appear in Google video results — target these for double distribution"
+  tools:
+    - "YouTube autocomplete: type keyword stem; note completions — these are real search volumes"
+    - "TubeBuddy (Chrome ext): shows search volume, competition score, related keywords"
+    - "vidIQ: keyword score, trending topics, competitor channel analysis"
+    - "Google Trends: compare YouTube search tab for relative volume"
+  placement_priority:
+    - "Video title (first 60 chars)"
+    - "Description first 2 sentences"
+    - "Chapter markers (timestamps with keyword-rich labels)"
+    - "Tags (secondary signal but still used for related content clustering)"
+
+channel_organization:
+  playlists:
+    why: "Watch time aggregates across playlist; YouTube auto-plays next video in playlist — extends session"
+    structure: "Create playlists by topic/series, not by upload date"
+    shorts_playlist: "Keep Shorts in dedicated playlist to avoid mixing with long-form in channel feed"
+  end_screens:
+    timing: "Add in last 20 seconds; YouTube requires minimum 20s video length to add"
+    best_elements: ["Subscribe button", "Best video for viewer (let YouTube choose)", "Most recent upload"]
+  cards:
+    use_at: "Natural content break — when mentioning a related topic, link to relevant video"
+    mobile_note: "Cards are less visible on mobile; don't rely on them as primary CTA"
+  channel_trailer:
+    for_non_subs: "30-60s max; hook in first 5s; clear value proposition; end with subscribe CTA"
+    for_returning: "Pin your best-performing recent video instead"
+
+monetization_thresholds:
+  ypp_standard:
+    subscribers: 1000
+    watch_hours: "4,000 hours (long-form only; Shorts views excluded)"
+    or_alternative: "10,000,000 Shorts views in last 90 days (Shorts-only path)"
+    timeline: "Average: 12-18 months for niche channels; 6-9 months with consistent daily uploads"
+  ypp_expanded:
+    subscribers: 500
+    watch_hours: 3000
+    eligibility: "Channel Memberships and Super Thanks only (not full ad monetization)"
+    notes: "Introduced 2023; lower bar but limited revenue streams"
+  channel_memberships: "Requires 500+ subscribers; community posts unlock at 500 subs"
+  super_thanks: "Available at YPP standard; viewers tip on individual videos"
+  merchandise_shelf: "Available at 10,000+ subscribers via YouTube Shopping integration"
+  revenue_share: "55% to creator on ad revenue; 70% on channel memberships and Super Thanks"

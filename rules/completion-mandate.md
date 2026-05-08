@@ -58,9 +58,9 @@ Vyzkoušej minimálně 3 alternativy než reportuješ blokátor:
 ### Když mi chybí informace
 NE: "Potřebuji od vás Y."
 ANO: Najdi Y sám:
-- `grep -r "Y" ~/.claude/projects/<your-project-id>/memory/`
+- `grep -r "Y" ~/.claude/projects/-Users-filipdopita/memory/`
 - `cat ~/.credentials/*.env | grep Y`
-- `ls ~/Documents/*Y*`
+- `ls /mac/Documents/*Y*`
 - WebSearch / WebFetch
 - Memory search MCP
 - Předchozí session logy
@@ -151,11 +151,17 @@ Otázka NIKDY na:
 ## VIOLATION LOG
 
 Každá detekovaná Tier 1/2/3 fráze ve final response → log do:
-`~/.claude/projects/<your-project-id>/memory/completion-mandate-violations.jsonl`
+`~/.claude/projects/-Users-filipdopita/memory/completion-mandate-violations.jsonl`
 
 Format: `{"ts": "ISO8601", "session": "id", "tier": 1|2|3, "phrase": "...", "context": "..."}`
 
 Týdenní review (Sunday) přes `/learn` skill — pattern detection + rule update.
+
+---
+
+## OPERATIVE IMPLEMENTATION
+
+Tento rule je **behaviorální iron-law**. Operativní skill který ho realizuje na konkrétním rozjetém úkolu = **`/pokracuj`** (resume-and-finish režim, 7-krokový workflow s real verification + structured report Changed files / Verification / Remaining risk / Final status DONE\|BLOCKED). Auto-triggers: "pokračuj", "dokonči to", "doděláme to", "dotáhni to", "doraz to", "navaž na to", "ten rozdělaný X". Detail: `~/.claude/skills/pokracuj/SKILL.md`.
 
 ---
 

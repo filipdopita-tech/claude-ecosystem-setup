@@ -1,6 +1,6 @@
 ---
 name: outreach-oneflow
-description: OneFlow-specific outreach copy generator (cold email / FB Messenger / IG DM / LinkedIn). Aplikuje FBI Voss techniky, Cialdini, Schwartz awareness levels, anti-robot patterns + OneFlow brand voice. Auto-trigger pro outreach tasky pro OneFlow podcast (OneFlow Cast), DD klienty, investor outreach, Tereza Tulcová pipeline. Posílá ven JEN po 9-bod pre-send checklistu. Filip schvaluje + manuálně posílá každou zprávu.
+description: OneFlow-specific outreach copy generator (cold email / FB Messenger / IG DM / LinkedIn). Aplikuje FBI Voss techniky, Cialdini, Schwartz awareness levels, anti-robot patterns + OneFlow brand voice. Auto-trigger pro outreach tasky pro OneFlow podcast (OneFlow Cast), DD klienty, investor outreach, <klient> pipeline. Posílá ven JEN po 9-bod pre-send checklistu. Filip schvaluje + manuálně posílá každou zprávu.
 metadata:
   version: 1.0.0
   last_updated: 2026-04-27
@@ -25,7 +25,7 @@ Generuj outreach copy pro OneFlow ekosystém: cold email, FB Messenger, IG DM, L
 Auto-trigger keywords:
 - "cold email" / "outreach" / "DM zpráva" / "FB Messenger zpráva" / "IG DM"
 - "OneFlow Cast" / "podcast pozvánka" / "podcast outreach"
-- "Tereza Tulcová" + outreach kontext
+- "<klient>" + outreach kontext
 - "napiš zprávu pro {kontakt}" / "připrav outreach pro {kontakt}"
 - "investor outreach" / "klient pitch" / "fundraising outreach"
 
@@ -51,8 +51,8 @@ Než začneš psát, načti:
 1. `~/.claude/expertise/outbound-sales-science.yaml` § `mandatory_v4` + `fbi_voss` + `reply_handlers`
 2. `~/.claude/rules/domains/cold-email.md` (pre-send checklist 9 bodů + calibrated questions framework)
 3. `~/.claude/rules/oneflow-all.md` (banned outreach openers + voice rules)
-4. `~/.claude/projects/<your-project-id>/memory/copywriting_persona.md` (Filipův styl z 9550 WA zpráv)
-5. Relevantní memory podle kontaktu (např. `project_tereza_tulcova_*` pro Tereza pipeline)
+4. `~/.claude/projects/-Users-filipdopita/memory/copywriting_persona.md` (Filipův styl z 9550 WA zpráv)
+5. Relevantní memory podle kontaktu (např. `project_<klient>_*` pro <klient> pipeline)
 
 ## Generování (postup)
 
@@ -202,7 +202,7 @@ Když Filip požádá o outreach copy, vrať:
 - `~/.claude/expertise/outbound-sales-science.yaml` — full framework
 - `~/.claude/rules/domains/cold-email.md` — CARL pre-send rules
 - `~/.claude/rules/oneflow-all.md` — voice + banned words
-- `~/Documents/OneFlow-Vault/01-Klienti/Tereza-Tulcova-FB/2026-04-27-OUTREACH-REVIZE/OUTREACH_v4_REVIZE.md` — full v4 reference se 7 personalizovanými + 5 šablonami
+- `~/Documents/OneFlow-Vault/01-Klienti/<klient>-Tulcova-FB/2026-04-27-OUTREACH-REVIZE/OUTREACH_v4_REVIZE.md` — full v4 reference se 7 personalizovanými + 5 šablonami
 - Google Doc: https://docs.google.com/document/d/1CNvBN8vq2u_CxKOPIWkr7Br9cuKaoViqwqkbwKCXvFA/edit
 
 ## Kvalitativní gate

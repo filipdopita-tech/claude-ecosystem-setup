@@ -111,7 +111,7 @@ Pokud mismatch → původní claim byl špatně.
 
 ### Příklad 1: DD claim
 ```
-Původní: "Emitent Patricny má DSCR 1.8, silný."
+Původní: "Emitent <projekt> má DSCR 1.8, silný."
 
 Step-back: Co je benchmark pro DSCR? → <1.2 riziko, 1.2-1.5 OK, >1.5 silný.
 

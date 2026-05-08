@@ -13,8 +13,8 @@
 # Reference:
 #   ~/.claude/rules/completion-mandate.md
 #   ~/.claude/rules/hard-stop-zone.md
-#   ~/.claude/projects/<your-project-id>/memory/feedback_full_autonomy.md
-#   ~/.claude/projects/<your-project-id>/memory/feedback_completion_mandate.md
+#   ~/.claude/projects/-Users-filipdopita/memory/feedback_full_autonomy.md
+#   ~/.claude/projects/-Users-filipdopita/memory/feedback_completion_mandate.md
 
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null)
@@ -24,7 +24,7 @@ if [ "$TOOL_NAME" != "AskUserQuestion" ]; then
 fi
 
 # Log violation candidate (audit trail)
-LOG_DIR="$HOME/.claude/projects/<your-project-id>/memory"
+LOG_DIR="$HOME/.claude/projects/-Users-filipdopita/memory"
 LOG_FILE="$LOG_DIR/autonomy-violations.jsonl"
 HOOK_LOG="$HOME/.claude/logs/autonomy-guard.log"
 mkdir -p "$LOG_DIR" 2>/dev/null
@@ -120,7 +120,7 @@ Pokud NESPADÁ (= většina otázek) → ROZHODNI SÁM:
   - 3 alternativy než reportuješ blokátor
   - Reverzibilní akce: udělej a oprav, kdyby selhalo
 
-Logged: ~/.claude/projects/<your-project-id>/memory/autonomy-violations.jsonl
+Logged: ~/.claude/projects/-Users-filipdopita/memory/autonomy-violations.jsonl
 
 Reference:
   ~/.claude/rules/completion-mandate.md

@@ -1,0 +1,47 @@
+# {{PROJECT_NAME}} — CLAUDE.md
+
+> Per-project rules. Inherits global `~/.claude/CLAUDE.md` (TOP RULES, codex-bridge, model routing, anti-halluci, completion-mandate, hard-stop-zone). Tento soubor jen rozšiřuje global o repo-specific kontext.
+
+## Project meta
+
+- **Type:** {{PROJECT_TYPE}}
+- **Stack:** {{STACK}}
+- **Sensitive scope:** {{SENSITIVE}}
+- **Initialized:** {{DATE}} via `/init-oneflow-project`
+
+## Routing (project-specific only)
+
+<!-- Doplň jen co je SPECIFICKÉ pro tento repo, ne globální. Příklady níže smaž pokud nepasují. -->
+
+| Task | Route to |
+|---|---|
+| Implementace feature | `ofs codex . "<task>"` (codex-bridge enabled) |
+| Code review | `/gstack-review` (diff vs spec) |
+| QA | `/gstack-qa` (full loop) |
+
+## Codex bridge
+
+✅ Marker `.claude/.codex-bridge-enabled` přítomen — code-heavy úkoly delegovat přes `ofs codex . "<task>"` nebo `/codex` skill.
+
+Bridge respektuje HARD-STOP zone: žádné platby, odeslání zpráv, destruktivní ops, FB/Meta logins.
+
+## Sensitive data handling
+
+<!-- Pokud SENSITIVE=klient-data nebo secrets, dopiš pravidla -->
+
+## Files Filip mostly edits
+
+<!-- Auto-fillable po pár commitech:
+git log --pretty=format:"%H" | head -50 | xargs -I{} git show --stat {} | grep -oE "^ [^ ]+\." | sort | uniq -c | sort -rn | head -10
+-->
+
+## Notes
+
+<!-- Cokoliv unikátního pro tento repo (gotchas, deploy targets, dependencies) -->
+
+## References
+
+- Global rules: `~/.claude/CLAUDE.md`
+- Codex bridge: `~/.claude/rules/codex-bridge-routing.md`
+- Workflow routing: `~/.claude/rules/workflow-routing.md`
+- OneFlow brand: `~/.claude/rules/oneflow-all.md` (pokud Filip-facing výstup)

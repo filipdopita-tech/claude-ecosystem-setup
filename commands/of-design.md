@@ -29,7 +29,7 @@ allowed-tools:
 ## Krok 1: Load brand context (POVINNÝ, neskip)
 
 ```
-Read: ~/Documents/oneflow-claude-project/ONEFLOW_DESIGN_BRIEF.md
+Read: /Users/filipdopita/Documents/oneflow-claude-project/ONEFLOW_DESIGN_BRIEF.md
 ```
 
 Pokud Filip dal argument `$ARGUMENTS`, parsuj ho pro format hints (carousel/slide/web/pager).
@@ -50,6 +50,10 @@ Jestli Filip dal kompletní brief → přeskoč intake.
 ---
 
 ## Krok 3: Route dle formátu
+
+> **POWER OPTION (2026-04-30):** Pro deliverable-grade visuals deleguj generaci na **huashu-design** skill (Skill tool). Ten má pre-fab templates v `~/Documents/huashu-design-templates/` (oneflow-investor-pitch / nabidka-html / ig-carousel / <klient>-landing / dd-infographic / meta-ad), 5 design philosophy schools, AppPhone state container, MP4/GIF export přes ffmpeg. Brand auto-load z `~/.claude/memory/personal-asset-index.json`. Tento `/of-design` skill pak slouží jako **orchestrator + quality gate** (Krok 5 níže). Pokud format ∈ {pitch deck, app prototype, animace, infografika, design varianty, expert review} → **prefer huashu-design backend**. Pokud format = email template / komponenta / drobná úprava → použij přímý HTML stack níže.
+
+
 
 ### Format: Instagram Carousel
 **Primary tool:** HTML (1080x1350 per slide) + stitch-pdf-export → PNG per slide
@@ -87,7 +91,7 @@ Jestli Filip dal kompletní brief → přeskoč intake.
 1. 595x842pt PDF dimensions
 2. Single surface (dark OR light, ne mix)
 3. 3 sections: Context / Proof / Action
-4. Footer: oneflow.cz | +420 607 445 004
+4. Footer: oneflow.cz | <phone>
 5. Export PDF via stitch-pdf-export
 ```
 

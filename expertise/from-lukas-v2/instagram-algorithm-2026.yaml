@@ -1,0 +1,139 @@
+domain: instagram-algorithm-2026
+keywords: [instagram, reels, ig, meta, social-distribution, algorithm, reach, engagement]
+last_updated: 2026-04-26
+confidence: high
+
+signal_weights:
+  # Relative weights as understood from Meta transparency reports + creator data Q1 2026
+  watch_time:
+    weight: 0.35
+    notes: >
+      Total seconds watched, not percentage. A 90s reel watched 60s beats a 10s reel watched 100%.
+      Loop views count after ~2s replay threshold. First 3s retention is gating signal — drop below
+      60% at 3s and distribution is suppressed before the broader test audience.
+  completion_rate:
+    weight: 0.25
+    notes: >
+      Percentage of viewers who watch to the final frame. Meta confirmed 2025 this is the strongest
+      single proxy for "satisfying content." Aim for >70% on reels under 30s; >50% on 60-90s.
+  sends:
+    weight: 0.20
+    notes: >
+      DM shares (send to friend) are the highest-intent signal. Each send triggers a micro-distribution
+      event to the recipient's network. Outweighs saves since late 2024 algo update.
+  saves:
+    weight: 0.12
+    notes: >
+      Strong intent signal, especially for educational/reference content. Bookmarks feed into
+      "interested in topic" graph nodes. Less powerful than sends but more durable.
+  comments:
+    weight: 0.05
+    notes: Comment length matters more than comment count since Q4 2025 update.
+  likes:
+    weight: 0.03
+    notes: Weakest signal; double-tap is low-friction so IG discounts it heavily now.
+
+reel_format_specs:
+  aspect_ratio: "9:16"
+  resolution: "1080x1920"
+  max_duration_for_full_distribution: 90s
+  # Meta confirmed 90s cap for Reels shelf distribution in Q1 2026; longer = downgraded to profile feed only
+  sweet_spot_duration: "21-34s"
+  # Under 20s: completion easy but sends/saves harder. Over 34s: drop-off accelerates.
+  file_format: MP4 (H.264 codec preferred; HEVC accepted but sometimes re-encodes poorly)
+  max_file_size: 1GB
+  frame_rate: "30fps minimum; 60fps supported and marginally preferred by encoder"
+  audio:
+    requirement: AAC stereo, 44.1kHz
+    headroom: "leave -3dB headroom to avoid clipping after IG's loudness normalization"
+    trending_audio_lift: "25-45% reach lift when using trending sound in first 72h of trend window"
+    original_audio_benefit: >
+      Original audio gets indexed as a sound. If it trends organically, creates compounding
+      discovery loop. Name your original audio deliberately (searchable keyword phrase).
+  safe_zone: "keep text/logo 250px from top and bottom edges (Stories UI overlap)"
+  captions_file: SRT upload supported; burned-in captions still outperform auto-captions on retention
+
+caption_strategy:
+  first_125_chars:
+    critical: true
+    reason: "Truncated in feed; must complete a thought or create scroll-stop tension without the 'more' tap"
+    pattern: "Hook statement or bold claim → reinforce with 1 detail → leave loop open OR give full value"
+  hashtag_count:
+    recommended: 3-5
+    diminishing_returns_at: 5
+    # IG internal data cited in 2024 creator summit: 3-5 outperforms 20-30 hashtags
+    strategy: "1 broad (1M+ posts) + 2-3 mid (100K-500K) + 1 niche (<50K) — avoids spam filter, targets real discovery"
+    avoid: "banned or restricted hashtags; repeated identical hashtag clusters across posts (triggers content clustering penalty)"
+  alt_text:
+    matters: true
+    why: "Used in accessibility compliance AND feeds into topic graph classification. More descriptive = better categorical reach."
+    how_to_set: "Edit post → Advanced settings → Write alt text (manual beats auto-generated)"
+  call_to_action:
+    placement: "after line break, after value delivery — not in first 125 chars"
+    best_performing: ["save this", "send to someone who needs this", "what would you add?"]
+
+posting_cadence_research:
+  sustainable_rate: "3-5 reels/week"
+  # Based on aggregated creator data from Metricool 2025 benchmarks and Later's 2026 report
+  burst_risk: >
+    Posting 7+ days in a row then stopping triggers algorithmic downgrade.
+    IG's distribution model expects predictable cadence. A "burst" pattern is penalized ~15-20%
+    reach reduction on posts after the gap.
+  best_posting_windows:
+    general: "Tue–Thu 7-9am or 6-9pm in audience's primary timezone"
+    # These are medians; use your own Insights → Most Active Times after 5K followers
+    note: "First 30 minutes post-publish are the most critical. Engagement velocity in that window sets distribution tier."
+  carousel_vs_reel: "Reels still get ~40% more non-follower reach than carousels as of Q1 2026"
+
+growth_loops:
+  collab_posts:
+    mechanism: "Post appears in both creator feeds; reaches both audiences simultaneously"
+    expected_lift: "50-200% follower reach on post; 10-30% follower conversion lift vs solo post"
+    best_use: "Brand + creator; creator + creator in adjacent (not competing) niches"
+  branded_content:
+    mechanism: "Creator marks post as paid partnership; brand can boost as ad from creator's handle"
+    expected_lift: "Boosted branded content (whitelisting) consistently outperforms brand-page ads 1.5-2× on CTR"
+    note: "Requires formal Meta partnership disclosure tag — undisclosed paid posts are a shadowban risk"
+  ugc_repost:
+    mechanism: "Share user-created content to Stories or feed (with credit)"
+    expected_lift: "low direct reach lift (~5-10%) but strong social proof signal; original creator's audience exposure"
+    risk: "Always credit. Do not republish without explicit DM permission."
+  audio_origination:
+    mechanism: "Create original sound; other creators use it; each use links back to your audio page"
+    expected_lift: "Compounding. 10 uses = minor. 100+ uses = significant ambient reach. Rare but high upside."
+
+shadowban_signals:
+  drop_in_non_follower_reach:
+    how_to_detect: "Reels Insights → Accounts Reached → filter by non-followers. Drop >50% in 7-day window = flag."
+    common_triggers: ["banned hashtags", "reported content", "sudden policy enforcement", "coordinated inauthentic engagement"]
+  copyright_audio_detection:
+    risk: "Using commercially licensed music outside Meta's licensed library triggers automatic muting or distribution throttle"
+    safe_sources: ["Meta Sound Collection", "licensed trending sounds", "original audio", "royalty-free with Meta-verified license"]
+  repeated_hashtag_clusters:
+    risk: "Using same 10-hashtag block on every post = spam pattern. IG reduces distribution after ~2 weeks of repetition."
+    fix: "Rotate 3 hashtag sets; vary based on content topic"
+  engagement_pod_activity:
+    risk: "Sudden burst of comments from unrelated accounts within 5 minutes = detectable as inauthentic"
+
+tools_apis:
+  meta_graph_api:
+    useful_endpoints:
+      - "GET /{ig-user-id}/media — list recent posts with metrics"
+      - "GET /{ig-media-id}/insights?metric=reach,impressions,saved,shares — post-level signals"
+      - "GET /{ig-user-id}/insights?metric=follower_count&period=day — daily follower delta"
+    auth: "User token with instagram_basic + instagram_manage_insights scopes"
+    rate_limits: "200 calls/hour per user token; media insights available 24h after post"
+  scheduling_tools:
+    later:
+      strength: "Visual grid planner; best-time suggestions; Stories scheduling"
+      weakness: "Analytics depth shallow; no TikTok cross-post"
+      price_tier: "$25/mo Starter (2026)"
+    buffer:
+      strength: "Multi-platform; clean UI; AI caption assist"
+      weakness: "Reel scheduling occasionally fails on accounts with 2FA issues"
+      price_tier: "$18/mo Essentials"
+    metricool:
+      strength: "Best analytics depth; competitor benchmarking; paid ads integration"
+      weakness: "UI more complex; mobile app lags desktop"
+      price_tier: "$22/mo Starter; most useful at $45/mo Advanced"
+    recommendation: "Metricool for data-serious creators; Later for visual-first planners"

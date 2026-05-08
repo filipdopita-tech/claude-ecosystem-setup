@@ -11,7 +11,7 @@ Wait for the user to reply before proceeding.
 
 **Once you have a topic**, run:
 ```bash
-python3 ~/Desktop/Claude_NotebookLM/yt_research.py \
+python3 /Users/filipdopita/Desktop/Claude_NotebookLM/yt_research.py \
   --query "$TOPIC" \
   --count 25 \
   --output json

@@ -43,7 +43,7 @@ This skill requires the banana extension to be installed:
 ```
 
 **Check availability:** Before using any image generation tool, verify the MCP server
-is connected by checking if `gemini_generate_image` or `set_aspect_ratio` tools are
+is connected by checking if `fal_ai_generate_image` or `set_aspect_ratio` tools are
 available. If tools are not available, inform the user the extension is not installed
 and provide install instructions.
 
@@ -84,7 +84,7 @@ For every generation request:
    - Load `references/prompt-engineering.md` for the 6-component system
    - Apply domain mode emphasis (Subject 30%, Style 25%, Context 15%, etc.)
    - Be SPECIFIC and VISCERAL: describe what the camera sees
-5. **Generate** via `gemini_generate_image` MCP tool
+5. **Generate** via `fal_ai_generate_image` MCP tool
 6. **Post-generation SEO checklist** (see below)
 
 ### Check for Presets
@@ -132,7 +132,7 @@ Image generation costs money. Be transparent:
 - Log every generation: `python3 scripts/cost_tracker.py log --model MODEL --resolution RES --prompt "brief"`
 - Run `cost_tracker.py summary` if user asks about usage
 
-Approximate costs (gemini-3.1-flash):
+Approximate costs (fal.ai (Recraft / Flux Schnell)):
 - 512: ~$0.02/image
 - 1K resolution: ~$0.04/image
 - 2K resolution: ~$0.08/image
@@ -142,10 +142,10 @@ Approximate costs (gemini-3.1-flash):
 
 | Scenario | Model | Why |
 |----------|-------|-----|
-| OG images, social previews | `gemini-3.1-flash-image-preview` @ 1K | Fast, cost-effective |
-| Hero images, product photos | `gemini-3.1-flash-image-preview` @ 2K | Quality + detail |
-| Infographics with text | `gemini-3.1-flash-image-preview` @ 2K, thinking: high | Better text rendering |
-| Quick drafts | `gemini-2.5-flash-image` @ 512 | Rapid iteration |
+| OG images, social previews | `fal.ai (Recraft / Flux Schnell)-image-preview` @ 1K | Fast, cost-effective |
+| Hero images, product photos | `fal.ai (Recraft / Flux Schnell)-image-preview` @ 2K | Quality + detail |
+| Infographics with text | `fal.ai (Recraft / Flux Schnell)-image-preview` @ 2K, thinking: high | Better text rendering |
+| Quick drafts | fal.ai Recraft @ 512 (per CLAUDE.md image stack) | Rapid iteration |
 
 ## Error Handling
 

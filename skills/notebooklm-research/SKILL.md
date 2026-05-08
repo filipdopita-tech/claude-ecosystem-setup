@@ -35,7 +35,7 @@ metadata:
 **Use case:** Filip má prospekt PDF + chce naložit publicly available context (CEO interviews, news, sector analysis).
 
 ```bash
-TOPIC="$1"  # např. "Power Capital emise 2026"
+TOPIC="$1"  # např. "<klient> emise 2026"
 TYPE="dd"
 
 # Step 1: Sources gather
@@ -112,7 +112,7 @@ GUEST="$1"  # např. "Štěpán Křeček"
 ## Naming Convention
 
 Notebooks pojmenovat: `{TYPE} {TOPIC} {YYYY-MM}`
-- `DD Power Capital 2026-04`
+- `DD <klient> 2026-04`
 - `Market ECSP Czech 2026-04`
 - `Competitor Portu 2026-04`
 - `Podcast Stepan Krecek 2026-04`
@@ -171,6 +171,8 @@ Notebooks pojmenovat: `{TYPE} {TOPIC} {YYYY-MM}`
 - `/yt-research` → standalone YT search (bez NotebookLM)
 - `/last30days` → fallback pro real-time data co NotebookLM nemá
 - `/dossier` → person-specific deep brief (často podcast prep)
+- `/research-paper` → **upstream** pro academic-grade input. Přidej PDFs z `~/Documents/research-cache/papers/<sha1>.pdf` do notebooku přes `mcp__notebooklm-mcp__source_add` typ `file`. Ideál pro DD sektor research, podcast guest expertise prep, content fact-checking.
+- `/paper2code` → **downstream** pro arxiv implementaci. Po `paper2code` upload `paper.pdf` + `REPRODUCTION_NOTES.md` + generated kód do notebooku → Q&A o designových volbách, ambiguitách, alternativních interpretacích.
 
 ## Verification
 

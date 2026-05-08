@@ -47,11 +47,11 @@ if [[ "$ICO" =~ ^[0-9]{8}$ ]]; then
 fi
 
 # OpenSpace skill chain
-# `oneflow-ares-enrichment` — viz ~/.claude/skills nebo OpenSpace MCP
+# `oneflow-ares-enrichment` — viz /mac/.claude/skills nebo OpenSpace MCP
 # `oneflow-emitent-risk-score` — A-F grade pokud type=emitent
 ```
 
-**Memory check:** Pokud emitent JE v `~/.claude/projects/<your-project-id>/memory/dd-*.md` → reuse exiting DD data. Nepřepiš.
+**Memory check:** Pokud emitent JE v `~/.claude/projects/-Users-filipdopita/memory/dd-*.md` → reuse exiting DD data. Nepřepiš.
 
 ### Step 2 — Web scrape primary source (pokud existuje)
 ```bash

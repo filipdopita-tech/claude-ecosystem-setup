@@ -161,7 +161,7 @@ the presentation with authority.
 
 ## CZ Adaptace pro OneFlow use cases
 
-### Investor pitch (OneFlow fundraise, Patricny, ASR partneři)
+### Investor pitch (OneFlow fundraise, <projekt>, <klient> partneři)
 
 **Empowerment Promise template (CZ):**
 > "Za 12 minut budete vědět, kolik vám OneFlow může vydělat na 24M Kč emisi a proč máme 0 % defaultů na 47M Kč emitovaného kapitálu. Žádné sliby — jen čísla a 3 roky track record."
@@ -173,7 +173,7 @@ the presentation with authority.
   - 47M Kč emitovaného kapitálu (+ aktuální měsíc)
   - 0 defaultů
   - 6,2 % průměrný výnos investorů (po fee)
-  - Q3 2026: spuštění Patricny a ASR
+  - Q3 2026: spuštění projektů
   - Co dostáváš: 8 % p.a. + zástava + měsíční reporting
 
 ### DD report executive summary (klient)
@@ -185,7 +185,7 @@ the presentation with authority.
 - **Salient Idea:** Jedna věta verdiktu (GO / REVIEW / RED)
 - **Story:** "Jak jsme našli díru ve 4. emisi konkurenta a co to znamená pro tento deal."
 
-### Klientská nabídka (ASR retainer, Patricny custom)
+### Klientská nabídka (<klient> retainer, <projekt> custom)
 
 **Opening 60s:**
 > "Dnes vám ukážu, jak za 90 dní postavíme vaši dluhopisovou emisi tak, že 80 % konkurence selže na compliance a vaši investoři dostanou peníze přesně v termínu. Žádné šablony. Žádné sliby. Konkrétní pipeline z 47M Kč emitovaného kapitálu."
@@ -208,7 +208,7 @@ Verbal punctuation česky: "Druhá zásadní věc, kterou musíte vědět…", "
 ## Slide Crime audit pro OneFlow assets (interní use)
 
 Aplikuj Prompt 2 na:
-- Stávající ASR pitch deck (klientské nabídky)
+- Stávající <klient> pitch deck (klientské nabídky)
 - Investor onboarding deck (47M Kč story)
 - IG carousels (10 slidů — Winston říká "slide ≤ 25 slov" = OK)
 - DD report PDF executive summary (poslední strana)

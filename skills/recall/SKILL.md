@@ -12,7 +12,7 @@ Quickly find historical context bez bulk-loading whole memory directory. Cascade
 
 - User asks "co jsme řešili o X" / "pamatuješ Y" / "už jsme to dělali"
 - You're about to act and need to check past decisions/feedback
-- User mentions project/incident/contact bez detailů (Tereza, Šulc, Musil, Conductor, etc.)
+- User mentions project/incident/contact bez detailů (<klient>, Šulc, Musil, Conductor, etc.)
 - Before implementing — search "feedback X" + "incident Y" pro relevant constraints
 
 ## Skip when
@@ -26,9 +26,9 @@ Quickly find historical context bez bulk-loading whole memory directory. Cascade
 ### Layer 1 — Grep MEMORY index files (cheapest, ~50ms, 0 tokens)
 
 ```bash
-grep -i "<term>" ~/.claude/projects/<your-project-id>/memory/MEMORY.md \
-                ~/.claude/projects/<your-project-id>/memory/MEMORY-INDEX-EXTRA.md \
-                ~/.claude/projects/<your-project-id>/memory/MEMORY-AUTO-INDEX.md
+grep -i "<term>" ~/.claude/projects/-Users-filipdopita/memory/MEMORY.md \
+                ~/.claude/projects/-Users-filipdopita/memory/MEMORY-INDEX-EXTRA.md \
+                ~/.claude/projects/-Users-filipdopita/memory/MEMORY-AUTO-INDEX.md
 ```
 
 If hit → Read pointed file. **STOP** if quality match found.
@@ -36,7 +36,7 @@ If hit → Read pointed file. **STOP** if quality match found.
 ### Layer 2 — Grep memory directory (cheap, ~200ms)
 
 ```bash
-grep -ril "<term>" ~/.claude/projects/<your-project-id>/memory/ | head -10
+grep -ril "<term>" ~/.claude/projects/-Users-filipdopita/memory/ | head -10
 ```
 
 Read top hits with `Read` (offset+limit if >200 lines). **STOP** on quality match.
@@ -68,8 +68,8 @@ Use when query is relational ("kdo zná X", "vztah X→Y", "kdy proběhlo X").
 ### Layer 6 — Session history grep (last resort)
 
 ```bash
-grep -rli "<term>" ~/Documents/claude-history/ 2>/dev/null | head -5
-grep -rli "<term>" ~/Documents/OneFlow-Vault/10a-Claude-History/ 2>/dev/null | head -5
+grep -rli "<term>" /Users/filipdopita/Documents/claude-history/ 2>/dev/null | head -5
+grep -rli "<term>" /Users/filipdopita/Documents/OneFlow-Vault/10a-Claude-History/ 2>/dev/null | head -5
 ```
 
 ## Output format
@@ -92,10 +92,10 @@ Try: rephrasing, broader term, or "/recall <related>".
 
 ## Examples
 
-### Example 1: "co jsme řešili kolem Tereza Tulcová?"
-1. Layer 1 grep "Tereza" → 4 hits v MEMORY.md (FB scrape, DYI, IG, Validation, Outreach v4)
-2. Read latest (project_tereza_tulcova_validation_2026_04_27.md)
-3. Output: "Found: Tereza pipeline, 24 VERIFIED, TOP 7 ready, outreach v4 v Google Doc. Detail: file."
+### Example 1: "co jsme řešili kolem <klient>?"
+1. Layer 1 grep "<klient>" → 4 hits v MEMORY.md (FB scrape, DYI, IG, Validation, Outreach v4)
+2. Read latest (project_<klient>_validation_2026_04_27.md)
+3. Output: "Found: <klient> pipeline, 24 VERIFIED, TOP 7 ready, outreach v4 v Google Doc. Detail: file."
 **Token cost:** ~2KB (grep output + 1 file read).
 
 ### Example 2: "pamatuješ jak fungoval Conductor?"

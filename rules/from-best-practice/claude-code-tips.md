@@ -62,7 +62,7 @@ claude --add-dir ~/Projects/PageIndex \
 ```
 Nebo persistent: `additionalDirectories` v `settings.json`.
 
-**Action:** Pro cross-repo refactory (např. brand sync mezi `oneflow-dashboard` + `beskyd-estate-web` + `oneflow-design-system`). Jeden Claude session, oba repos.
+**Action:** Pro cross-repo refactory (např. brand sync mezi `oneflow-dashboard` + `<klient>-web` + `oneflow-design-system`). Jeden Claude session, oba repos.
 
 ### `--agent` — custom system prompts
 Define agent in `.claude/agents/<name>.md`, run `claude --agent=<name>`. Restricted tools, custom model, specific behavior.

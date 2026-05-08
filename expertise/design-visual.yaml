@@ -4,7 +4,7 @@ description: Moderní HTML/CSS/visual design — trendy 2025-2026, premium patte
 
 # =========================
 # KRITICKÝ INSIGHT: DVĚ VERZE
-# Zdroj: reálné nabídky (nabidka-patricny-2026.html, nabidka-asr-2026-v4-web.html)
+# Zdroj: reálné nabídky (nabidka-<projekt>-2026.html, nabidka-<klient>-2026-v4-web.html)
 # =========================
 oneflow_two_modes:
   documents:
@@ -758,9 +758,9 @@ audit_workflow:
 # CROSS-REFERENCES
 # =========================
 related_files:
-  research: "~/docs/design-research-2025.md"
-  stitch_systems: "~/docs/design-stitch-systems-2025.md"
-  brand_dna: "~/docs/DESIGN.md"
+  research: "/Users/filipdopita/docs/design-research-2025.md"
+  stitch_systems: "/Users/filipdopita/docs/design-stitch-systems-2025.md"
+  brand_dna: "/Users/filipdopita/docs/DESIGN.md"
   oneflow_brand: "~/.claude/expertise/oneflow-brand.yaml"
 
 related_knowledge:

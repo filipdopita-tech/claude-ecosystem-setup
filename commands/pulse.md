@@ -8,7 +8,7 @@ Zobraz přehled všech aktivních projektů ve formátu CLI kanban boardu.
 
 ## Postup
 
-1. Přečti všechny soubory `project_*.md` z `~/.claude/projects/<your-project-id>/memory/`
+1. Přečti všechny soubory `project_*.md` z `/mac/.claude/projects/-Users-filipdopita/memory/`
 2. Z každého souboru extrahuj:
    - **Název** (z frontmatter `name:` nebo prvního nadpisu)
    - **Status** (hledej klíčová slova: ACTIVE, PENDING, PAUSED, COMPLETED, MONITORING, nebo odvoď z obsahu)

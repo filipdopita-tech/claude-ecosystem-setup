@@ -4,7 +4,7 @@ Zkontroluj Swarm Hub a reaguj na posledni zpravu od partnera.
 
 ## Hub cesta
 `~/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
-Na VPS: `~/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
+Na VPS: `/mac/Library/Mobile Documents/com~apple~CloudDocs/claude-swarm/`
 
 ## Kroky
 

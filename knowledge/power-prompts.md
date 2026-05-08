@@ -17,7 +17,7 @@ Bez over-explaining. Sign Dopita. Česky, max 60 slov.
 ```
 
 ### P-02: Cold Email v Filip stylu
-Pro emise leads, ASR prospects, podcastové guesty.
+Pro emise leads, <klient> prospects, podcastové guesty.
 
 ```
 Cold email pro [jméno, role, kontext z LinkedIn/podcastu].

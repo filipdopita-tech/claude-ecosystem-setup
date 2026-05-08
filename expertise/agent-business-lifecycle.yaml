@@ -1,0 +1,540 @@
+name: agent-business-lifecycle
+version: 1.0
+created: 2026-04-28
+source: "Filipova ~/Downloads/Prompts.docx (5 prompts) + CZ market reference"
+purpose: |
+  Reference data + frameworks pro 5-fázový agent business lifecycle skill.
+  Načítá se on-demand když /agent-business-lifecycle skill běží nebo task obsahuje
+  agent business / klient AI agent / pricing / sales klíčová slova.
+
+# ============================================================
+# PHASE 1 — PLAN (validation + workflow + stack + criteria)
+# ============================================================
+
+phase_1_plan:
+
+  problem_validation_matrix:
+    description: "6-bod validation gate. 5+ GO = BUILD, 3-4 GO = PIVOT, <3 GO = NO-GO"
+    dimensions:
+      - id: structured_input
+        question: "Je vstup deterministicky strukturovaný?"
+        go: "ANO (CSV, JSON, formuláře, structured PDF)"
+        pivot: "Polostrukturovaný (text s patterny)"
+        nogo: "Volný text bez patternu"
+      - id: feedback_signal
+        question: "Existuje correct/wrong feedback signál?"
+        go: "Konkrétní expected output existuje"
+        pivot: "Slabý (manual review periodic)"
+        nogo: "Pure subjective taste / aesthetic"
+      - id: volume
+        question: "Je objem dat 50+ instancí/měs?"
+        go: "ANO"
+        pivot: "10-50 instancí (marginální ROI)"
+        nogo: "<10 (nestoji za to)"
+      - id: latency_acceptable
+        question: "Je akceptovatelná cena 5+ s/instance?"
+        go: "ANO (batch OK)"
+        pivot: "1-5s (real-time tight)"
+        nogo: "<1s (latency-critical, agent overhead too much)"
+      - id: workflow_stable
+        question: "Mění se workflow častěji než agent dokáže adaptovat?"
+        go: "NE (stabilní 6+ měs)"
+        pivot: "Občas (kvartální changes)"
+        nogo: "ANO (každý týden něco nové)"
+      - id: accountability
+        question: "Vyžaduje legal/medical/finanční accountability?"
+        go: "NE"
+        pivot: "Částečně (human review final)"
+        nogo: "ANO (human required by law)"
+
+  default_oneflow_stack:
+    llm:
+      default: "Claude Sonnet 4.6 (claude-sonnet-4-6)"
+      escalation: "Claude Opus 4.7 (claude-opus-4-7) když reasoning komplexní + finanční stakes"
+      large_context: "Claude Opus 4.7 1M (claude-opus-4-7[1m]) když >200K tokens input"
+      cheap: "Claude Haiku 4.5 (claude-haiku-4-5) pro classify-only / lookup"
+      fallback_free: "OpenRouter free models (deepseek/qwen/kimi/nemotron) pro batch >50 items"
+      banned: "Žádný Google Gemini API (cost-zero-tolerance.md, 2026-04-27)"
+
+    orchestration:
+      default: "Conductor daemon na VPS Flash (10.77.0.1)"
+      alternative: "Custom Next.js API route když klient chce vlastní UI"
+
+    storage:
+      default: "SQLite na Flash (rychlé, levné, do 1M rows)"
+      scale_up: "PostgreSQL když 1M+ rows nebo concurrent writes"
+      cloud: "Supabase pokud klient chce vlastní cloud account"
+
+    auth:
+      default: "None (interní agent) nebo NextAuth (klientský projekt)"
+      multi_tenant: "Supabase Auth"
+      avoid: "Custom auth (security risk)"
+
+    frontend:
+      default: "None (CLI / cron / API webhook)"
+      minimal: "Minimal Next.js dashboard (pokud klient potřebuje vidět output)"
+      full: "React app jen když klient zaplatí extra (přidaná hodnota >50k Kč)"
+
+    deploy:
+      default: "VPS Flash (systemd service)"
+      static: "Vercel pro static UI"
+      non_vps: "Railway pro non-VPS klient"
+
+    monitoring:
+      default: "ntfy + monit (free, na Flash)"
+      multi_user: "Sentry (klientský produkt)"
+
+    mcp_servers:
+      principle: "Jen ty, které agent reálně volá. NEVER 'for future'."
+
+  success_criteria_smart:
+    accuracy:
+      format: "% správných výstupů na test sadě"
+      example: "≥95% klasifikace shoduje se s human reviewerem na 50-instance test setu"
+    latency:
+      format: "Max čas per instance"
+      example: "≤30s end-to-end (trigger → output)"
+    cost:
+      format: "Max Kč/instance"
+      example: "≤2 Kč LLM cost per run (Sonnet typický)"
+    failure_coverage:
+      format: "List edge cases s graceful degrade"
+      example: "Empty input → return null + flag, API down → retry 3× → fallback queue"
+
+# ============================================================
+# PHASE 2 — BUILD (failure points + error handling + tests)
+# ============================================================
+
+phase_2_build:
+
+  failure_modes_taxonomy:
+    - id: input_malformed
+      examples: "PDF místo TXT, encoding issue, missing required field"
+      handler: "Schema validation → notify_human"
+    - id: input_empty
+      examples: "Trigger s prázdným payload, null, []"
+      handler: "Early return + log + skip"
+    - id: external_api_down
+      examples: "OpenAI 503, ARES timeout, Apify maintenance"
+      handler: "Retry 3× exponential backoff → fallback queue"
+    - id: rate_limited
+      examples: "429 z LLM API, ARES rate cap"
+      handler: "Retry-After header parse → sleep → retry"
+    - id: llm_hallucination
+      examples: "Agent vyrobí fake IČO, neexistující jméno, špatné číslo"
+      handler: "Verify-claim re-prompt + confidence threshold + flag for review"
+    - id: cost_overrun
+      examples: "Single instance přečerpá budget (retry loop, infinite)"
+      handler: "Per-run token/cost cap + halt + alert"
+    - id: race_condition
+      examples: "2× spuštění současně, lock missing, double-write"
+      handler: "Distributed lock (Redis SETNX) nebo idempotency key"
+
+  fallback_pattern_template_python: |
+    # Per failure mode, structured handler:
+    @retry(max=3, backoff=exponential, jitter=True)
+    def safe_call(func, *args, fallback_fn=None, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except RateLimitError as e:
+            sleep(int(e.headers.get('Retry-After', 60)))
+            raise
+        except SchemaError as e:
+            log("input_malformed", e)
+            notify_human("Validation failed", payload=args)
+            if fallback_fn:
+                return fallback_fn(*args, **kwargs)
+            return None
+
+  human_readable_error_examples:
+    bad: "Error in line 42: NoneType has no attribute 'parse'"
+    good: "Vstupní soubor klient X (ID 12345) nešel zpracovat — chybí pole 'datum'. Zaslán e-mail klientovi s žádostí o doplnění."
+
+  testing_protocol_layers:
+    happy_path:
+      coverage: "5-10 reálných instancí (nejčastější vstupy)"
+      pass_criterion: "100% match s expected output"
+    edge_cases:
+      coverage: "Každý failure mode z Phase 2 mapy"
+      pass_criterion: "Žádný crash, vždy fallback active"
+    adversarial:
+      coverage: "Worst inputs (empty, malformed, malicious payloads)"
+      pass_criterion: "Gracefully degrade, nezaspamuje API, žádný cost runaway"
+
+# ============================================================
+# PHASE 3 — DEPLOY (checklist + sequence + handoff + monitoring)
+# ============================================================
+
+phase_3_deploy:
+
+  pre_deployment_checklist_categories:
+    credentials:
+      - "Klient API keys přiděleny per service"
+      - "Keys v secrets manager (NEVER hardcoded)"
+      - "Test ping každého API z target prostředí"
+      - "Token expiry > 90 dní (jinak rotation plan)"
+    permissions:
+      - "OAuth scopes minimální (no wildcards)"
+      - "Service account isolovaný (vlastní user/role, ne admin)"
+      - "DB SELECT/INSERT/UPDATE jen na potřebných tabulkách"
+      - "File permissions: chmod 600 creds, 644 code"
+    integrations:
+      - "Webhook URLs registrovány a unit-testované"
+      - "Rate limit dohodnut s upstream (≥2× expected peak)"
+      - "Fallback queue pokud stream-based (RabbitMQ/SQS/Redis)"
+      - "Backup endpoint pokud klient má staging+prod"
+    compliance:
+      - "GDPR DPA podepsaná, retention policy dokumentovaná"
+      - "Žádná osobní data v plain text logech"
+      - "AML/financial data: encrypted at rest + audit trail"
+    infra:
+      - "Resources adequate (RAM, CPU, disk) — verify on actual"
+      - "systemd unit připravená (Restart=always, RestartSec=10)"
+      - "Logs rotation (logrotate, 30 dní default)"
+    testing:
+      - "Smoke test 1× ručně na real prostředí"
+      - "Load test 10× expected concurrent"
+      - "Chaos test (kill external API → verify fallback)"
+
+  deployment_sequence_12_steps:
+    1: "Setup secrets manager (env file, chmod 600)"
+    2: "Deploy code (git pull / docker pull) — služba ještě NESPUŠTĚNA"
+    3: "Run migrations (DB schema, jen pokud potřeba)"
+    4: "Smoke test 1× ručně (CLI nebo curl)"
+    5: "Start service (systemctl start)"
+    6: "Verify logs žádné errory v prvních 60s"
+    7: "Health endpoint check (curl /health)"
+    8: "Load test 10 instancí"
+    9: "Setup monitoring (ntfy + monit + Sentry pokud klient)"
+    10: "Verify alerty fungují (trigger fake error, ověř notif)"
+    11: "Document version + rollback plan"
+    12: "Notify klienta 'agent live'"
+
+  monitoring_signals:
+    - signal: "Service down"
+      source: "systemctl status"
+      threshold: "60s downtime"
+      action: "ntfy red + auto-restart"
+    - signal: "Error rate spike"
+      source: "logs (grep ERROR)"
+      threshold: ">5% in 5min"
+      action: "ntfy yellow + investigate"
+    - signal: "API rate-limit hit"
+      source: "logs (grep 429)"
+      threshold: "3× v 1 hod"
+      action: "ntfy yellow + verify backoff"
+    - signal: "Cost overrun"
+      source: "billing API / token counter"
+      threshold: ">150% expected daily"
+      action: "ntfy red + halt + email Filip"
+    - signal: "Stale agent"
+      source: "last_run timestamp"
+      threshold: ">2× expected interval"
+      action: "ntfy yellow"
+    - signal: "Output quality drift"
+      source: "sample audit (random 5%)"
+      threshold: "accuracy < success_criteria threshold"
+      action: "ntfy red + retrain plan"
+
+  client_handoff_doc_principles:
+    - "CZ jazyk, vykání"
+    - "Žádný technical jargon (LLM, prompt, vector DB, embedding)"
+    - "3 sekce: Co dělá / Co NEdělá / Když nefunguje"
+    - "Kontakt na Filipa explicitně (email + telefon)"
+    - "Bezpečnostní info (kde data, kdo má přístup, GDPR delete window)"
+
+# ============================================================
+# PHASE 4 — PRICE (ROI + outcome-based + tiers + framework)
+# ============================================================
+
+phase_4_price:
+
+  cz_market_rates_2026:
+    hourly_consulting:
+      junior: "600-900 Kč/h"
+      senior: "1200-2000 Kč/h"
+      specialist_ai_dev: "2000-3500 Kč/h"
+      legal_consulting: "3000-5000 Kč/h"
+      cnb_compliance: "4000-6000 Kč/h"
+
+    agent_build_one_time:
+      simple_workflow: "30 000 — 80 000 Kč"
+      medium_complexity: "80 000 — 200 000 Kč"
+      production_grade: "200 000 — 500 000 Kč"
+      enterprise_multi_agent: "500 000+ Kč"
+
+    monthly_retainer:
+      starter: "15 000 — 30 000 Kč/měs (basic monitoring, malé volumy)"
+      growth: "30 000 — 100 000 Kč/měs (full monitoring, support, monthly review)"
+      enterprise: "100 000 — 300 000 Kč/měs (multi-agent, dedicated VPS, 24/7 SLA)"
+
+    per_instance:
+      data_enrichment_basic: "5-15 Kč"
+      data_enrichment_with_verification: "20-50 Kč"
+      classification_simple: "10-30 Kč"
+      due_diligence_finance: "500-2000 Kč"
+      legal_doc_analysis: "200-800 Kč"
+      medical_screening: "500-2000 Kč"
+
+    success_fee_models:
+      lead_gen: "5-15% z deal value, min 5 000 Kč"
+      sales_qualified_lead: "1 500-5 000 Kč/SQL"
+      booked_meeting: "3 000-10 000 Kč/meeting"
+
+  roi_formula:
+    annual_roi_template: |
+      Roční ROI =
+        (hours_saved/měs × hourly_rate × 12)
+        + (errors_eliminated/rok × cost_per_error)
+        + (revenue_added/rok)
+        - (agent_cost/rok)
+
+    example_lead_enrichment:
+      input:
+        hours_saved: 40
+        hourly_rate: 1500
+        errors_eliminated: 200
+        cost_per_error: 5000
+        revenue_added: 0
+      calculation: "(40 × 1500 × 12) + (200 × 5000) + 0 = 720 000 + 1 000 000 = 1 720 000 Kč/rok"
+      cost: "Growth tier 65 000 × 12 = 780 000 Kč/rok"
+      net: "1 720 000 − 780 000 = 940 000 Kč net savings + 40h/měs senior tým freed"
+
+  three_tier_template_cz:
+    starter:
+      price_monthly: "25 000 Kč"
+      includes:
+        - "1× agent"
+        - "500 instancí/měs"
+        - "Basic monitoring (ntfy)"
+        - "5h support/měs"
+      target: "Solopreneur, malá firma <10 zaměstnanců"
+      framing: "Vstupní úroveň, vyzkoušíte si"
+
+    growth:
+      price_monthly: "65 000 Kč"
+      badge: "DOPORUČUJEME"
+      includes:
+        - "1× agent"
+        - "5000 instancí/měs"
+        - "Full monitoring + Sentry"
+        - "15h support/měs"
+        - "Monthly review call"
+      target: "SMB 10-50 zaměstnanců (sweet spot)"
+      framing: "Standard pro firmy s reálným provozem"
+
+    enterprise:
+      price_monthly: "180 000 Kč"
+      includes:
+        - "3× agentů"
+        - "Neomezené instance"
+        - "Dedicated VPS"
+        - "24/7 monitoring"
+        - "40h support/měs"
+        - "Custom SLA"
+        - "Training pro tým"
+      target: "Korporát 100+ zaměstnanců"
+      framing: "Mission-critical, full ownership"
+
+    add_ons:
+      build_fee_one_time: "50 000 — 150 000 Kč podle Phase 2 komplexity"
+      onboarding_first_30_days: "0 Kč (zruší decisional friction)"
+      annual_lockin_discount: "−10% pro 12měs commitment"
+
+  conversation_framework_steps:
+    1_anchor_roi: "ZAČNI s ROI číslem klienta (ne s cenou)"
+    2_agitate: "Klient si uvědomí jak moc ho současný stav stojí"
+    3_introduce: "Až teď zmiň agent — řešení toho problému"
+    4_present_tiers: "3-tier visual, Growth highlighted"
+    5_anchor_to_roi: "Cena vs. ROI (% z úspory)"
+    6_calibrated_close: "Co by muselo platit, abyste rozjel ještě tento měsíc?"
+
+  pricing_iron_rules:
+    - "ROI vždy PŘED cenou (never reverse)"
+    - "Konkrétní čísla, ne 'significant savings'"
+    - "Calibrated questions for closing (Voss style)"
+    - "Žádný apologetic framing ('vím, že to zní hodně, ale...')"
+    - "NIKDY hourly rate (race to bottom)"
+
+# ============================================================
+# PHASE 5 — SELL (pain map + quantification + demo + close)
+# ============================================================
+
+phase_5_sell:
+
+  pain_map_4_dimensions:
+    time:
+      probe: "Kolik hodin/měs strávíte ručně tímhle procesem?"
+      quantify: "Hours × hourly_rate × 12 = roční time cost"
+    errors:
+      probe: "Kolik chyb produkuje a co každá stojí?"
+      quantify: "Error rate × instances × cost_per_error = roční error cost"
+    delays:
+      probe: "Jak dlouho trvá od trigger → output?"
+      quantify: "Compare to competitor speed → opportunity cost"
+    opportunity:
+      probe: "Co byste místo toho mohl dělat?"
+      quantify: "Senior team time × strategic value = opportunity cost"
+
+  pain_quantification_questions_voss:
+    - "Než vám ukazuju cokoliv, chci pochopit váš dnešní proces. Kolik z vašich lidí dnes ručně dělá [konkrétní task]?"
+    - "A jak často to vede k chybě, kterou musíte řešit zpětně?"
+    - "Kdyby každý takový incident stál typicky [X Kč], kolik takových za rok řešíte?"
+    - "A když ten člověk zrovna dělá tuhle manuálku, co dělat nemůže? Co by místo toho mohl?"
+    - "Vidíte u konkurence, že tohle dělají rychleji nebo levněji? Jak na to reagujete?"
+    - "Takže jen co jste mi popsal: [částka] ročně. To je správně?"
+
+  demonstration_iron_rules:
+    - "NIKDY generic demo. VŽDY klientova reálná data."
+    - "Vyžádej 3 reálné instance PŘED call (lead, dokument, případ)"
+    - "Spusť agent offline na nich. Save outputy."
+    - "Show before (manual) → Show after (agent) → Let client extrapolate"
+    - "MLČ po posledním kroku. Ticho = klient si propočítá."
+
+  closing_questions_voss_calibrated:
+    forcing_function: "Co by muselo platit, abyste tohle rozjel ještě tento měsíc?"
+    no_oriented_low_risk: "Bylo by mimo, kdybychom začali Growth tier s onboarding od 1.6.?"
+    decision_frame: "Vidím dvě možnosti: rozjedeme Growth od pondělí, nebo to ještě 14 dní zvážíme. Co dává smysl pro vás?"
+    empathy_reframe: "Mýlím se, když si myslím, že tohle je přesně problém, který vás teď žere?"
+    specific_commitment: "Co by vám pomohlo říct ANO ještě tento týden?"
+
+  post_close_actions:
+    if_yes:
+      - "Email s contract draft do 2 hodin"
+      - "Calendar invite na kick-off call"
+      - "Memory entry: client_{slug}_signed_{YYYY_MM_DD}.md"
+    if_thinking:
+      - "Calibrated follow-up: Co ještě potřebujete vědět, abyste se rozhodl?"
+      - "14-day re-engagement sequence (cold-email skill)"
+    if_no:
+      - "Learning question: Co by mě muselo přesvědčit, že je to ze mě?"
+      - "Postmortem entry pro feedback loop"
+
+# ============================================================
+# OneFlow brand compliance (cross-cutting)
+# ============================================================
+
+brand_compliance:
+  voice:
+    - "Vykání novému klientovi"
+    - "Žádné omluvy"
+    - "Žádné vykřičníky"
+    - "Max 1-2 emoji"
+    - "Podpis: 'Dopita' nebo 'Filip Dopita | OneFlow'"
+
+  banned_words:
+    - "Dovoluji si"
+    - "Rád bych Vám"
+    - "Obracím se na Vás"
+    - "S pozdravem"
+    - "Inovativní → použij 'nový'"
+    - "Revoluční"
+    - "Komplexní řešení"
+    - "Win-win"
+    - "Synergie"
+
+  banned_ai_patterns:
+    - "Seznamy s přesně 5/10 položkami"
+    - "Furthermore / Moreover transitions"
+    - "Uniform sentence length"
+    - "Em dash abuse"
+
+  references:
+    voice_rules: "~/.claude/rules/oneflow-all.md"
+    sales_psychology: "~/.claude/expertise/outbound-sales-science.yaml"
+
+# ============================================================
+# Auto-trigger keywords (CZ + EN)
+# ============================================================
+
+auto_triggers:
+  cz:
+    - "klient chce AI agenta"
+    - "klient chce automatizaci s AI"
+    - "mám novou agent zakázku"
+    - "naceň agent service"
+    - "kolik si naceňovat za AI agenta"
+    - "klient nerozumí proč mu agent pomůže"
+    - "jak nasadit agenta klientovi"
+    - "připravit nabídku na AI agent"
+    - "agent pro klienta {jméno}"
+    - "AI workflow pro klienta"
+
+  en:
+    - "agent for client"
+    - "AI agent business"
+    - "price my agent"
+    - "sell my agent"
+    - "deploy agent to client"
+    - "agent client onboarding"
+
+# ============================================================
+# Integration s ostatními skills/expertise
+# ============================================================
+
+integrations:
+  pre_condition:
+    - skill: "oneflow-diagnose"
+      relation: "GO verdict před Phase 1 (validation gate)"
+    - skill: "prd-spec"
+      relation: "Phase 1 deliverable lze konvertovat na PRD"
+
+  during:
+    phase_2:
+      - skill: "agent-loop"
+        relation: "Engineering pattern (decompose → review)"
+      - skill: "agent-harness-construction"
+        relation: "Action space design"
+      - skill: "python-testing-patterns"
+        relation: "Test framework"
+
+    phase_3:
+      - skill: "deploy-service"
+        relation: "VPS systemd setup"
+      - skill: "setup-deploy"
+        relation: "Config templates"
+      - skill: "canary-watch"
+        relation: "Post-deploy monitoring"
+
+    phase_4:
+      - skill: "pricing-strategy"
+        relation: "General pricing reference"
+
+    phase_5:
+      - skill: "cold-outreach-v3"
+        relation: "Outreach execution po sales call"
+      - skill: "closer"
+        relation: "Sales copy templates"
+      - expertise: "outbound-sales-science.yaml"
+        relation: "Voss/Cialdini/Schwartz frameworks"
+
+  rules_compliance:
+    - rule: "oneflow-all.md"
+      relation: "Voice + banned words (POVINNÉ pro client-facing copy)"
+    - rule: "completion-mandate.md"
+      relation: "No 'po schválení' mid-phase"
+    - rule: "cost-zero-tolerance.md"
+      relation: "Žádný Google Gemini API even free tier"
+    - rule: "anti-hallucination.md"
+      relation: "Konkrétní čísla = real source, ne odhad"
+
+# ============================================================
+# Maintenance
+# ============================================================
+
+maintenance:
+  source_refresh:
+    file: "~/Downloads/Prompts.docx"
+    frequency: "Když Filip uzná novou fázi nebo update existing"
+  cz_pricing_review:
+    frequency: "Quarterly (CZ market rates se mění)"
+    inputs:
+      - "Vlastní deal closures (samples z memory)"
+      - "Konkurence pricing (n8n.cloud, Make, custom CZ agencies)"
+      - "Hourly rate inflation CZ trh"
+  expertise_links_check:
+    frequency: "Monthly"
+    targets:
+      - "outbound-sales-science.yaml § fbi_voss"
+      - "prd-driven-saas.yaml § productization"
+      - "agent-employees.yaml § archetypes"

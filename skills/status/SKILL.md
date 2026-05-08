@@ -27,7 +27,7 @@ ssh vps-alfa "uptime && df -h / && systemctl --failed --no-pager 2>/dev/null | h
 
 ### 2. Memory Health
 ```bash
-ls ~/.claude/projects/<your-project-id>/memory/*.md 2>/dev/null | wc -l
+ls ~/.claude/projects/-Users-filipdopita/memory/*.md 2>/dev/null | wc -l
 ```
 Přečti credential_expiry.md — varuj pokud něco expiruje.
 
@@ -40,6 +40,21 @@ wc -l ~/.claude/homunculus/instincts/*.jsonl 2>/dev/null
 - Aktuální CWD
 - Poslední handoff (pokud existuje)
 
+### 5. Google Workspace (gws CLI) — NEW 2026-05-05
+```bash
+/opt/homebrew/bin/gws auth status --format json 2>/dev/null | sed '/^Using/d' | python3 -c "
+import sys,json; d=json.load(sys.stdin)
+print(f'gws: {d.get(\"user\",\"?\")} | scopes={d.get(\"scope_count\",0)} | valid={d.get(\"token_valid\",False)}')"
+```
+Pokud token_valid=False → smaž `~/.config/gws/token_cache.json` nebo run `gws auth login`. Ne otevírej browser bez Filipova pokynu (HARD-STOP).
+
+### 6. Briefing / Daily Auto Status
+```bash
+TODAY=$(date +%Y-%m-%d)
+[[ -f ~/Documents/OneFlow-Vault/00-Claude-Dashboard/Briefing-${TODAY}.md ]] && echo "✓ briefing ${TODAY} ready" || echo "✗ briefing missing (launchd 06:30 nevybralo nebo nepřišlo k nemu)"
+launchctl list | grep -E "com.oneflow.gws-(daily-briefing|weekly-smoke)" || echo "✗ gws launchd timers UNLOADED"
+```
+
 ## Výstupní formát
 
 ```
@@ -51,6 +66,8 @@ wc -l ~/.claude/homunculus/instincts/*.jsonl 2>/dev/null
 ║ Memory:     N files                  ║
 ║ Instincts:  N seed                   ║
 ║ Credentials: N ok, N expiring        ║
+║ gws:        user | N scopes | valid  ║
+║ Briefing:   ✓ ready / ✗ missing      ║
 ╚══════════════════════════════════════╝
 ```
 

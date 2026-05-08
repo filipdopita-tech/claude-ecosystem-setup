@@ -44,6 +44,33 @@ Načti relevantní znalosti:
 - `~/.claude/rules/legal-compliance.md` — prospekt povinnosti, QI, AML
 - `~/.claude/rules/cz-market-data.md` — CZ benchmarky pro srovnání
 
+### Krok 1b: PDF parsing strategy (added 2026-05-03 z D4Vinci audit)
+
+Automatická 3-tier pipeline: `recipes/pdf_3tier.py` (auto-pick podle file size + filename hints).
+
+| Tier | Tool | Wall-time (BICZ Soukup 7p) | Output kvalita | Použij když |
+|---|---|---|---|---|
+| 1 | markitdown | 4.4s | Flat text 11507 chars | Quick sken — "co je v prospektu", emails/phones extraction |
+| 2 | docling | 31s warm cache (~2min cold) | Structured 9501 chars + ## headers + image markers | DD prospekt s sekce/tabulky/layout |
+| 3 | pdfplumber | ~5s/page | Text + tables array | Heavy financial grids (DSCR/LTV/rozvaha) |
+
+**Activation:**
+
+```bash
+# Auto-pick (default)
+python ~/.claude/skills/dd-emitent/recipes/pdf_3tier.py /path/to/prospekt.pdf
+
+# Explicit tier
+python ~/.claude/skills/dd-emitent/recipes/pdf_3tier.py /path/to/prospekt.pdf --tier=2
+```
+
+**Auto-trigger v dd-emitent skill flow:**
+- Když Filip uvede emitent landing s PDF prospekt download → tier 1 (rychlý overview)
+- Když report vyžaduje sekce extraction → tier 2 (docling structure)
+- Když Krok 2 finanční analýza vyžaduje DSCR/LTV computation z grids → tier 3 (pdfplumber)
+
+**Citations**: Adapted from microsoft/markitdown (MIT) + docling-project/docling (MIT).
+
 Zdroje dat pro DD:
 1. **Justice.cz** — výpis z OR, účetní závěrky, insolvence
 2. **ARES** (ares.gov.cz) — IČO, obchodní rejstřík
@@ -64,13 +91,13 @@ import requests
 def sec_edgar_search(company_name: str) -> dict:
     """Hledá firmu v SEC EDGAR. Vrátí CIK a seznam filingů."""
     url = f"https://efts.sec.gov/LATEST/search-index?q=%22{company_name}%22&dateRange=custom&startdt=2022-01-01&forms=10-K,10-Q"
-    r = requests.get(url, headers={"User-Agent": "OneFlow DD filip@oneflow.cz"})
+    r = requests.get(url, headers={"User-Agent": "OneFlow DD <email>"})
     return r.json() if r.status_code == 200 else {}
 
 def sec_company_facts(cik: str) -> dict:
     """Finanční data (revenue, assets, liabilities) z XBRL filingů."""
     url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik.zfill(10)}.json"
-    r = requests.get(url, headers={"User-Agent": "OneFlow DD filip@oneflow.cz"})
+    r = requests.get(url, headers={"User-Agent": "OneFlow DD <email>"})
     return r.json() if r.status_code == 200 else {}
 
 # CoinGecko — krypto tržní data (pro emitenty s crypto expozicí)

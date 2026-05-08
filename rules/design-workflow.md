@@ -21,7 +21,7 @@ Fáze 2: Claude Artifacts (production)
 
 | Task | Pattern |
 |---|---|
-| Landing page (oneflow.cz, ASR, lead-magnet) | Stitch → Claude |
+| Landing page (oneflow.cz, <klient>, lead-magnet) | Stitch → Claude |
 | Dashboard / admin UI (terminal, social-publisher) | Stitch → Claude |
 | Klientská nabídka HTML/PDF | Stitch → Claude |
 | Email template (transactional, marketing) | Stitch → Claude |

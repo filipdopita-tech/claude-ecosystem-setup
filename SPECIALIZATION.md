@@ -55,7 +55,7 @@ The tuning shows up as deep, opinionated coverage of **6 verticals** that most g
 **Real production proof:**
 - 5 production domains running, multi-IP A/B/C rotation
 - Zero blocklist incidents since proper warm-up (2026-04-15 onward)
-- Tested at scale: 42 WhatsApp outreach with 26.2% reply rate (2026-04-22 Steakhouse campaign)
+- Tested at scale: 42 WhatsApp outreach with 26.2% reply rate (2026-04-22 <klient> campaign)
 
 ---
 
@@ -75,7 +75,7 @@ The tuning shows up as deep, opinionated coverage of **6 verticals** that most g
 - Justice.cz (court proceedings)
 - Veřejný rejstřík (UBO, zástavy, statutární orgány)
 
-**Production scale**: 10,067 firms processed in scraping engine v4.0, 503 outreach-ready rows from one Tereza Tulcová Facebook scrape (after 3-pass validation, 0 Kč spend, 0 FB account touch).
+**Production scale**: 10,067 firms processed in scraping engine v4.0, 503 outreach-ready rows from one <klient> Facebook scrape (after 3-pass validation, 0 Kč spend, 0 FB account touch).
 
 ---
 

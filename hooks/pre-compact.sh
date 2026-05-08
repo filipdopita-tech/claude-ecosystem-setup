@@ -25,11 +25,11 @@ OUT="$STATE_DIR/${TS}_${SESSION_ID}.md"
   echo "**Trigger**: ${PAYLOAD:+payload present}${PAYLOAD:-no payload}"
   echo ""
   echo "## Active TODOs"
-  TODO_FILE="$HOME/.claude/projects/<your-project-id>/todos/$SESSION_ID-agent-$SESSION_ID.json"
+  TODO_FILE="$HOME/.claude/projects/-Users-filipdopita/todos/$SESSION_ID-agent-$SESSION_ID.json"
   if [ -f "$TODO_FILE" ]; then
     jq -r '.[] | "- [\(.status)] \(.content)"' "$TODO_FILE" 2>/dev/null || echo "(empty)"
   else
-    LATEST_TODO="$(ls -t "$HOME/.claude/projects/<your-project-id>/todos/"*.json 2>/dev/null | head -1)"
+    LATEST_TODO="$(ls -t "$HOME/.claude/projects/-Users-filipdopita/todos/"*.json 2>/dev/null | head -1)"
     if [ -n "$LATEST_TODO" ]; then
       jq -r '.[] | "- [\(.status)] \(.content)"' "$LATEST_TODO" 2>/dev/null || echo "(unable to parse)"
     else

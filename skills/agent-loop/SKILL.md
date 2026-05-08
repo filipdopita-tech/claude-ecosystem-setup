@@ -12,7 +12,7 @@ allowed-tools:
   - TodoWrite
 metadata:
   source: "skool-intel cherry-pick 2026-04-28: claude-code-architects 'Egnineering Agent Loops and Workflows' (15 komentářů, 21 likes)"
-  filip-adaptace: "Pro OneFlow context: aplikováno na DD validace, Tereza pipeline, investor outreach review."
+  filip-adaptace: "Pro OneFlow context: aplikováno na DD validace, <klient> pipeline, investor outreach review."
 ---
 
 # Agent Loop — Decomposition + Self-Review Pattern

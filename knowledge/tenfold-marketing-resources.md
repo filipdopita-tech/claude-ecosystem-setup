@@ -59,7 +59,7 @@ Filip ollama orphan smazal 2026-04-25.
 - **GitHub:** https://github.com/kylezantos/design-motion-principles
 - **Co dělá:** Motion audits trénované na 3 top designerech (Linear, Stripe, Vercel)
 - **Install:** `npx skills add kylezantos/design-motion-principles`
-- **OneFlow fit:** Filip má design-systems Linear+Stripe+Vercel reference v `~/Documents/design-systems/`. Tohle skill formalizuje motion principles z těchto inspirací.
+- **OneFlow fit:** Filip má design-systems Linear+Stripe+Vercel reference v `/mac/Documents/design-systems/`. Tohle skill formalizuje motion principles z těchto inspirací.
 - **Verdict:** EVAL — useful pokud Filip začne přidávat motion/animations do OneFlow webů (terminal.oneflow.cz, oneflow.cz).
 
 ### EVAL-C: Frontend Design (Anthropic plugin)
@@ -77,7 +77,7 @@ Filip ollama orphan smazal 2026-04-25.
 - **Co dělá:** Design system s 50+ styles, 161 color palettes, 57 font pairings, React/Next.js/Vue/Svelte support
 - **Install:** Manual via GitHub repo
 - **OneFlow fit:** Filip má vlastní brand (monochrome only, Inter Tight, mono palette). UI/UX Pro Max jde proti tomu (162 palettes). **POZOR — může produkovat off-brand outputs.**
-- **Verdict:** SKIP pro OneFlow brand projekty. EVAL pro klientské projekty mimo OneFlow brand (např. Tereza Tulcová site, klientské landingy bez OneFlow brandu).
+- **Verdict:** SKIP pro OneFlow brand projekty. EVAL pro klientské projekty mimo OneFlow brand (např. <klient> site, klientské landingy bez OneFlow brandu).
 
 ### EVAL-E: Remotion (video skill)
 - **Author:** Remotion (remotion.dev)
@@ -126,7 +126,7 @@ Filip ollama orphan smazal 2026-04-25.
 
 ### Wiki System / Memory Obsidian
 - **Tenfold:** "Claude Code Wiki System" + "How to Give Claude Code a Memory (Obsidian)"
-- **Filip má:** `OneFlow-Vault` (Obsidian) + `flywheel-memory` MCP + `/compile-wiki` skill + `/lint-wiki` + auto-memory v `~/.claude/projects/<your-project-id>/memory/`
+- **Filip má:** `OneFlow-Vault` (Obsidian) + `flywheel-memory` MCP + `/compile-wiki` skill + `/lint-wiki` + auto-memory v `~/.claude/projects/-Users-filipdopita/memory/`
 - **Verdict:** Filipovo setup je o TŘI ŘÁDOVĚ sophisticated.
 
 ### Tenfold custom skills (/copy, /viral, /script, /spy)

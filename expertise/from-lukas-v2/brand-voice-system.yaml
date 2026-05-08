@@ -1,0 +1,217 @@
+domain: brand-voice-system
+keywords: [brand, voice, tone, copywriting, brand-system, messaging, identity]
+last_updated: 2026-04-26
+confidence: high
+
+voice_axes:
+  # Score 1-5 on each axis. These are defaults; override per channel per tone_per_channel.
+  # 1 = fully left pole; 5 = fully right pole; 3 = neutral center
+  formal_to_casual:
+    left_pole: formal
+    right_pole: casual
+    default_score: 3
+    notes: "Score 2 for B2B enterprise copy; score 4 for social/short-form consumer. Never 5 (too slangy to scale)."
+  serious_to_playful:
+    left_pole: serious
+    right_pole: playful
+    default_score: 2
+    notes: "Most professional brands live at 2-3. Playful is a trap — ages poorly, alienates segments."
+  authoritative_to_collaborative:
+    left_pole: authoritative
+    right_pole: collaborative
+    default_score: 3
+    notes: >
+      Authoritative = declarative sentences, data-backed, confident. Collaborative = invites reader
+      into the process, uses 'we/together', asks questions. Neither extreme scales well alone.
+  sparse_to_dense:
+    left_pole: sparse
+    right_pole: dense
+    default_score: 2
+    notes: "Sparse wins in most channels. Dense is appropriate for technical docs, deep-dive content, email courses."
+  scoring_protocol:
+    document: "Record scores in brand doc. When briefing AI or writers, share all 4 scores + any channel overrides."
+    review_trigger: "Re-score when brand positioning changes (new market, new product tier, rebranding)."
+
+vocabulary_lists:
+  always_use:
+    # Words and phrases that are on-brand; use actively when they fit
+    words: []  # Populate with brand-specific terms after brand discovery session
+    phrases: []  # Populate with signature phrases
+    pattern: >
+      Document 5-10 words that embody brand positioning. Example categories:
+      action verbs that reflect method (e.g., "build", "ship", "architect"),
+      descriptors that own a niche (e.g., "precision", "outcome-driven", "earned"),
+      social proof framing words consistent with positioning.
+  never_use:
+    universal_avoids:
+      - "synergy"
+      - "leverage (as verb)"
+      - "utilize (use 'use')"
+      - "solutions (without specific qualifier)"
+      - "best-in-class"
+      - "world-class"
+      - "cutting-edge"
+      - "empower (usually hollow)"
+      - "journey (unless literal)"
+      - "seamless"
+      - "robust"
+      - "innovative"
+      - "revolutionary"
+    brand_specific: []  # Add words that conflict with positioning or audience expectation
+  signature_phrases:
+    definition: "2-5 phrases that appear consistently across brand touchpoints; create recognizable voice fingerprint"
+    examples_of_structure:
+      - "[Specific claim], not [vague alternative]"
+      - "We [mechanism], so you can [outcome]"
+      - "[Number]-step [process]: [brief label each step]"
+    note: "Signature phrases are anchors — repeat them verbatim across channels. Consistency creates familiarity."
+
+tone_per_channel:
+  homepage:
+    formal_to_casual: 2
+    serious_to_playful: 2
+    authoritative_to_collaborative: 2
+    sparse_to_dense: 1
+    rules:
+      - "State outcome in headline, not process"
+      - "First sentence of every section must work standalone (scanners)"
+      - "No first-person plural ('we') in hero — reader doesn't care about us yet"
+  paid_ad:
+    formal_to_casual: 3
+    serious_to_playful: 2
+    authoritative_to_collaborative: 2
+    sparse_to_dense: 1
+    rules:
+      - "First 3 words must stop scroll — treat them as a headline-within-headline"
+      - "CTA is a verb + specific outcome, never 'Learn More'"
+      - "Match message to audience segment — retargeting ad can be warmer than cold ad"
+      - "Under 125 chars for primary text in Meta ads (avoid truncation)"
+  email:
+    formal_to_casual: 3
+    serious_to_playful: 2
+    authoritative_to_collaborative: 3
+    sparse_to_dense: 2
+    rules:
+      - "Subject line: curiosity gap OR clear benefit — never both in same line"
+      - "Preview text is the second headline — write it intentionally"
+      - "One primary CTA per email; secondary links OK in PS"
+      - "Plain text performs competitively with HTML for nurture sequences"
+  instagram_caption:
+    formal_to_casual: 4
+    serious_to_playful: 3
+    authoritative_to_collaborative: 4
+    sparse_to_dense: 2
+    rules:
+      - "Write like a human, not a brand"
+      - "First 125 chars must be self-contained"
+      - "No hashtag walls in main body — move to first comment or end"
+      - "Conversational punctuation OK (dashes, ellipses) — no multiple exclamation marks"
+  long_form_blog_seo:
+    formal_to_casual: 2
+    serious_to_playful: 1
+    authoritative_to_collaborative: 2
+    sparse_to_dense: 3
+    rules:
+      - "H2s must be scannable and keyword-bearing"
+      - "No padding paragraphs for word count — every paragraph must earn its place"
+      - "Use second person ('you') throughout; avoid first-person bloat"
+
+bad_patterns_to_avoid:
+  corporate_speak:
+    examples:
+      - "We are committed to delivering exceptional value to our stakeholders"
+      - "Our mission is to empower teams to unlock their full potential"
+    fix: "Replace with what you actually do and the specific outcome: 'We build X so that Y happens for Z people'"
+  hedging:
+    examples:
+      - "could potentially help"
+      - "may be able to"
+      - "in some cases"
+    fix: "Make the claim and qualify it once, specifically. 'Cuts setup time by 40% for teams under 10.'"
+  false_intimacy:
+    examples:
+      - "Hey, friend!"
+      - "We feel your pain..."
+      - "We know how hard it is to [generic struggle]"
+    fix: "Earn intimacy through specificity. Name the actual pain precisely; don't perform understanding."
+  exclamation_point_overuse:
+    rule: "Maximum 1 exclamation point per email; 0 on homepage body copy; 1 per IG caption max"
+    why: "Every additional ! devalues the previous one. Overuse signals desperation or low confidence."
+  em_dash_overuse:
+    rule: "Maximum 2 em dashes per paragraph — they create rhythm but become noise at high density"
+    why: "Em dash overuse is a specific AI-writing tell; human editors flag it immediately"
+  passive_voice:
+    examples:
+      - "Results are achieved by..."
+      - "The decision was made to..."
+    fix: "Active voice always: 'We achieved X' / 'We decided to'"
+  filler_openers:
+    examples:
+      - "In today's fast-paced world..."
+      - "Have you ever wondered..."
+      - "It's no secret that..."
+    fix: "Start with the claim, the number, or the problem. Never warm up to the point."
+
+voice_test:
+  # 3 questions to ask before publishing any copy variant
+  question_1:
+    prompt: "Would our most skeptical target customer read this and feel respected — or feel sold to?"
+    pass_criteria: "Specific claim + evidence present; no hollow promises"
+  question_2:
+    prompt: "Could our closest competitor publish this verbatim without changing a word?"
+    pass_criteria: "Copy fails this test (= good). If competitor could use it unchanged, it's too generic."
+  question_3:
+    prompt: "What would we have to believe was true to write this headline?"
+    pass_criteria: "The belief should be a real insight about the audience — not wishful thinking about the product"
+
+evolution_protocol:
+  review_trigger_events:
+    - "New product line added that serves different audience"
+    - "Brand repositioning (market move, price tier change)"
+    - "Internal team grows past 5 people producing content"
+    - "Negative brand association or PR event requiring recalibration"
+  review_process:
+    - "Audit 30 most recent pieces of content against current voice axes — note drift"
+    - "Conduct 3-5 customer interviews specifically about brand perception"
+    - "Propose score adjustments; test updated guidelines on 2-3 copy pieces"
+    - "Approve updated guidelines; archive previous version with date"
+  approvals:
+    small_changes: "Brand lead or content lead can approve vocabulary list updates"
+    axis_score_changes: "Requires sign-off from brand lead + one senior stakeholder"
+  never_change:
+    - "Signature phrases mid-campaign (creates inconsistency in active distribution)"
+    - "Voice axes without documented rationale (prevents regression next cycle)"
+
+ai_prompt_template:
+  description: "Paste-ready scaffold for briefing Claude or any LLM to generate on-brand copy"
+  template: |
+    You are writing copy for [Brand Name].
+
+    Brand voice (score 1-5, 1=left pole, 5=right pole):
+    - Formal (1) to Casual (5): [score]
+    - Serious (1) to Playful (5): [score]
+    - Authoritative (1) to Collaborative (5): [score]
+    - Sparse (1) to Dense (5): [score]
+
+    Always use: [list always-use words/phrases]
+    Never use: [list never-use words]
+
+    Signature phrases to incorporate where natural: [list phrases]
+
+    Channel: [homepage / ad / email / IG caption / other]
+    Channel-specific rules for this channel:
+    [paste rules from tone_per_channel above]
+
+    Bad patterns to avoid: corporate-speak, hedging, false intimacy, exclamation overuse, em-dash overuse, filler openers.
+
+    Task: [specific copy request — include format, length, CTA if relevant]
+
+    Audience: [describe who will read this — their state of mind, awareness level, key pain point]
+
+    Single message this copy must land: [one sentence — the core claim]
+
+    Do not: [any specific exclusions for this task]
+  usage_notes:
+    - "Fill in all brackets before pasting — partial briefs produce partial results"
+    - "The 'single message' field is the highest-leverage input — be ruthlessly specific"
+    - "For A/B tests: submit same prompt twice with different 'single message' values"

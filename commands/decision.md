@@ -11,7 +11,7 @@ Zaznamenej nebo zobraz důležitá technická rozhodnutí s kontextem.
 ### Zápis nového rozhodnutí
 Když uživatel řekne `/decision` s popisem, zapiš rozhodnutí:
 
-1. Přidej nový záznam do `~/.claude/homunculus/decisions.jsonl` ve formátu:
+1. Přidej nový záznam do `/mac/.claude/homunculus/decisions.jsonl` ve formátu:
 ```json
 {"date": "2026-04-03", "category": "infra|arch|security|integration|tooling", "decision": "Co bylo rozhodnuto", "rationale": "Proč", "alternatives": "Co bylo zváženo a zamítnuto", "context": "Projekt/situace", "reversible": true/false}
 ```
@@ -21,7 +21,7 @@ Když uživatel řekne `/decision` s popisem, zapiš rozhodnutí:
 ### Zobrazení historie
 Když uživatel řekne `/decision list` nebo `/decision show`:
 
-1. Přečti `~/.claude/homunculus/decisions.jsonl`
+1. Přečti `/mac/.claude/homunculus/decisions.jsonl`
 2. Zobraz posledních 10 rozhodnutí v čitelné tabulce:
 
 ```

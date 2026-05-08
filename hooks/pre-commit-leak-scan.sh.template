@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# pre-commit-leak-scan.sh.template — Optional git pre-commit hook for leak detection.
+# Pattern 1 z ruflo-extracted-patterns.md (chain s message-sanitizer.py).
+#
+# OPT-IN INSTALL per repo (NOT auto-enabled):
+#   1. cd <repo>
+#   2. cp ~/.claude/hooks/pre-commit-leak-scan.sh.template .git/hooks/pre-commit
+#   3. chmod +x .git/hooks/pre-commit
+#
+# OR project-wide via core.hooksPath:
+#   git config --global core.hooksPath ~/.git-hooks
+#   cp ~/.claude/hooks/pre-commit-leak-scan.sh.template ~/.git-hooks/pre-commit
+#
+# Behavior: scans staged files using message-sanitizer.py at trust=untrusted.
+# BLOCK = abort commit (exit 1). PASS = allow commit.
+#
+# Bypass (rare, e.g. dev fixture s example tokens):
+#   git commit --no-verify
+#   OR: SANITIZE_BYPASS=1 git commit
+#
+# Note: complements existing scan-sensitive-tokens.sh — that's BLOCK-only,
+# this provides 14-type detection + tier policy + smarter regex.
+
+set -euo pipefail
+
+if [[ "${SANITIZE_BYPASS:-0}" == "1" ]]; then
+  echo "(sanitize bypass active — SANITIZE_BYPASS=1)" >&2
+  exit 0
+fi
+
+SANITIZER="${HOME}/scripts/automation/message-sanitizer.py"
+if [[ ! -x "$SANITIZER" ]]; then
+  echo "[pre-commit] sanitizer not found at $SANITIZER, skipping" >&2
+  exit 0
+fi
+
+# Get staged files (added or modified, not deleted)
+STAGED=$(git diff --cached --name-only --diff-filter=AM)
+if [[ -z "$STAGED" ]]; then
+  exit 0
+fi
+
+# Filter to text files only (skip binaries, lock files, common safe types)
+FAIL=0
+declare -a BLOCKED_FILES=()
+
+while IFS= read -r file; do
+  # Skip binaries, lockfiles, common safe types
+  case "$file" in
+    *.png|*.jpg|*.jpeg|*.gif|*.pdf|*.zip|*.tar|*.tar.gz|*.tgz|*.bin|*.exe|*.so|*.dylib) continue ;;
+    *.lock|*-lock.json|package-lock.json|yarn.lock|*.lockb|Cargo.lock|poetry.lock|uv.lock) continue ;;
+    *.pyc|*.class|*.o|*.a) continue ;;
+  esac
+
+  # Skip files that don't exist (deleted in working tree but staged)
+  [[ ! -f "$file" ]] && continue
+
+  # Run sanitizer at "low" trust — strict but not paranoid
+  # (exit 2 = BLOCKED detection of secrets/injection)
+  if ! "$SANITIZER" --trust=low --file="$file" --quiet >/dev/null 2>/dev/null; then
+    rc=$?
+    if [[ "$rc" == "2" ]]; then
+      BLOCKED_FILES+=("$file")
+      FAIL=1
+    fi
+  fi
+done <<< "$STAGED"
+
+if [[ "$FAIL" == "1" ]]; then
+  echo "" >&2
+  echo "🔴 pre-commit BLOCKED — secrets/injection detected in staged files:" >&2
+  for f in "${BLOCKED_FILES[@]}"; do
+    echo "  - $f" >&2
+    "$SANITIZER" --trust=low --file="$f" 2>&1 | grep -E "^\s*\[BLOCK\]" | head -5 >&2
+  done
+  echo "" >&2
+  echo "Resolution:" >&2
+  echo "  1. Remove the secret from the file (preferred)" >&2
+  echo "  2. Use environment variables / .env (gitignored)" >&2
+  echo "  3. If false positive: SANITIZE_BYPASS=1 git commit ..." >&2
+  echo "  4. Or one-time: git commit --no-verify" >&2
+  exit 1
+fi
+
+exit 0

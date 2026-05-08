@@ -1,13 +1,14 @@
 ---
 name: ig-creator-deep-dive
-description: "Deep-dive analyzer pro IG kreátory ve free režimu. Trigger: 'analyzuj kreátora X', 'rozeber profil @user', URL instagram.com/USER + slovo 'rozeber/analyzuj/deep'. Stáhne posty (max 24 free), analyzuje captions přes Gemini Flash free, identifikuje top picks pro OneFlow ekosystem, instaluje top 3 ADOPT, generuje CZ adaptaci formátu, vrací master report."
+description: "Deep-dive analyzer pro IG kreátory ve free režimu. Trigger: 'analyzuj kreátora X', 'rozeber profil @user', URL instagram.com/USER + slovo 'rozeber/analyzuj/deep'. Stáhne posty (max 24 free), analyzuje captions přes OpenRouter free (deepseek-r1:free, 1500 req/den, 0 Kč), identifikuje top picks pro OneFlow ekosystem, instaluje top 3 ADOPT, generuje CZ adaptaci formátu, vrací master report."
 metadata:
-  requires-env: GEMINI_API_KEY
+  requires-env: OPENROUTER_API_KEY
   allowed-hosts:
     - instagram.com
-    - <vps-private-ip>
+    - openrouter.ai
+    - 10.77.0.1
     - api.github.com
-  version: "1.0"
+  version: "2.0"
 allowed-tools:
   - Bash
   - Read
@@ -33,7 +34,7 @@ allowed-tools:
 Mac (residential IP)              Flash (compute)
 ├── ig_analyzer.py             ──> Whisper medium (top 3 reels)
 │   └── 24 posts max bez auth     └── transcripts.txt
-├── Gemini 2.5 Flash free
+├── OpenRouter deepseek-r1:free (1500 req/den, 0 Kč)
 │   └── analysis.json (24 entries)
 ├── WebFetch GitHub verify
 └── brew/npx installs (top picks)
@@ -51,9 +52,9 @@ Mac (residential IP)              Flash (compute)
 ### Stage 1: Profile metadata fetch (Mac, ~2 min)
 ```bash
 USER="${1:-marc.kaz}"  # default
-WORK_DIR="~/Desktop/${USER}-analysis"
+WORK_DIR="/Users/filipdopita/Desktop/${USER}-analysis"
 mkdir -p "$WORK_DIR" && cd "$WORK_DIR"
-python3 ~/scripts/social/ig_analyzer.py "$USER" \
+python3 /Users/filipdopita/scripts/social/ig_analyzer.py "$USER" \
   --metadata-only --max-posts 100 --output-dir . > fetch.log 2>&1
 ```
 
@@ -76,7 +77,7 @@ print(f'Wrote {len(out)} entries')
 EOF
 ```
 
-### Stage 3: Gemini Flash analysis (Mac → Gemini API free, ~30s)
+### Stage 3: OpenRouter free analysis (Mac → OpenRouter, ~30s)
 
 **Build prompt** s OneFlow ekosystem fit rubrikou:
 ```bash
@@ -106,12 +107,18 @@ PROMPT_EOF
 cat captions_clean.json >> /tmp/gemini_prompt.txt
 ```
 
-**Run Gemini**:
+**Run OpenRouter (free, deepseek-r1)**:
 ```bash
-export GEMINI_API_KEY=$(grep '^GEMINI_API_KEY=' ~/.claude/mcp-keys.env | head -1 | cut -d= -f2- | tr -d '"')
-gemini --model gemini-2.5-flash --prompt "$(cat /tmp/gemini_prompt.txt)" > gemini_raw.txt 2>&1
+export OPENROUTER_API_KEY=$(grep '^OPENROUTER_API_KEY=' ~/.claude/mcp-keys.env | head -1 | cut -d= -f2- | tr -d '"')
+PROMPT=$(jq -Rs . < /tmp/gemini_prompt.txt)
+curl -s https://openrouter.ai/api/v1/chat/completions \
+  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"model\":\"deepseek/deepseek-r1:free\",\"messages\":[{\"role\":\"user\",\"content\":$PROMPT}]}" \
+  | jq -r '.choices[0].message.content' > gemini_raw.txt
 sed -n '/^\[/,/^\]/p' gemini_raw.txt > analysis.json
 ```
+Fallback při deepseek 429/quota: swap model na `qwen/qwen-3-coder:free` nebo `moonshotai/kimi-k2:free`.
 
 **Verify**: `analysis.json` musí být validní JSON array, length > 0.
 
@@ -147,7 +154,7 @@ with open('analysis.json') as f:
     d = sorted(json.load(f), key=lambda x: x.get('oneflow_fit_score',0), reverse=True)
 print(' '.join(f'\"https://www.instagram.com/reel/{e[\"shortcode\"]}/\"' for e in d[:3]))
 ")
-nohup ~/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
+nohup /Users/filipdopita/scripts/social/ig_transcribe_remote.sh $TOP3_URLS > transcribe.log 2>&1 & disown
 ```
 
 ### Stage 7: Implement top picks (varies)
@@ -180,7 +187,7 @@ Generuj `REPORT.md` v `${WORK_DIR}/`:
 - Next steps offer
 
 ### Stage 10: Memory update
-Vytvoř `~/.claude/projects/<your-project-id>/memory/project_${USER}_ig_analysis_${DATE}.md`:
+Vytvoř `~/.claude/projects/-Users-filipdopita/memory/project_${USER}_ig_analysis_${DATE}.md`:
 - Implemented this session
 - Skipped + důvody
 - Klíčový insight z transcribce

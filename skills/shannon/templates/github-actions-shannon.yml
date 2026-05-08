@@ -1,0 +1,160 @@
+# GitHub Actions: Shannon Pre-Deploy Security Scan
+#
+# Place at: .github/workflows/shannon-scan.yml v každém OneFlow repo
+# Triggers:
+#   - Pull request → main (block merge if HIGH+ findings)
+#   - Manual dispatch (recurring re-scan)
+#   - Scheduled weekly (Sunday 03:00)
+#
+# Requires repo secrets:
+#   - SHANNON_OAUTH_TOKEN: Claude Code OAuth token (or ANTHROPIC_API_KEY)
+#   - SHANNON_TARGET_URL: staging URL pro scan
+#
+# Self-hosted runner option: použij Filip's Flash VPS (claude user) — zero AI cost
+
+name: Shannon Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target URL to scan'
+        required: true
+        type: string
+  schedule:
+    # Weekly: Sunday 03:00 UTC
+    - cron: '0 3 * * 0'
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  shannon-scan:
+    name: Shannon AI Pentest
+    # Self-hosted runner = use Flash VPS (zero AI cost — Max OAuth)
+    # Fallback: ubuntu-latest, install Docker + Node 18+ + pnpm
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Determine target URL
+        id: target
+        run: |
+          if [[ -n "${{ inputs.target_url }}" ]]; then
+            echo "url=${{ inputs.target_url }}" >> $GITHUB_OUTPUT
+          else
+            # PR → use staging URL convention
+            echo "url=${{ secrets.SHANNON_TARGET_URL }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Shannon scan
+        id: scan
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.SHANNON_OAUTH_TOKEN }}
+          CLAUDE_CODE_MAX_OUTPUT_TOKENS: 64000
+        run: |
+          # Pull Shannon worker image
+          docker pull keygraph/shannon-worker:latest 2>/dev/null || \
+            (npm install -g @keygraph/shannon && \
+             npx @keygraph/shannon start \
+               -u "${{ steps.target.outputs.url }}" \
+               -r "$GITHUB_WORKSPACE" \
+               -w "ci-${{ github.run_id }}" \
+               -o "./shannon-output")
+
+          # Move report to predictable location
+          mkdir -p artifacts
+          cp -r shannon-output/* artifacts/ 2>/dev/null || true
+
+      - name: Parse findings
+        id: findings
+        run: |
+          REPORT="artifacts/shannon-report.md"
+          if [[ -f "$REPORT" ]]; then
+            CRITICAL=$(grep -c "Severity: CRITICAL" "$REPORT" || echo 0)
+            HIGH=$(grep -c "Severity: HIGH" "$REPORT" || echo 0)
+            MEDIUM=$(grep -c "Severity: MEDIUM" "$REPORT" || echo 0)
+            LOW=$(grep -c "Severity: LOW" "$REPORT" || echo 0)
+            echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+            echo "high=$HIGH" >> $GITHUB_OUTPUT
+            echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+            echo "low=$LOW" >> $GITHUB_OUTPUT
+          else
+            echo "no_report=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Shannon report
+        uses: actions/upload-artifact@v4
+        with:
+          name: shannon-report-${{ github.run_id }}
+          path: artifacts/
+          retention-days: 90
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const c = '${{ steps.findings.outputs.critical }}';
+            const h = '${{ steps.findings.outputs.high }}';
+            const m = '${{ steps.findings.outputs.medium }}';
+            const l = '${{ steps.findings.outputs.low }}';
+            let verdict = '✅ PASS';
+            if (parseInt(c) > 0) verdict = '🔴 FAIL — CRITICAL findings';
+            else if (parseInt(h) > 0) verdict = '🟠 BLOCK — HIGH findings';
+            else if (parseInt(m) > 0) verdict = '🟡 WARN — MEDIUM findings';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🛡️ Shannon Security Scan\n\n` +
+                    `**Verdict**: ${verdict}\n\n` +
+                    `| Severity | Count |\n` +
+                    `|---|---|\n` +
+                    `| 🔴 CRITICAL | ${c} |\n` +
+                    `| 🟠 HIGH | ${h} |\n` +
+                    `| 🟡 MEDIUM | ${m} |\n` +
+                    `| 🔵 LOW | ${l} |\n\n` +
+                    `[Download full report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
+            });
+
+      - name: Block merge on HIGH+
+        if: steps.findings.outputs.critical != '0' || steps.findings.outputs.high != '0'
+        run: |
+          echo "::error::Security findings block merge."
+          echo "Critical: ${{ steps.findings.outputs.critical }}"
+          echo "High: ${{ steps.findings.outputs.high }}"
+          exit 1
+
+      - name: Notify ntfy on completion
+        if: always()
+        run: |
+          PRIORITY="default"
+          [[ "${{ steps.findings.outputs.critical }}" != "0" ]] && PRIORITY="urgent"
+          [[ "${{ steps.findings.outputs.high }}" != "0" && "$PRIORITY" == "default" ]] && PRIORITY="high"
+
+          curl -s -X POST https://ntfy.oneflow.cz/Filip \
+            -H "Title: Shannon CI scan: ${{ github.repository }}" \
+            -H "Priority: $PRIORITY" \
+            -d "Run ${{ github.run_id }}: C:${{ steps.findings.outputs.critical }} H:${{ steps.findings.outputs.high }} M:${{ steps.findings.outputs.medium }} L:${{ steps.findings.outputs.low }}" \
+            || true
