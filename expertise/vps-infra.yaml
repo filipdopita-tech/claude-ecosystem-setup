@@ -88,7 +88,7 @@ services_flash:
     type: telegram_bot
     purpose: "Filip's TG assistant"
 
-  <klient>_form:
+  beskyd_form:
     type: form_handler
 
   fluent_bit:

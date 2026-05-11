@@ -13,25 +13,23 @@ This is **a snapshot, not a plug-and-play install pack**. Shared with friends an
 - ⚠️ **VPS infra references** (Flash 10.77.0.1, oneflow.cz domains) — replace with your own.
 - 📜 **Use at your own risk, no warranty.** This is shared in the spirit of "Show your work."
 
-## Snapshot — 2026-05-08
+## Snapshot — 2026-05-11
 
 | Component | Count | Notes |
 |---|---|---|
-| Skills | 436 | security-toolkit, scrapling, algorithm-recall, agency-*, dd-emitent, /codex, /evalopt, /mythos, /triad. **gstack/ excluded** — install separately from upstream (it's vendored binaries, large). |
-| Agents | 77 | incl. 14 agency-* (financial-analyst, investment-researcher, reality-checker, ...) |
+| Skills | 558 | +122 since 05-08: ab-test-*, ad-creative, agent-business-lifecycle, agent-harness-construction, algorithm-recall, analytics-tracking, apify-*, binary-analysis, brainstorming, cache-audit, canary-watch, cc-power-tips, chains, clarity-heatmaps, clickhouse-analytics, codex, cold-outreach-v3, compact, compile-wiki, completion-check, continuous-learning-v2, copy-editing, copyweb, customer-research, darwin, dashboard, data-analysis, data-growth-os, database-optimizer, dd-batch-sql, dd-emitent, dd-pipeline, deep-post-ideas, defuddle, deploy-service, deploy-to-vercel, deset, design-motion-principles, desktop-notify, dispatching-parallel-agents, doc-coauthoring, docx, dream, evalopt, evolution-event-log, evolve-scan, executing-plans, form-cro, frank, free-tool-strategy, gateway-session, generate, git-why, graphify, gsd-*, harness-shield, ig-*, impeccable, instinct-*, investment-memo, jobs-leadgen, karimo:*, lead-magnets, lead-research-assistant, lean-refactor, llm-council, marketing-*, mcp-builder, monitor-*, mutation-testing, nextjs-*, obsidian-*, onboarding-cro, openspace-*, orchestrate, outreach-oneflow, paid-ads, paper2code, paywall-upgrade-cro, pdf, perf-profiler, playwright-*, pokracuj, posthog-analytics, postmortem, pptx, prd-spec, pricing-strategy, product-marketing-context, programmatic-seo, prompt-decompose, publish, python-testing-patterns, qmd, recall, referral-program, remotion-best-practices, repurpose, research, revops, rudolf, rum-monitoring, saas-from-workflow, safety-queue, sales-enablement, schema-markup, scrapling, script, second-opinion, security-*, seedance-*, semantic-recall, seo (15 variants), session-*, shadcn, shannon, sheets-automation, signup-flow-cro, site-*, skill-freshness-check, slime-mold, social-content, sop, spec-miner, status, storyboard, subagent-driven-development, supply-chain-risk-auditor, systematic-debugging, test-driven-development, trend-tracker, trends, triad, typescript-advanced-types, ultraplan, unreasonable-hospitality, using-*, vercel-*, verify-claim, web-*, winston-deck, workflow-orchestration-patterns, writing, xlsx, xscrape, zadej. **gstack/ excluded** — install separately from upstream. |
+| Agents | 78 | incl. 14 agency-* (financial-analyst, investment-researcher, reality-checker, ...) |
 | Hooks | 84 | Iron Rules enforcement (anti-hallucination, completion-mandate, hard-stop-zone, codex-bridge nudge) |
-| Rules | 29 | behavioral; load-on-demand via knowledge-router |
-| Expertise YAMLs | 23 | structured domain knowledge (CZ regulatory, sales, design, code, scraping, ...) |
-| Knowledge docs | 37 | curated reference material |
-| Slash commands | 201 | high-leverage chains: `/cso`, `/dd-emitent`, `/evalopt`, `/mythos`, `/triad`, `/codex` |
-| Output styles | 6 | |
+| Rules | 19 | 5 core (always-load) + 14 lazy-load (knowledge-router, workflow-routing, lean-engine, ...) |
+| Expertise YAMLs | 22 | structured domain knowledge (CZ regulatory, sales, design, code, scraping, ...) |
+| Slash commands | 558 | high-leverage chains: `/cso`, `/dd-emitent`, `/evalopt`, `/mythos`, `/triad`, `/codex`, `/pokracuj`, `/recall`, `/verify-claim` |
 
-**Major additions since 2026-05-05 push:**
-- **gstack 0.17 integration** — 45 namespaced skills (browse, qa, design-html, scrape, ship, canary, ...). Not bundled in repo (60MB+ Bun binaries). Install separately: see [gstack upstream](https://gstack.dev) or `npx gstack-installer`.
-- **agency-* agents** — financial-analyst, investment-researcher, reality-checker, incident-commander, compliance-auditor, paid-media-* (creative+tracking), discovery-coach, proposal-strategist, evidence-collector, feedback-synthesizer, legal-document-review, email-intelligence, codebase-onboarding, chief-of-staff
-- **Codex bridge** — full Claude/Codex orchestration (claude = strategy, codex = repo work) with telemetry, dashboard, weekly retro
-- **Anthropic financial-services** patterns mirrored — Pitch Agent, Earnings Reviewer, Model Builder DCF/LBO/comps, KYC Screener
-- **Cherry-picks** — `holaOS` (`/agents-md`, `/evolve-scan`, blocker-aggregator), `vercel-labs/skills` (deploy-to-vercel, view-transitions, web-design-guidelines), `maigret` (OSINT username search), `Mercury` (memory-decay)
+**Major additions since 2026-05-08:**
+- **+122 new skills** — SEO suite (15 variants), GSD suite (full project management), karimo:* (task/PR automation), seedance-* (video/motion), vercel-* (deployment patterns), security-* (toolkit, shannon, redteam, supply-chain-risk), CRO suite (form/page/paywall/onboarding), dd-* (emitent, pipeline, batch-sql), playwright-* (best-practices, content-qa), gsd-* (full build cycle), social-content, storyboard, triad, ultraplan, winston-deck, xscrape, zadej
+- **LLM Safety Defenses** — Malinoe × OneFlow defensive AI safety integration: 16-section rule covering Crescendo, Lazarus Library, Reflexive Control, DARVO, Deep Curiosity Complex, BITE Model, Reid Technique, 8-framework compound detection, iFixAi 5-pillar alignment scoring (A-F grade system), klient AI agent deploy gate (>90% hold rate required)
+- **Ecosystem optimization 2026-05-09** — auto-compact 80%, rules reduced from 2874→901 tokens (69%), MCP zombie cleanup, hybrid BM25+cosine recall, context-mode-inject hook
+- **iFixAi 5-pillar** cherry-pick — Fabrication/Manipulation/Deception/Unpredictability/Opacity scoring + drift tracker
+- **Codex Bridge v3** — telemetry, weekly retro, statusline indicator, Obsidian heatmap, per-project ratio tracking
 - **Iron Rules v2** — anti-hallucination (verify-before-claim with `[VERIFIED]/[LIKELY]/[GUESS]/[UNCERTAIN]` markers), completion-mandate (no "to nejde", 3 alternatives before blocker), hard-stop-zone (5 explicit zones: payments/sends/destruction/FB-login/strategic-100k+)
 - **Cost discipline** — Google API total ban after 3× billing incidents (Apr 17, Apr 24, Apr 27 2026); pivot to OpenRouter free models (DeepSeek R1, Qwen 3 Coder, Kimi K2, Nemotron Nano) — see `COST_DISCIPLINE.md`
 

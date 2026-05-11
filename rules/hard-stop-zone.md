@@ -107,7 +107,7 @@ Otázka SMÍ projít, když akce může vyvolat FB/Meta detection trigger nebo a
 - CrowdTangle / Business Suite export Pages kde je Filip admin
 - Klientův OAuth consent pro jeho vlastní data
 
-**Reference:** `~/.claude/rules/fb-scrape-safety.md` (HARD RULE, 2026-04-21 incident <klient>)
+**Reference:** `~/.claude/rules/fb-scrape-safety.md` (HARD RULE, 2026-04-21 incident Tereza)
 
 ---
 

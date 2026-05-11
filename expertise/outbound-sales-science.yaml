@@ -6,7 +6,7 @@ description: Cold email + LinkedIn + DM outreach věda — A/B testing, reply ps
 # v4 FRAMEWORK (2026-04-27) — povinný pro VŠECHNY outreach výstupy
 # =========================
 # Aplikuje se PŘED každým generováním cold emailu / DM / FB Messenger zprávy.
-# Zdroj: project_tereza_outreach_revize_v4_2026_04_27.md (<klient> cycle)
+# Zdroj: project_tereza_outreach_revize_v4_2026_04_27.md (Tereza Tulcová cycle)
 
 mandatory_v4:
   hard_ban_phrases:  # automatický kill — generuj znovu
@@ -30,7 +30,7 @@ mandatory_v4:
     - "Krátká věta + delší věta = rytmus (varied sentence length)"
     - "Calibrated CTA (Voss): 'Co by muselo platit / Jak by / Bylo by mimo' — NE ano-ne otázka"
     - "Konkrétní číslo (180 leadů, 28 let) > přídavné jméno (hodně, dlouho)"
-    - "Podpis: jen Dopita (FB/IG) nebo Filip Dopita | OneFlow | <phone> (email)"
+    - "Podpis: jen Dopita (FB/IG) nebo Filip Dopita | OneFlow | +420 607 445 004 (email)"
 
   pre_send_checklist:
     - "Personalizace = 1 specifický detail z ARES nebo profilu/postu nebo recenze?"
